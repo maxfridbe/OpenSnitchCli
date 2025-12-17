@@ -1,2 +1,5 @@
 /OpenSnitchCli/bin
 /OpenSnitchCli/obj
+/bin/
+bin/
+obj/

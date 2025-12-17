@@ -8,11 +8,16 @@ namespace OpenSnitchCli.Services
     public class UiService : UI.UIBase
     {
         private readonly ILogger<UiService> _logger;
+        private readonly bool _logEntries;
         private readonly JsonFormatter _formatter;
 
-        public UiService(ILogger<UiService> logger)
+        // Event to notify subscribers (CLI logger or TUI)
+        public event Action<string, IMessage>? OnMessageReceived;
+
+        public UiService(ILogger<UiService> logger, bool logEntries)
         {
             _logger = logger;
+            this._logEntries = logEntries;
             _formatter = new JsonFormatter(JsonFormatter.Settings.Default.WithFormatDefaultValues(true));
         }
 
@@ -30,18 +35,55 @@ namespace OpenSnitchCli.Services
 
         public override Task<ClientConfig> Subscribe(ClientConfig request, ServerCallContext context)
         {
-            LogMessage("Subscribe", request);
-            return Task.FromResult(request);
+            if(_logEntries)
+            _logger.LogDebug("Received Subscribe request: {Request}", request);
+            
+            // Create a response that attempts to force monitoring/interception
+            var responseConfig = new ClientConfig
+            {
+                Id = request.Id,
+                Name = request.Name,
+                Version = request.Version,
+                IsFirewallRunning = true, // Tell daemon we want it running
+                // Also send back configuration to enable interception and eBPF
+                // This is a JSON string passed directly.
+                Config = "{\"InterceptUnknown\":true,\"ProcMonitorMethod\":\"ebpf\"}",
+                LogLevel = request.LogLevel,
+                Rules = { request.Rules } // Send back existing rules
+            };
+
+            LogMessage("Subscribe (Response)", responseConfig);
+            return Task.FromResult(responseConfig);
         }
 
         public override async Task Notifications(IAsyncStreamReader<NotificationReply> requestStream, IServerStreamWriter<Notification> responseStream, ServerCallContext context)
         {
              try
              {
+                 // 1. Start SocketsMonitor
+                 var socketsConfig = "{\"Name\":\"SocketsMonitor\",\"Data\":{\"interval\":\"2s\",\"states\":\"1,10\"}}";
+                 await responseStream.WriteAsync(new Notification
+                 {
+                     Id = 1,
+                     Type = Protocol.Action.TaskStart,
+                     Data = socketsConfig
+                 });
+                 _logger.LogDebug("Sent SocketsMonitor: {Command}", socketsConfig);
+
+                 // 2. Start PidMonitor
+                 var pidConfig = "{\"Name\":\"PidMonitor\",\"Data\":{\"interval\":\"2s\"}}";
+                 await responseStream.WriteAsync(new Notification
+                 {
+                     Id = 2,
+                     Type = Protocol.Action.TaskStart,
+                     Data = pidConfig
+                 });
+                 _logger.LogDebug("Sent PidMonitor: {Command}", pidConfig);
+
                  while (await requestStream.MoveNext())
                  {
                      var reply = requestStream.Current;
-                     LogMessage("NotificationReply", reply);
+                     _logger.LogTrace("Received NotificationReply: Code={Code}, Data={Data}", reply.Code, reply.Data);
                  }
              }
              catch (Exception ex)
@@ -60,12 +102,12 @@ namespace OpenSnitchCli.Services
         {
             try 
             {
-                var json = _formatter.Format(message);
-                Console.WriteLine(json);
+                OnMessageReceived?.Invoke(method, message);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error formatting message: {ex.Message}");
+                if(_logEntries)
+                _logger.LogError(ex, "Error invoking message handler");
             }
         }
     }
