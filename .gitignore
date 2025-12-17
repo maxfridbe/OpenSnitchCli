@@ -3,3 +3,8 @@
 /bin/
 bin/
 obj/
+/OpenSnitchCli/dns.cache.txt
+.log
+*log
+/publish/
+/OpenSnitchCli/*log*

@@ -9,6 +9,7 @@ using OpenSnitchTUI;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Reflection;
 
 namespace OpenSnitchTGUI
 {
@@ -22,6 +23,10 @@ namespace OpenSnitchTGUI
         private List<TuiEvent> _events = new();
         private object _lock = new object();
         private IApplication? _app;
+        private Window? _win;
+
+        private bool _themesInitialized = false;
+        private List<string> _cycleThemes = new List<string> { "Base", "Matrix", "Red", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord" };
 
         public void AddEvent(TuiEvent evt)
         {
@@ -39,13 +44,13 @@ namespace OpenSnitchTGUI
             });
         }
 
-        public void Stop() { _app?.RequestStop(); }
+        public void Stop() { _app?.RequestStop(); } 
         public void Run()
         {
             _app = Application.Create();
             _app.Init();
 
-            var win = new Window() 
+            _win = new Window() 
             {
                 Title = "OpenSnitch CLI (Terminal.Gui)",
                 X = 0,
@@ -58,10 +63,10 @@ namespace OpenSnitchTGUI
             var statusLabel = new Label() 
             {
                 Text = "Status: Online",
-                X = Pos.Right(win) - 20, 
+                X = Pos.Right(_win) - 20, 
                 Y = 0 
             };
-            win.Add(statusLabel);
+            _win.Add(statusLabel);
 
             // Table
             _dt = new DataTable();
@@ -85,14 +90,12 @@ namespace OpenSnitchTGUI
             _tableView.SelectedCellChanged += (s, e) => UpdateDetails(e.NewRow);
 
             // Column Styles
-            // 6: Address, 7: Port -> Right Aligned
             _tableView.Style.GetOrCreateColumnStyle(6).Alignment = Alignment.End;
             _tableView.Style.GetOrCreateColumnStyle(7).Alignment = Alignment.End;
-            // 3: PID -> Right Aligned
             _tableView.Style.GetOrCreateColumnStyle(3).Alignment = Alignment.End;
 
-            // Handle resizing to force Program column to expand
-            win.SubViewsLaidOut += (s, e) =>
+            // Handle resizing
+            _win.SubViewsLaidOut += (s, e) =>
             {
                 if (_tableView!.Viewport.Width <= 0) return;
 
@@ -100,7 +103,6 @@ namespace OpenSnitchTGUI
                 int scrollBarWidth = 1; 
                 int fixedWidths = 0;
 
-                // Define desired widths for fixed columns
                 var colWidths = new Dictionary<string, int>
                 {
                     { "Time", 10 },
@@ -108,20 +110,18 @@ namespace OpenSnitchTGUI
                     { "Protocol", 8 },
                     { "PID", 8 },
                     { "User", 15 },
-                    // Program is variable
-                    { "Address", 25 }, // Adjust Address width
-                    { "Port", 5 }    // Set Port width to 5
+                    { "Address", 25 }, 
+                    { "Port", 5 }
                 };
 
                 foreach (var kvp in colWidths) fixedWidths += kvp.Value;
 
-                int programWidth = Math.Max(10, width - fixedWidths - scrollBarWidth - 5); // -5 for padding safety
+                int programWidth = Math.Max(10, width - fixedWidths - scrollBarWidth - 5);
 
                 foreach (DataColumn col in _dt!.Columns)
                 {
                     var style = _tableView.Style.GetOrCreateColumnStyle(col.Ordinal);
                     int w = col.ColumnName == "Program" ? programWidth : (colWidths.ContainsKey(col.ColumnName) ? colWidths[col.ColumnName] : 10);
-                    
                     style.MinWidth = w;
                     style.MaxWidth = w;
                 }
@@ -148,10 +148,10 @@ namespace OpenSnitchTGUI
             };
             detailsWin.Add(_detailsView);
 
-            win.Add(_tableView, detailsWin);
+            _win.Add(_tableView, detailsWin);
 
-            // Global Key Handler for 'q' and 't'
-            win.KeyDown += (s, e) =>
+            // Global Key Handler
+            _win.KeyDown += (s, e) =>
             {
                 if (e == Key.Q)
                 {
@@ -169,23 +169,129 @@ namespace OpenSnitchTGUI
                 new Shortcut(Key.T, "~t~ Theme", () => CycleTheme()),
                 new Shortcut(Key.F1, "~F1~ Help", () => MessageBox.Query(_app, "Help", "Use Arrow Keys to Navigate\nPress 'q' to Quit\nPress 't' to Cycle Themes", "Ok"))
             });
-            win.Add(statusBar);
+            _win.Add(statusBar);
 
-            _app.Run(win);
+            try 
+            {
+                _app.Run(_win);
+            }
+            catch (Exception ex)
+            {
+                System.IO.File.AppendAllText("crash_log.txt", $"MAIN LOOP CRASH: {ex}\n");
+            }
             _app.Dispose();
+        }
+
+        private void InitCustomThemes()
+        {
+            if (_themesInitialized) return;
+
+            try 
+            {
+                System.IO.File.AppendAllText("theme_init.log", "InitCustomThemes: Started dynamic discovery\n");
+                
+                var schemeManagerType = AppDomain.CurrentDomain.GetAssemblies()
+                        .Select(a => a.GetType("Terminal.Gui.Configuration.SchemeManager"))
+                        .FirstOrDefault(t => t != null);
+
+                if (schemeManagerType == null)
+                {
+                    System.IO.File.AppendAllText("theme_init.log", "InitCustomThemes: SchemeManager not found\n");
+                    return;
+                }
+
+                var addSchemeMethod = schemeManagerType.GetMethods()
+                    .FirstOrDefault(m => m.Name == "AddScheme" && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(string));
+
+                if (addSchemeMethod == null)
+                {
+                    System.IO.File.AppendAllText("theme_init.log", "InitCustomThemes: AddScheme method not found\n");
+                    return;
+                }
+
+                var schemeType = addSchemeMethod.GetParameters()[1].ParameterType;
+                var normalProp = schemeType.GetProperty("Normal");
+                if (normalProp == null) return;
+                var attrType = normalProp.PropertyType;
+
+                object CreateAttr(Color fg, Color bg)
+                {
+                    return Activator.CreateInstance(attrType, fg, bg)!;
+                }
+
+                void CreateScheme(string name, Color fg, Color bg, Color focusFg, Color focusBg)
+                {
+                    try {
+                        var scheme = Activator.CreateInstance(schemeType);
+                        
+                        schemeType.GetProperty("Normal")?.SetValue(scheme, CreateAttr(fg, bg));
+                        schemeType.GetProperty("Focus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
+                        schemeType.GetProperty("HotNormal")?.SetValue(scheme, CreateAttr(fg, bg));
+                        schemeType.GetProperty("HotFocus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
+                        
+                        addSchemeMethod.Invoke(null, new object[] { name, scheme });
+                        System.IO.File.AppendAllText("theme_init.log", $"InitCustomThemes: Registered {name}\n");
+                    } catch (Exception ex) {
+                        System.IO.File.AppendAllText("theme_init.log", $"InitCustomThemes: Failed to register {name}: {ex}\n");
+                    }
+                }
+
+                // Matrix Theme
+                CreateScheme("Matrix", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen);
+                
+                // Red Theme
+                CreateScheme("Red", Color.Red, Color.Black, Color.White, Color.Red);
+
+                // Solarized Dark (Teal/Gray)
+                CreateScheme("SolarizedDark", Color.Cyan, Color.Black, Color.White, Color.DarkGray);
+
+                // Solarized Light (Cream/Gray) - Using White/Black approximation
+                CreateScheme("SolarizedLight", Color.Black, Color.White, Color.Blue, Color.White);
+
+                // Monokai (Dark/Pink)
+                CreateScheme("Monokai", Color.White, Color.Black, Color.Magenta, Color.Black);
+
+                // Dracula (Dark/Purple)
+                CreateScheme("Dracula", Color.White, Color.DarkGray, Color.Magenta, Color.DarkGray);
+
+                // Nord (Blueish)
+                CreateScheme("Nord", Color.White, Color.Blue, Color.Cyan, Color.Blue);
+
+                _themesInitialized = true;
+                System.IO.File.AppendAllText("theme_init.log", "InitCustomThemes: Finished\n");
+            }
+            catch (Exception ex)
+            {
+                 System.IO.File.AppendAllText("theme_init.log", $"InitCustomThemes EXCEPTION: {ex}\n");
+                 MessageBox.ErrorQuery(_app, "Init Error", ex.Message, "Ok");
+            }
         }
 
         private void CycleTheme()
         {
-            if (ThemeManager.Themes == null || !ThemeManager.Themes.Any()) return;
-            var themes = ThemeManager.Themes.Keys.ToList();
-            var currentTheme = ThemeManager.Theme;
-            var currentIndex = themes.IndexOf(currentTheme);
-            var nextIndex = (currentIndex + 1) % themes.Count;
-            var nextTheme = themes[nextIndex];
+            try 
+            {
+                System.IO.File.AppendAllText("cycle_debug.log", "CycleTheme: Start\n");
+                InitCustomThemes();
 
-            ThemeManager.Theme = nextTheme;
-            ConfigurationManager.Apply();
+                if (_win == null) return; 
+                
+                var current = _win.SchemeName ?? "Base";
+                System.IO.File.AppendAllText("cycle_debug.log", $"CycleTheme: Current={current}\n");
+                
+                var idx = _cycleThemes.IndexOf(current);
+                if (idx == -1) idx = 0;
+                
+                var next = _cycleThemes[(idx + 1) % _cycleThemes.Count];
+                System.IO.File.AppendAllText("cycle_debug.log", $"CycleTheme: Next={next}\n");
+                
+                _win.SchemeName = next;
+                _win.SetNeedsDraw();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.ErrorQuery(_app, "Error", $"Failed to cycle: {ex.Message}", "Ok");
+            }
         }
 
         private void RefreshTable()
@@ -241,16 +347,14 @@ namespace OpenSnitchTGUI
                 user = _userManager.GetUser(match.Groups[1].Value);
             }
 
-            var text = $"""
-Timestamp:   {evt.Timestamp:yyyy-MM-dd HH:mm:ss.fff}
-Type:        {evt.Type}
-Protocol:    {evt.Protocol}
-PID:         {evt.Pid}
-User:        {user}
-Program:     {evt.Source}
-Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}
-Details:     {evt.Details}
-""";
+            var text = $"Timestamp:   {evt.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\n" +
+                       $"Type:        {evt.Type}\n" +
+                       $"Protocol:    {evt.Protocol}\n" +
+                       $"PID:         {evt.Pid}\n" +
+                       $"User:        {user}\n" +
+                       $"Program:     {evt.Source}\n" +
+                       $"Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}\n" +
+                       $"Details:     {evt.Details}";
             _detailsView.Text = text;
         }
     }
