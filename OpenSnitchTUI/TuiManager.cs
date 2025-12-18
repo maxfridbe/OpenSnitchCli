@@ -185,6 +185,21 @@ namespace OpenSnitchTUI
             grid.AddRow("PID:", evt.Pid ?? "");
             grid.AddRow("Program:", evt.Source ?? "");
             
+            if (evt.IsFlatpak)
+            {
+                grid.AddRow("Origin:", "[cyan]📦 Flatpak (Sandboxed)[/]");
+            }
+            else if (evt.IsInNamespace)
+            {
+                grid.AddRow("Origin:", "[magenta]📦 Container/Namespace[/]");
+            }
+
+            var description = DescriptionManager.Instance.GetDescription(evt.Source ?? "");
+            if (!string.IsNullOrEmpty(description))
+            {
+                grid.AddRow("About:", $"[yellow]{description}[/]");
+            }
+            
             var dnsName = _dnsManager.GetDisplayName(evt.DestinationIp);
             grid.AddRow("Destination:", $"{evt.DestinationIp} ({dnsName}) : {evt.DestinationPort}");
             

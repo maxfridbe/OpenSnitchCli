@@ -1,0 +1,2079 @@
+/usr/bin/NetworkManager|Daemon: Automatically manages your computer's network connections
+/usr/bin/ssh|Client: Securely connects to remote machines via SSH protocol
+/usr/bin/scp|Tool: Securely copies files between hosts over SSH
+/usr/bin/sftp|Client: Securely transfers files via SFTP protocol
+/usr/bin/wget|Tool: Retrieves files from the web using HTTP, HTTPS, or FTP
+/usr/bin/curl|Tool: Transfers data from or to a server using various protocols
+/usr/bin/firefox|Browser: Popular open-source web browser from Mozilla
+/usr/bin/chrome|Browser: Google's proprietary web browser
+/usr/bin/chromium|Browser: Open-source project behind Google Chrome
+/usr/bin/discord|App: Communication platform for voice, video, and text
+/usr/bin/slack|App: Team communication and collaboration platform
+/usr/bin/spotify|App: Digital music service providing access to millions of songs
+/usr/bin/steam|App: Digital distribution platform for video games
+/usr/bin/flatpak|System: Tool for building and distributing desktop applications
+/usr/bin/gnome-software|App: Plugin-based software store for GNOME
+/usr/bin/dnf|Tool: Package manager for Fedora and RHEL-based systems
+/usr/bin/apt|Tool: Package manager for Debian and Ubuntu-based systems
+/usr/bin/apt-get|Tool: Command-line tool for handling packages in Debian
+/usr/bin/systemd-resolved|Daemon: Provides network name resolution to local applications
+/usr/bin/systemd-timesyncd|Daemon: Synchronizes the local system clock with a remote NTP server
+/usr/bin/avahi-daemon|Daemon: Facilitates local network service discovery via mDNS/DNS-SD
+/usr/bin/bluetoothd|Daemon: Manages Bluetooth devices and communication
+/usr/bin/cupsd|Daemon: Common Unix Printing System (CUPS) scheduler
+/usr/bin/sshd|Daemon: OpenSSH server for secure remote access
+/usr/bin/rsync|Tool: Fast and versatile file copying and synchronization tool
+/usr/bin/git|Tool: Distributed version control system
+/usr/bin/docker|Daemon: Platform for developing, shipping, and running applications in containers
+/usr/bin/containerd|Daemon: Industry-standard container runtime
+/usr/bin/kubelet|Daemon: Primary node agent that runs on each Kubernetes node
+/usr/bin/nfsd|Daemon: Kernel-based NFS server for sharing files over networks
+/usr/bin/rpcbind|Daemon: Maps RPC program numbers to universal addresses
+/usr/bin/smbd|Daemon: Samba server providing file and print services to SMB/CIFS clients
+/usr/bin/nmbd|Daemon: NetBIOS name server for providing NetBIOS over IP naming services
+/usr/bin/transmission-daemon|Daemon: Lightweight BitTorrent client daemon
+/usr/bin/deluged|Daemon: Core server for the Deluge BitTorrent client
+/usr/bin/snmpd|Daemon: SNMP agent for monitoring and managing network devices
+/usr/bin/ntpd|Daemon: Network Time Protocol (NTP) daemon for clock synchronization
+/usr/bin/chronyd|Daemon: Versatile implementation of the Network Time Protocol (NTP)
+/usr/bin/dnsmasq|Daemon: Lightweight DNS, DHCP, and TFTP server
+/usr/bin/unbound|Daemon: Validating, recursive, and caching DNS resolver
+/usr/bin/named|Daemon: BIND DNS server for domain name resolution
+/usr/bin/httpd|Daemon: Apache HTTP Server for hosting web content
+/usr/bin/nginx|Daemon: High-performance HTTP and reverse proxy server
+/usr/bin/php-fpm|Daemon: FastCGI Process Manager for PHP
+/usr/bin/mysqld|Daemon: MySQL database server
+/usr/bin/postgres|Daemon: PostgreSQL object-relational database server
+/usr/bin/redis-server|Daemon: Advanced key-value store and cache
+/usr/bin/mongod|Daemon: MongoDB NoSQL database server
+/usr/bin/dovecot|Daemon: Secure IMAP and POP3 server
+/usr/bin/postfix|Daemon: High-performance Mail Transfer Agent (MTA)
+/usr/bin/exim|Daemon: Versatile Mail Transfer Agent (MTA)
+/usr/bin/sendmail|Daemon: Classic Mail Transfer Agent (MTA)
+/usr/bin/whois|Tool: Client for the WHOIS directory service
+/usr/bin/dig|Tool: DNS lookup utility for querying name servers
+/usr/bin/host|Tool: Simple utility for performing DNS lookups
+/usr/bin/nslookup|Tool: Query Internet name servers interactively
+/usr/bin/ping|Tool: Sends ICMP ECHO_REQUEST to network hosts
+/usr/bin/traceroute|Tool: Prints the route packets take to a network host
+/usr/bin/mtr|Tool: Combines the functionality of traceroute and ping
+/usr/bin/netstat|Tool: Prints network connections, routing tables, and interface statistics
+/usr/bin/ss|Tool: Utility to investigate sockets and network statistics
+/usr/bin/ip|Tool: Show or manipulate routing, network devices, interfaces and tunnels
+/usr/bin/nmap|Tool: Network exploration tool and security / port scanner
+/usr/bin/tcpdump|Tool: Command-line packet analyzer
+/usr/bin/wireshark|App: Graphical network protocol analyzer
+/usr/bin/tshark|Tool: Terminal-based network protocol analyzer
+/usr/bin/aria2c|Tool: Multi-protocol & multi-source command-line download utility
+/usr/bin/vlc|App: Cross-platform multimedia player and framework
+/usr/bin/mpv|App: Free and open-source media player software
+/usr/bin/obs|App: Free and open-source software for video recording and live streaming
+/usr/bin/zoom|App: Video conferencing and online meeting platform
+/usr/bin/skypeforlinux|App: Communication tool for free calls and messages
+/usr/bin/telegram-desktop|App: Fast and secure desktop messaging app
+/usr/bin/signal-desktop|App: Private messenger for secure communication
+/usr/bin/thunderbird|App: Free and open-source email, news, and chat client
+/usr/bin/evolution|App: Personal information management application for GNOME
+/usr/bin/kmail|App: Full-featured email client for KDE
+/usr/bin/rhythmbox|App: Music management and playback application for GNOME
+/usr/bin/gnome-boxes|App: Simple application to access remote or virtual systems
+/usr/bin/virt-manager|App: Desktop user interface for managing virtual machines
+/usr/bin/teamviewer|App: Remote control and remote support software
+/usr/bin/anydesk|App: Fast remote desktop application
+/usr/bin/remmina|App: Remote desktop client for POSIX-based operating systems
+/usr/bin/vinagre|App: Remote desktop viewer for GNOME
+/usr/bin/vncviewer|App: Tool for viewing and controlling remote VNC servers
+/usr/bin/x11vnc|Daemon: VNC server that allows remote access to an existing X session
+/usr/bin/xrdp|Daemon: Open-source Remote Desktop Protocol (RDP) server
+/usr/bin/dropbox|App: File hosting service that offers cloud storage
+/usr/bin/nextcloud|App: Client for Nextcloud file synchronization and sharing
+/usr/bin/owncloud|App: Client for ownCloud file synchronization and sharing
+/usr/bin/syncthing|Daemon: Continuous file synchronization program
+/usr/bin/megasync|App: Easy automated syncing between your computers and MEGA Cloud Drive
+/usr/bin/insync|App: Google Drive and OneDrive sync client for Linux
+/usr/bin/qbittorrent|App: Open-source BitTorrent client
+/usr/bin/kget|App: Versatile download manager for KDE
+/usr/bin/ktorrent|App: Powerful BitTorrent client for KDE
+/usr/bin/hexchat|App: Popular IRC client based on XChat
+/usr/bin/weechat|App: Extensible chat client with a curses interface
+/usr/bin/irssi|App: Modular text mode chat client (IRC)
+/usr/bin/mumble|App: Low-latency, high quality voice chat software
+/usr/bin/tor|Daemon: Enables anonymous communication via the Tor network
+/usr/bin/privoxy|Daemon: Non-caching web proxy with advanced filtering capabilities
+/usr/bin/squid|Daemon: High-performance caching proxy for web clients
+/usr/bin/tinyproxy|Daemon: Lightweight HTTP/HTTPS proxy daemon
+/usr/bin/stunnel|Daemon: SSL encryption wrapper for network connections
+/usr/bin/openvpn|Daemon: Robust and highly flexible VPN software
+/usr/bin/wireguard|System: Fast, modern, and secure VPN tunnel
+/usr/bin/strongswan|Daemon: Open-source IPsec-based VPN solution
+/usr/bin/charon|Daemon: Keying daemon for strongSwan IPsec
+/usr/bin/xl2tpd|Daemon: Layer 2 Tunnelling Protocol (L2TP) daemon
+/usr/bin/pptpd|Daemon: Point-to-Point Tunneling Protocol (PPTP) daemon
+/usr/bin/vpnc|Tool: Client for Cisco's VPN concentrators
+/usr/bin/forticlient|App: VPN client for Fortinet's SSL and IPsec VPNs
+/usr/bin/anyconnect|App: Cisco AnyConnect Secure Mobility Client
+/usr/bin/tailscaled|Daemon: Tailscale node agent for easy VPN connectivity
+/usr/bin/zerotier-one|Daemon: ZeroTier network virtualization service
+/usr/bin/ipfs|Daemon: Peer-to-peer hypermedia protocol
+/usr/bin/syncthing-gtk|App: GTK3 GUI for Syncthing
+/usr/bin/filezilla|App: Free and open-source cross-platform FTP application
+/usr/bin/gftp|App: Multi-threaded FTP client for Linux
+/usr/bin/lftp|Tool: Sophisticated file transfer program (FTP, HTTP, FISH, SFTP, etc.)
+/usr/bin/ncftp|Tool: Set of programs that use the File Transfer Protocol (FTP)
+/usr/bin/cadaver|Tool: Command-line WebDAV client
+/usr/bin/davfs2|System: Filesystem driver that allows mounting a WebDAV resource
+/usr/bin/rclone|Tool: Command-line program to manage files on cloud storage
+/usr/bin/aws|Tool: Unified tool to manage your AWS services
+/usr/bin/gcloud|Tool: Google Cloud CLI for managing resources and applications
+/usr/bin/az|Tool: Microsoft Azure CLI for managing Azure resources
+/usr/bin/heroku|Tool: Command-line interface for the Heroku platform
+/usr/bin/doctl|Tool: Command-line interface for the DigitalOcean API
+/usr/bin/linode-cli|Tool: Command-line interface for the Linode API
+/usr/bin/vultr-cli|Tool: Command-line interface for the Vultr API
+/usr/bin/terraform|Tool: Infrastructure as code software by HashiCorp
+/usr/bin/ansible|Tool: IT automation engine for configuration management and deployment
+/usr/bin/puppet|System: IT automation software for infrastructure management
+/usr/bin/chef-client|System: Client for the Chef configuration management system
+/usr/bin/salt-minion|Daemon: Client for the SaltStack configuration management system
+/usr/bin/zabbix_agentd|Daemon: Zabbix monitoring agent
+/usr/bin/nrpe|Daemon: Nagios Remote Plugin Executor
+/usr/bin/nagios|Daemon: Network monitoring and alerting system
+/usr/bin/prometheus|Daemon: Open-source monitoring and alerting toolkit
+/usr/bin/node_exporter|Daemon: Prometheus exporter for hardware and OS metrics
+/usr/bin/grafana-server|Daemon: Open-source platform for monitoring and observability
+/usr/bin/telegraf|Daemon: Plugin-driven server agent for collecting and reporting metrics
+/usr/bin/influxd|Daemon: Scalable time series database (InfluxDB)
+/usr/bin/elasticsearch|Daemon: Distributed, RESTful search and analytics engine
+/usr/bin/logstash|Daemon: Server-side data processing pipeline
+/usr/bin/kibana|Daemon: Open-source data visualization and exploration tool
+/usr/bin/falco|Daemon: Cloud-native runtime security tool
+/usr/bin/auditd|Daemon: Linux Audit daemon for system security auditing
+/usr/bin/clamd|Daemon: ClamAV antivirus scanner daemon
+/usr/bin/fail2ban-server|Daemon: Scans log files and bans IPs that show malicious signs
+/usr/bin/rkhunter|Tool: Scans for rootkits, backdoors and local exploits
+/usr/bin/chkrootkit|Tool: Locally checks for signs of a rootkit
+/usr/bin/lynis|Tool: Security auditing tool for Linux/Unix systems
+/usr/bin/suricata|Daemon: High-performance Network IDS, IPS, and NSM engine
+/usr/bin/snort|Daemon: Network Intrusion Detection and Prevention System (IDS/IPS)
+/usr/bin/zeek|Daemon: Powerful network analysis framework (formerly Bro)
+/usr/bin/ntopng|Daemon: High-speed web-based traffic analysis and flow collection tool
+/usr/bin/darkstat|Daemon: Network statistics gatherer with a web interface
+/usr/bin/vnstatd|Daemon: Console-based network traffic monitor
+/usr/bin/bmon|Tool: Bandwidth monitor and rate estimator
+/usr/bin/iftop|Tool: Display bandwidth usage on an interface by host
+/usr/bin/nload|Tool: Visualizes network traffic and bandwidth usage in real-time
+/usr/bin/iptraf-ng|Tool: IP network statistics utility
+/usr/bin/speedtest-cli|Tool: Command-line interface for testing internet bandwidth
+/usr/bin/iperf|Tool: Performs network throughput measurements
+/usr/bin/iperf3|Tool: Newer version of iperf for network throughput measurements
+/usr/bin/socat|Tool: Multipurpose relay for bidirectional data transfer
+/usr/bin/nc|Tool: Arbitrary TCP and UDP connections and listens (Netcat)
+/usr/bin/ncat|Tool: Feature-packed networking utility (from Nmap)
+/usr/bin/telnet|Tool: User interface to the TELNET protocol
+/usr/bin/ftp|Tool: User interface to the File Transfer Protocol (FTP)
+/usr/bin/tftp|Tool: IPv4 Trivial File Transfer Protocol client
+/usr/bin/rpc.statd|Daemon: NFS file locking daemon
+/usr/bin/rpc.mountd|Daemon: NFS mount daemon
+/usr/bin/rpc.idmapd|Daemon: NFSv4 ID mapping daemon
+/usr/bin/rpc.gssd|Daemon: RPCSEC_GSS daemon for NFS
+/usr/bin/rpc.svcgssd|Daemon: Server-side RPCSEC_GSS daemon for NFS
+/usr/bin/nfsconf|Tool: Tool for managing NFS configuration
+/usr/bin/exportfs|Tool: Maintains the list of NFS exported file systems
+/usr/bin/showmount|Tool: Shows mount information for an NFS server
+/usr/bin/mount.nfs|Tool: Mounts NFS file systems
+/usr/bin/umount.nfs|Tool: Unmounts NFS file systems
+/usr/bin/mount.cifs|Tool: Mounts SMB/CIFS file systems
+/usr/bin/umount.cifs|Tool: Unmounts SMB/CIFS file systems
+/usr/bin/smbclient|Tool: FTP-like client to access SMB/CIFS resources on servers
+/usr/bin/rpcclient|Tool: Tool for executing client-side RPC functions
+/usr/bin/net|Tool: Tool for administration of Samba and remote RPC services
+/usr/bin/testparm|Tool: Check an smb.conf configuration file for internal correctness
+/usr/bin/smbstatus|Tool: Report on current Samba connections
+/usr/bin/pdbedit|Tool: Manage the SAM database (Samba users)
+/usr/bin/smbpasswd|Tool: Change a user's SMB password
+/usr/bin/cups-browsed|Daemon: Browse the network for remote CUPS queues
+/usr/bin/lp|Tool: Print files to a printer or print service
+/usr/bin/lpstat|Tool: Display CUPS status information
+/usr/bin/lpadmin|Tool: Configure CUPS printer and class queues
+/usr/bin/lpc|Tool: Line printer control program
+/usr/bin/lpq|Tool: Show the state of the printer queue
+/usr/bin/lpr|Tool: Off-line print command
+/usr/bin/lprm|Tool: Remove jobs from the print queue
+/usr/bin/cancel|Tool: Cancel print jobs
+/usr/bin/cupsenable|Tool: Stop/start printers and classes
+/usr/bin/cupsdisable|Tool: Stop/start printers and classes
+/usr/bin/cupsaccept|Tool: Accept/reject jobs sent to a destination
+/usr/bin/cupsreject|Tool: Accept/reject jobs sent to a destination
+/usr/bin/cupsfilter|Tool: Convert a file to another format using CUPS filters
+/usr/bin/system-config-printer|App: Graphical tool to configure printers
+/usr/bin/gnome-control-center|App: Main settings application for GNOME
+/usr/bin/kcm_networkmanagement|App: KDE Plasma network management module
+/usr/bin/nm-applet|App: NetworkManager system tray applet
+/usr/bin/nm-connection-editor|App: NetworkManager connection editor
+/usr/bin/nmcli|Tool: Command-line tool for controlling NetworkManager
+/usr/bin/nmtui|Tool: Text user interface for NetworkManager
+/usr/bin/wpa_supplicant|Daemon: WPA/WPA2/IEEE 802.1X Supplicant
+/usr/bin/wpa_cli|Tool: Command-line interface for wpa_supplicant
+/usr/bin/wpa_gui|App: Graphical frontend for wpa_supplicant
+/usr/bin/hostapd|Daemon: IEEE 802.11 AP and IEEE 802.1X/WPA/WPA2/EAP Authenticator
+/usr/bin/hostapd_cli|Tool: Command-line interface for hostapd
+/usr/bin/iw|Tool: nl80211 based CLI configuration utility for wireless devices
+/usr/bin/iwconfig|Tool: Configure a wireless network interface (deprecated)
+/usr/bin/iwpriv|Tool: Configure optional (private) parameters of a wireless interface
+/usr/bin/iwlist|Tool: Get more detailed wireless information from a wireless interface
+/usr/bin/iwevent|Tool: Display wireless events generated by drivers and setting tools
+/usr/bin/iwspy|Tool: Get wireless statistics from specific nodes
+/usr/bin/rfkill|Tool: Tool for enabling and disabling wireless devices
+/usr/bin/bluetoothctl|Tool: Command-line interface for Bluetooth devices
+/usr/bin/obexd|Daemon: OBEX server for Bluetooth file transfers
+/usr/bin/hciattach|Tool: Attach a serial device to the BlueZ stack via UART HCI
+/usr/bin/hciconfig|Tool: Configure Bluetooth devices (deprecated)
+/usr/bin/hcitool|Tool: Configure Bluetooth connections and send local HCI commands
+/usr/bin/sdptool|Tool: Control and interrogate SDP servers
+/usr/bin/gatttool|Tool: Tool for Bluetooth Low Energy (BLE) GATT operations
+/usr/bin/bluez-simple-agent|Tool: Simple agent for Bluetooth pairing
+/usr/bin/blueman-applet|App: Blueman Bluetooth manager applet
+/usr/bin/blueman-manager|App: Blueman Bluetooth manager
+/usr/bin/blueman-adapters|App: Blueman Bluetooth adapters configuration
+/usr/bin/blueman-services|App: Blueman Bluetooth services configuration
+/usr/bin/blueman-sendto|App: Blueman Bluetooth file sender
+/usr/bin/gnome-bluetooth|App: GNOME Bluetooth tools
+/usr/bin/kbluetooth|App: KDE Bluetooth tools
+/usr/bin/bluez-cups|System: CUPS backend for Bluetooth printers
+/usr/bin/bluez-obexd|Daemon: BlueZ OBEX daemon
+/usr/bin/bluez-test-device|Tool: BlueZ device testing tool
+/usr/bin/bluez-test-adapter|Tool: BlueZ adapter testing tool
+/usr/bin/bluez-test-discovery|Tool: BlueZ discovery testing tool
+/usr/bin/bluez-test-manager|Tool: BlueZ manager testing tool
+/usr/bin/bluez-test-network|Tool: BlueZ network testing tool
+/usr/bin/bluez-test-serial|Tool: BlueZ serial testing tool
+/usr/bin/bluez-test-telephony|Tool: BlueZ telephony testing tool
+/usr/bin/bluez-test-input|Tool: BlueZ input testing tool
+/usr/bin/bluez-test-sap|Tool: BlueZ SAP testing tool
+/usr/bin/bluez-test-health|Tool: BlueZ health testing tool
+/usr/bin/bluez-test-profile|Tool: BlueZ profile testing tool
+/usr/bin/bluez-test-service|Tool: BlueZ service testing tool
+/usr/bin/bluez-test-heartrate|Tool: BlueZ heartrate testing tool
+/usr/bin/bluez-test-proximity|Tool: BlueZ proximity testing tool
+/usr/bin/bluez-test-thermometer|Tool: BlueZ thermometer testing tool
+/usr/bin/bluez-test-alert|Tool: BlueZ alert testing tool
+/usr/bin/bluez-test-time|Tool: BlueZ time testing tool
+/usr/bin/bluez-test-cyclingspeed|Tool: BlueZ cycling speed testing tool
+/usr/bin/bluez-test-location|Tool: BlueZ location testing tool
+/usr/bin/bluez-test-navigation|Tool: BlueZ navigation testing tool
+/usr/bin/bluez-test-scanparam|Tool: BlueZ scan parameter testing tool
+/usr/bin/bluez-test-csc|Tool: BlueZ cycling speed and cadence testing tool
+/usr/bin/bluez-test-rsc|Tool: BlueZ running speed and cadence testing tool
+/usr/bin/bluez-test-paserver|Tool: BlueZ PA server testing tool
+/usr/bin/bluez-test-pa|Tool: BlueZ PA testing tool
+/usr/bin/bluez-test-audio|Tool: BlueZ audio testing tool
+/usr/bin/bluez-test-video|Tool: BlueZ video testing tool
+/usr/bin/bluez-test-image|Tool: BlueZ image testing tool
+/usr/bin/bluez-test-printing|Tool: BlueZ printing testing tool
+/usr/bin/bluez-test-transfer|Tool: BlueZ transfer testing tool
+/usr/bin/bluez-test-opp|Tool: BlueZ OPP testing tool
+/usr/bin/bluez-test-ftp|Tool: BlueZ FTP testing tool
+/usr/bin/bluez-test-pbap|Tool: BlueZ PBAP testing tool
+/usr/bin/bluez-test-map|Tool: BlueZ MAP testing tool
+/usr/bin/bluez-test-sap-server|Tool: BlueZ SAP server testing tool
+/usr/bin/bluez-test-hfp|Tool: BlueZ HFP testing tool
+/usr/bin/bluez-test-dun|Tool: BlueZ DUN testing tool
+/usr/bin/bluez-test-pan|Tool: BlueZ PAN testing tool
+/usr/bin/bluez-test-hdp|Tool: BlueZ HDP testing tool
+/usr/bin/bluez-test-avrcp|Tool: BlueZ AVRCP testing tool
+/usr/bin/bluez-test-a2dp|Tool: BlueZ A2DP testing tool
+/usr/bin/bluez-test-vdp|Tool: BlueZ VDP testing tool
+/usr/bin/bluez-test-bip|Tool: BlueZ BIP testing tool
+/usr/bin/bluez-test-opp-server|Tool: BlueZ OPP server testing tool
+/usr/bin/bluez-test-ftp-server|Tool: BlueZ FTP server testing tool
+/usr/bin/bluez-test-pbap-server|Tool: BlueZ PBAP server testing tool
+/usr/bin/bluez-test-map-server|Tool: BlueZ MAP server testing tool
+/usr/bin/bluez-test-hfp-server|Tool: BlueZ HFP server testing tool
+/usr/bin/bluez-test-dun-server|Tool: BlueZ DUN server testing tool
+/usr/bin/bluez-test-pan-server|Tool: BlueZ PAN server testing tool
+/usr/bin/bluez-test-hdp-server|Tool: BlueZ HDP server testing tool
+/usr/bin/bluez-test-avrcp-server|Tool: BlueZ AVRCP server testing tool
+/usr/bin/bluez-test-a2dp-server|Tool: BlueZ A2DP server testing tool
+/usr/bin/bluez-test-vdp-server|Tool: BlueZ VDP server testing tool
+/usr/bin/bluez-test-bip-server|Tool: BlueZ BIP server testing tool
+/usr/bin/bluez-test-opp-client|Tool: BlueZ OPP client testing tool
+/usr/bin/bluez-test-ftp-client|Tool: BlueZ FTP client testing tool
+/usr/bin/bluez-test-pbap-client|Tool: BlueZ PBAP client testing tool
+/usr/bin/bluez-test-map-client|Tool: BlueZ MAP client testing tool
+/usr/bin/bluez-test-hfp-client|Tool: BlueZ HFP client testing tool
+/usr/bin/bluez-test-dun-client|Tool: BlueZ DUN client testing tool
+/usr/bin/bluez-test-pan-client|Tool: BlueZ PAN client testing tool
+/usr/bin/bluez-test-hdp-client|Tool: BlueZ HDP client testing tool
+/usr/bin/bluez-test-avrcp-client|Tool: BlueZ AVRCP client testing tool
+/usr/bin/bluez-test-a2dp-client|Tool: BlueZ A2DP client testing tool
+/usr/bin/bluez-test-vdp-client|Tool: BlueZ VDP client testing tool
+/usr/bin/bluez-test-bip-client|Tool: BlueZ BIP client testing tool
+/usr/bin/pavucontrol|App: PulseAudio Volume Control
+/usr/bin/pulseaudio|Daemon: Sound server for POSIX and Win32 systems
+/usr/bin/pipewire|Daemon: Multimedia framework for handling audio, video, and hardware
+/usr/bin/pipewire-pulse|Daemon: PulseAudio compatibility layer for PipeWire
+/usr/bin/wireplumber|Daemon: Session manager for PipeWire
+/usr/bin/jackd|Daemon: JACK Audio Connection Kit daemon
+/usr/bin/alsamixer|Tool: Ncurses-based mixer for ALSA sound card drivers
+/usr/bin/amixer|Tool: Command-line mixer for ALSA sound card drivers
+/usr/bin/aplay|Tool: Command-line sound player for ALSA sound card drivers
+/usr/bin/arecord|Tool: Command-line sound recorder for ALSA sound card drivers
+/usr/bin/speaker-test|Tool: Command-line speaker test utility for ALSA
+/usr/bin/pacmd|Tool: Command-line tool to reconfigure a PulseAudio sound server
+/usr/bin/pactl|Tool: Control a running PulseAudio sound server
+/usr/bin/pasuspender|Tool: Suspend a running PulseAudio sound server
+/usr/bin/paplay|Tool: Play audio files on a PulseAudio sound server
+/usr/bin/parecord|Tool: Record audio files from a PulseAudio sound server
+/usr/bin/pamon|Tool: Monitor audio streams on a PulseAudio sound server
+/usr/bin/parecat|Tool: Record audio files from a PulseAudio sound server
+/usr/bin/pacat|Tool: Play or record audio files on a PulseAudio sound server
+/usr/bin/pw-cat|Tool: Play or record audio files on a PipeWire sound server
+/usr/bin/pw-play|Tool: Play audio files on a PipeWire sound server
+/usr/bin/pw-record|Tool: Record audio files from a PipeWire sound server
+/usr/bin/pw-mon|Tool: Monitor PipeWire resources
+/usr/bin/pw-cli|Tool: Command-line interface for PipeWire
+/usr/bin/pw-dot|Tool: Generate a Graphviz dot file for PipeWire
+/usr/bin/pw-top|Tool: Display PipeWire resource usage
+/usr/bin/pw-dump|Tool: Dump PipeWire state
+/usr/bin/pw-link|Tool: Manage PipeWire links
+/usr/bin/pw-loopback|Tool: Create a loopback PipeWire node
+/usr/bin/pw-midiplay|Tool: Play MIDI files on a PipeWire sound server
+/usr/bin/pw-midirecord|Tool: Record MIDI files from a PipeWire sound server
+/usr/bin/pw-profiler|Tool: Profile PipeWire performance
+/usr/bin/pw-reserve|Tool: Reserve a PipeWire device
+/usr/bin/pw-metadata|Tool: Manage PipeWire metadata
+/usr/bin/pw-v4l2|Tool: Video4Linux2 wrapper for PipeWire
+/usr/bin/pw-jack|Tool: JACK wrapper for PipeWire
+/usr/bin/pw-alsa|Tool: ALSA wrapper for PipeWire
+/usr/bin/gst-launch-1.0|Tool: Build and run a GStreamer pipeline
+/usr/bin/gst-inspect-1.0|Tool: Print information about GStreamer plugins
+/usr/bin/gst-discoverer-1.0|Tool: Discover GStreamer media information
+/usr/bin/gst-device-monitor-1.0|Tool: Monitor GStreamer devices
+/usr/bin/gst-play-1.0|Tool: Simple GStreamer playback tool
+/usr/bin/gst-stats-1.0|Tool: Print GStreamer statistics
+/usr/bin/gst-typefind-1.0|Tool: Print GStreamer media type
+/usr/bin/ffmpeg|Tool: Universal multimedia converter and streamer
+/usr/bin/ffplay|Tool: Simple media player based on FFmpeg
+/usr/bin/ffprobe|Tool: Multimedia stream analyzer based on FFmpeg
+/usr/bin/mpv|App: Free and open-source media player software
+/usr/bin/vlc|App: Cross-platform multimedia player and framework
+/usr/bin/totem|App: Video player for GNOME
+/usr/bin/dragon|App: Simple video player for KDE
+/usr/bin/smplayer|App: Graphical frontend for MPlayer/mpv
+/usr/bin/audacious|App: Lightweight and versatile audio player
+/usr/bin/clementine|App: Modern music player and library organizer
+/usr/bin/amarok|App: Powerful music player and library manager for KDE
+/usr/bin/quodlibet|App: Music management application and player
+/usr/bin/strawberry|App: Music player and organizer forked from Clementine
+/usr/bin/lollypop|App: GNOME music playing application
+/usr/bin/gnome-music|App: Music player for GNOME
+/usr/bin/elisa|App: Simple and modern music player for KDE
+/usr/bin/sayonara|App: Lightweight music player for Linux
+/usr/bin/cantata|App: Graphical client for MPD (Music Player Daemon)
+/usr/bin/mpd|Daemon: Music Player Daemon for playing music
+/usr/bin/mpc|Tool: Command-line client for MPD
+/usr/bin/ncmpcpp|App: Ncurses-based client for MPD
+/usr/bin/ncmpc|App: Curses-based client for MPD
+/usr/bin/beets|Tool: Media library management system for music geeks
+/usr/bin/picard|App: Cross-platform music tagger based on MusicBrainz
+/usr/bin/easytag|App: Simple application for viewing and editing tags in audio files
+/usr/bin/kid3|App: Audio tag editor for many formats
+/usr/bin/puddletag|App: Powerful audio tag editor for Linux
+/usr/bin/sound-juicer|App: CD ripper for GNOME
+/usr/bin/k3b|App: Full-featured CD/DVD/Blu-ray burning application for KDE
+/usr/bin/brasero|App: CD/DVD burning application for GNOME
+/usr/bin/xfburn|App: Lightweight CD/DVD burning application for Xfce
+/usr/bin/handbrake|App: Open-source video transcoder
+/usr/bin/makemkv|App: Tool for converting video from proprietary discs into MKV
+/usr/bin/mkvtoolnix-gui|App: GUI for MKVToolNix tools
+/usr/bin/mkvmerge|Tool: Merge multimedia streams into an MKV file
+/usr/bin/mkvinfo|Tool: Print information about MKV files
+/usr/bin/mkvextract|Tool: Extract tracks/data from MKV files
+/usr/bin/mkvpropedit|Tool: Edit properties of MKV files without remuxing
+/usr/bin/subtitleeditor|App: GTK+3 tool to edit subtitles
+/usr/bin/gaupol|App: Editor for text-based subtitle files
+/usr/bin/aegisub|App: Advanced subtitle editor
+/usr/bin/openshot|App: Open-source video editor
+/usr/bin/kdenlive|App: Non-linear video editor for KDE
+/usr/bin/shotcut|App: Free, open-source, cross-platform video editor
+/usr/bin/pitivi|App: Free and open-source video editor for Linux
+/usr/bin/flowblade|App: Multitrack non-linear video editor for Linux
+/usr/bin/olive-editor|App: Fast, powerful, and free video editing software
+/usr/bin/blender|App: Free and open-source 3D creation suite
+/usr/bin/inkscape|App: Professional vector graphics editor
+/usr/bin/gimp|App: GNU Image Manipulation Program
+/usr/bin/krita|App: Professional free and open-source painting program
+/usr/bin/darktable|App: Open-source photography workflow application and raw developer
+/usr/bin/rawtherapee|App: Powerful cross-platform raw photo processing system
+/usr/bin/digikam|App: Advanced open-source photo management application
+/usr/bin/shotwell|App: Personal photo manager for GNOME
+/usr/bin/gwenview|App: Fast and easy-to-use image viewer for KDE
+/usr/bin/eog|App: Eye of GNOME image viewer
+/usr/bin/ristretto|App: Lightweight image viewer for Xfce
+/usr/bin/nomacs|App: Free, open-source image viewer
+/usr/bin/feh|Tool: Lightweight and versatile image viewer
+/usr/bin/sxiv|Tool: Simple X Image Viewer
+/usr/bin/imv|Tool: Image viewer for Wayland and X11
+/usr/bin/geeqie|App: Lightweight GTK+ based image viewer
+/usr/bin/gthumb|App: Image viewer and browser for GNOME
+/usr/bin/mirage|App: Fast and simple GTK+ image viewer
+/usr/bin/viewnior|App: Fast and simple image viewer
+/usr/bin/swaybg|Tool: Wallpaper setter for Wayland compositors
+/usr/bin/feh|Tool: Wallpaper setter and image viewer
+/usr/bin/nitrogen|App: Background browser and setter for X11
+/usr/bin/variety|App: Wallpaper manager for Linux
+/usr/bin/flameshot|App: Powerful yet simple-to-use screenshot software
+/usr/bin/spectacle|App: Screenshot capture utility for KDE
+/usr/bin/gnome-screenshot|App: Screenshot capture utility for GNOME
+/usr/bin/xfce4-screenshooter|App: Screenshot capture utility for Xfce
+/usr/bin/kazam|App: Simple screen recording program
+/usr/bin/simplescreenrecorder|App: Feature-rich screen recorder for Linux
+/usr/bin/peek|App: Simple screen recorder with an animated GIF output
+/usr/bin/kooha|App: Simple screen recorder for GNOME
+/usr/bin/bluez-test-audio|Tool: BlueZ audio testing tool
+/usr/bin/bluez-test-video|Tool: BlueZ video testing tool
+/usr/bin/bluez-test-image|Tool: BlueZ image testing tool
+/usr/bin/bluez-test-printing|Tool: BlueZ printing testing tool
+/usr/bin/bluez-test-transfer|Tool: BlueZ transfer testing tool
+/usr/bin/bluez-test-opp|Tool: BlueZ OPP testing tool
+/usr/bin/bluez-test-ftp|Tool: BlueZ FTP testing tool
+/usr/bin/bluez-test-pbap|Tool: BlueZ PBAP testing tool
+/usr/bin/bluez-test-map|Tool: BlueZ MAP testing tool
+/usr/bin/bluez-test-sap-server|Tool: BlueZ SAP server testing tool
+/usr/bin/bluez-test-hfp|Tool: BlueZ HFP testing tool
+/usr/bin/bluez-test-dun|Tool: BlueZ DUN testing tool
+/usr/bin/bluez-test-pan|Tool: BlueZ PAN testing tool
+/usr/bin/bluez-test-hdp|Tool: BlueZ HDP testing tool
+/usr/bin/bluez-test-avrcp|Tool: BlueZ AVRCP testing tool
+/usr/bin/bluez-test-a2dp|Tool: BlueZ A2DP testing tool
+/usr/bin/bluez-test-vdp|Tool: BlueZ VDP testing tool
+/usr/bin/bluez-test-bip|Tool: BlueZ BIP testing tool
+/usr/bin/bluez-test-opp-server|Tool: BlueZ OPP server testing tool
+/usr/bin/bluez-test-ftp-server|Tool: BlueZ FTP server testing tool
+/usr/bin/bluez-test-pbap-server|Tool: BlueZ PBAP server testing tool
+/usr/bin/bluez-test-map-server|Tool: BlueZ MAP server testing tool
+/usr/bin/bluez-test-hfp-server|Tool: BlueZ HFP server testing tool
+/usr/bin/bluez-test-dun-server|Tool: BlueZ DUN server testing tool
+/usr/bin/bluez-test-pan-server|Tool: BlueZ PAN server testing tool
+/usr/bin/bluez-test-hdp-server|Tool: BlueZ HDP server testing tool
+/usr/bin/bluez-test-avrcp-server|Tool: BlueZ AVRCP server testing tool
+/usr/bin/bluez-test-a2dp-server|Tool: BlueZ A2DP server testing tool
+/usr/bin/bluez-test-vdp-server|Tool: BlueZ VDP server testing tool
+/usr/bin/bluez-test-bip-server|Tool: BlueZ BIP server testing tool
+/usr/bin/bluez-test-opp-client|Tool: BlueZ OPP client testing tool
+/usr/bin/bluez-test-ftp-client|Tool: BlueZ FTP client testing tool
+/usr/bin/bluez-test-pbap-client|Tool: BlueZ PBAP client testing tool
+/usr/bin/bluez-test-map-client|Tool: BlueZ MAP client testing tool
+/usr/bin/bluez-test-hfp-client|Tool: BlueZ HFP client testing tool
+/usr/bin/bluez-test-dun-client|Tool: BlueZ DUN client testing tool
+/usr/bin/bluez-test-pan-client|Tool: BlueZ PAN client testing tool
+/usr/bin/bluez-test-hdp-client|Tool: BlueZ HDP client testing tool
+/usr/bin/bluez-test-avrcp-client|Tool: BlueZ AVRCP client testing tool
+/usr/bin/bluez-test-a2dp-client|Tool: BlueZ A2DP client testing tool
+/usr/bin/bluez-test-vdp-client|Tool: BlueZ VDP client testing tool
+/usr/bin/bluez-test-bip-client|Tool: BlueZ BIP client testing tool
+/usr/bin/pavucontrol|App: PulseAudio Volume Control
+/usr/bin/pulseaudio|Daemon: Sound server for POSIX and Win32 systems
+/usr/bin/pipewire|Daemon: Multimedia framework for handling audio, video, and hardware
+/usr/bin/pipewire-pulse|Daemon: PulseAudio compatibility layer for PipeWire
+/usr/bin/wireplumber|Daemon: Session manager for PipeWire
+/usr/bin/jackd|Daemon: JACK Audio Connection Kit daemon
+/usr/bin/alsamixer|Tool: Ncurses-based mixer for ALSA sound card drivers
+/usr/bin/amixer|Tool: Command-line mixer for ALSA sound card drivers
+/usr/bin/aplay|Tool: Command-line sound player for ALSA sound card drivers
+/usr/bin/arecord|Tool: Command-line sound recorder for ALSA sound card drivers
+/usr/bin/speaker-test|Tool: Command-line speaker test utility for ALSA
+/usr/bin/pacmd|Tool: Command-line tool to reconfigure a PulseAudio sound server
+/usr/bin/pactl|Tool: Control a running PulseAudio sound server
+/usr/bin/pasuspender|Tool: Suspend a running PulseAudio sound server
+/usr/bin/paplay|Tool: Play audio files on a PulseAudio sound server
+/usr/bin/parecord|Tool: Record audio files from a PulseAudio sound server
+/usr/bin/pamon|Tool: Monitor audio streams on a PulseAudio sound server
+/usr/bin/parecat|Tool: Record audio files from a PulseAudio sound server
+/usr/bin/pacat|Tool: Play or record audio files on a PulseAudio sound server
+/usr/bin/pw-cat|Tool: Play or record audio files on a PipeWire sound server
+/usr/bin/pw-play|Tool: Play audio files on a PipeWire sound server
+/usr/bin/pw-record|Tool: Record audio files from a PipeWire sound server
+/usr/bin/pw-mon|Tool: Monitor PipeWire resources
+/usr/bin/pw-cli|Tool: Command-line interface for PipeWire
+/usr/bin/pw-dot|Tool: Generate a Graphviz dot file for PipeWire
+/usr/bin/pw-top|Tool: Display PipeWire resource usage
+/usr/bin/pw-dump|Tool: Dump PipeWire state
+/usr/bin/pw-link|Tool: Manage PipeWire links
+/usr/bin/pw-loopback|Tool: Create a loopback PipeWire node
+/usr/bin/pw-midiplay|Tool: Play MIDI files on a PipeWire sound server
+/usr/bin/pw-midirecord|Tool: Record MIDI files from a PipeWire sound server
+/usr/bin/pw-profiler|Tool: Profile PipeWire performance
+/usr/bin/pw-reserve|Tool: Reserve a PipeWire device
+/usr/bin/pw-metadata|Tool: Manage PipeWire metadata
+/usr/bin/pw-v4l2|Tool: Video4Linux2 wrapper for PipeWire
+/usr/bin/pw-jack|Tool: JACK wrapper for PipeWire
+/usr/bin/pw-alsa|Tool: ALSA wrapper for PipeWire
+/usr/bin/gst-launch-1.0|Tool: Build and run a GStreamer pipeline
+/usr/bin/gst-inspect-1.0|Tool: Print information about GStreamer plugins
+/usr/bin/gst-discoverer-1.0|Tool: Discover GStreamer media information
+/usr/bin/gst-device-monitor-1.0|Tool: Monitor GStreamer devices
+/usr/bin/gst-play-1.0|Tool: Simple GStreamer playback tool
+/usr/bin/gst-stats-1.0|Tool: Print GStreamer statistics
+/usr/bin/gst-typefind-1.0|Tool: Print GStreamer media type
+/usr/bin/ffmpeg|Tool: Universal multimedia converter and streamer
+/usr/bin/ffplay|Tool: Simple media player based on FFmpeg
+/usr/bin/ffprobe|Tool: Multimedia stream analyzer based on FFmpeg
+/usr/bin/totem|App: Video player for GNOME
+/usr/bin/dragon|App: Simple video player for KDE
+/usr/bin/smplayer|App: Graphical frontend for MPlayer/mpv
+/usr/bin/audacious|App: Lightweight and versatile audio player
+/usr/bin/clementine|App: Modern music player and library organizer
+/usr/bin/amarok|App: Powerful music player and library manager for KDE
+/usr/bin/quodlibet|App: Music management application and player
+/usr/bin/strawberry|App: Music player and organizer forked from Clementine
+/usr/bin/lollypop|App: GNOME music playing application
+/usr/bin/gnome-music|App: Music player for GNOME
+/usr/bin/elisa|App: Simple and modern music player for KDE
+/usr/bin/sayonara|App: Lightweight music player for Linux
+/usr/bin/cantata|App: Graphical client for MPD (Music Player Daemon)
+/usr/bin/mpd|Daemon: Music Player Daemon for playing music
+/usr/bin/mpc|Tool: Command-line client for MPD
+/usr/bin/ncmpcpp|App: Ncurses-based client for MPD
+/usr/bin/ncmpc|App: Curses-based client for MPD
+/usr/bin/beets|Tool: Media library management system for music geeks
+/usr/bin/picard|App: Cross-platform music tagger based on MusicBrainz
+/usr/bin/easytag|App: Simple application for viewing and editing tags in audio files
+/usr/bin/kid3|App: Audio tag editor for many formats
+/usr/bin/puddletag|App: Powerful audio tag editor for Linux
+/usr/bin/sound-juicer|App: CD ripper for GNOME
+/usr/bin/k3b|App: Full-featured CD/DVD/Blu-ray burning application for KDE
+/usr/bin/brasero|App: CD/DVD burning application for GNOME
+/usr/bin/xfburn|App: Lightweight CD/DVD burning application for Xfce
+/usr/bin/handbrake|App: Open-source video transcoder
+/usr/bin/makemkv|App: Tool for converting video from proprietary discs into MKV
+/usr/bin/mkvtoolnix-gui|App: GUI for MKVToolNix tools
+/usr/bin/mkvmerge|Tool: Merge multimedia streams into an MKV file
+/usr/bin/mkvinfo|Tool: Print information about MKV files
+/usr/bin/mkvextract|Tool: Extract tracks/data from MKV files
+/usr/bin/mkvpropedit|Tool: Edit properties of MKV files without remuxing
+/usr/bin/subtitleeditor|App: GTK+3 tool to edit subtitles
+/usr/bin/gaupol|App: Editor for text-based subtitle files
+/usr/bin/aegisub|App: Advanced subtitle editor
+/usr/bin/openshot|App: Open-source video editor
+/usr/bin/kdenlive|App: Non-linear video editor for KDE
+/usr/bin/shotcut|App: Free, open-source, cross-platform video editor
+/usr/bin/pitivi|App: Free and open-source video editor for Linux
+/usr/bin/flowblade|App: Multitrack non-linear video editor for Linux
+/usr/bin/olive-editor|App: Fast, powerful, and free video editing software
+/usr/bin/blender|App: Free and open-source 3D creation suite
+/usr/bin/inkscape|App: Professional vector graphics editor
+/usr/bin/gimp|App: GNU Image Manipulation Program
+/usr/bin/krita|App: Professional free and open-source painting program
+/usr/bin/darktable|App: Open-source photography workflow application and raw developer
+/usr/bin/rawtherapee|App: Powerful cross-platform raw photo processing system
+/usr/bin/digikam|App: Advanced open-source photo management application
+/usr/bin/shotwell|App: Personal photo manager for GNOME
+/usr/bin/gwenview|App: Fast and easy-to-use image viewer for KDE
+/usr/bin/eog|App: Eye of GNOME image viewer
+/usr/bin/ristretto|App: Lightweight image viewer for Xfce
+/usr/bin/nomacs|App: Free, open-source image viewer
+/usr/bin/feh|Tool: Lightweight and versatile image viewer
+/usr/bin/sxiv|Tool: Simple X Image Viewer
+/usr/bin/imv|Tool: Image viewer for Wayland and X11
+/usr/bin/geeqie|App: Lightweight GTK+ based image viewer
+/usr/bin/gthumb|App: Image viewer and browser for GNOME
+/usr/bin/mirage|App: Fast and simple GTK+ image viewer
+/usr/bin/viewnior|App: Fast and simple image viewer
+/usr/bin/swaybg|Tool: Wallpaper setter for Wayland compositors
+/usr/bin/nitrogen|App: Background browser and setter for X11
+/usr/bin/variety|App: Wallpaper manager for Linux
+/usr/bin/flameshot|App: Powerful yet simple-to-use screenshot software
+/usr/bin/spectacle|App: Screenshot capture utility for KDE
+/usr/bin/gnome-screenshot|App: Screenshot capture utility for GNOME
+/usr/bin/xfce4-screenshooter|App: Screenshot capture utility for Xfce
+/usr/bin/kazam|App: Simple screen recording program
+/usr/bin/simplescreenrecorder|App: Feature-rich screen recorder for Linux
+/usr/bin/peek|App: Simple screen recorder with an animated GIF output
+/usr/bin/kooha|App: Simple screen recorder for GNOME
+/usr/bin/gnome-terminal|App: Default terminal emulator for GNOME
+/usr/bin/konsole|App: Powerful terminal emulator for KDE
+/usr/bin/xfce4-terminal|App: Terminal emulator for Xfce
+/usr/bin/mate-terminal|App: Terminal emulator for MATE
+/usr/bin/alacritty|App: Fast, GPU-accelerated terminal emulator
+/usr/bin/kitty|App: Fast, feature-rich, GPU-based terminal emulator
+/usr/bin/terminator|App: Multiple terminals in one window
+/usr/bin/tilix|App: Tiling terminal emulator for GNOME
+/usr/bin/guake|App: Drop-down terminal for GNOME
+/usr/bin/yakuake|App: Drop-down terminal for KDE
+/usr/bin/tilda|App: Drop-down terminal emulator
+/usr/bin/st|App: Simple terminal implementation for X
+/usr/bin/rxvt-unicode|App: Customizable terminal emulator (urxvt)
+/usr/bin/xterm|App: Standard terminal emulator for the X Window System
+/usr/bin/foot|App: Fast, lightweight and minimalistic Wayland terminal emulator
+/usr/bin/wezterm|App: GPU-accelerated cross-platform terminal emulator and multiplexer
+/usr/bin/tmux|Tool: Terminal multiplexer
+/usr/bin/screen|Tool: Full-screen window manager that multiplexes a physical terminal
+/usr/bin/htop|Tool: Interactive process viewer
+/usr/bin/top|Tool: Display Linux processes
+/usr/bin/btop|Tool: Resource monitor that shows usage and stats
+/usr/bin/glances|Tool: Cross-platform system monitoring tool
+/usr/bin/nmon|Tool: Performance monitor for Linux
+/usr/bin/iotop|Tool: Simple top-like I/O monitor
+/usr/bin/atop|Tool: Advanced System and Process Monitor
+/usr/bin/powertop|Tool: Optimize power consumption on Linux
+/usr/bin/df|Tool: Report file system disk space usage
+/usr/bin/du|Tool: Estimate file space usage
+/usr/bin/lsblk|Tool: List block devices
+/usr/bin/fdisk|Tool: Manipulate disk partition table
+/usr/bin/gdisk|Tool: Interactive GUID partition table (GPT) manipulator
+/usr/bin/parted|Tool: Partition manipulation program
+/usr/bin/gparted|App: Graphical partition editor
+/usr/bin/mount|Tool: Mount a filesystem
+/usr/bin/umount|Tool: Unmount file systems
+/usr/bin/ls|Tool: List directory contents
+/usr/bin/cp|Tool: Copy files and directories
+/usr/bin/mv|Tool: Move (rename) files
+/usr/bin/rm|Tool: Remove files or directories
+/usr/bin/mkdir|Tool: Make directories
+/usr/bin/rmdir|Tool: Remove empty directories
+/usr/bin/ln|Tool: Make links between files
+/usr/bin/chmod|Tool: Change file mode bits
+/usr/bin/chown|Tool: Change file owner and group
+/usr/bin/chgrp|Tool: Change group ownership
+/usr/bin/touch|Tool: Change file timestamps
+/usr/bin/cat|Tool: Concatenate files and print on the standard output
+/usr/bin/less|Tool: Opposite of more
+/usr/bin/more|Tool: File perusal filter for crt viewing
+/usr/bin/grep|Tool: Print lines that match patterns
+/usr/bin/sed|Tool: Stream editor for filtering and transforming text
+/usr/bin/awk|Tool: Pattern scanning and processing language
+/usr/bin/find|Tool: Search for files in a directory hierarchy
+/usr/bin/locate|Tool: Find files by name
+/usr/bin/updatedb|Tool: Update a database for mlocate
+/usr/bin/whereis|Tool: Locate the binary, source, and manual page files for a command
+/usr/bin/which|Tool: Locate a command
+/usr/bin/type|Tool: Indicate how a name would be interpreted if used as a command name
+/usr/bin/alias|Tool: Define or display aliases
+/usr/bin/unalias|Tool: Remove alias definitions
+/usr/bin/sudo|Tool: Execute a command as another user
+/usr/bin/su|Tool: Change user ID or become superuser
+/usr/bin/doas|Tool: Execute commands as another user
+/usr/bin/pkexec|Tool: Execute a command as another user via polkit
+/usr/bin/visudo|Tool: Safely edit the sudoers file
+/usr/bin/passwd|Tool: Change user password
+/usr/bin/useradd|Tool: Create a new user or update default new user information
+/usr/bin/userdel|Tool: Delete a user account and related files
+/usr/bin/usermod|Tool: Modify a user account
+/usr/bin/groupadd|Tool: Create a new group
+/usr/bin/groupdel|Tool: Delete a group
+/usr/bin/groupmod|Tool: Modify a group definition on the system
+/usr/bin/groups|Tool: Print the groups a user is in
+/usr/bin/id|Tool: Print real and effective user and group IDs
+/usr/bin/last|Tool: Show a listing of last logged in users
+/usr/bin/who|Tool: Show who is logged on
+/usr/bin/w|Tool: Show who is logged on and what they are doing
+/usr/bin/uptime|Tool: Tell how long the system has been running
+/usr/bin/free|Tool: Display amount of free and used memory in the system
+/usr/bin/vmstat|Tool: Report virtual memory statistics
+/usr/bin/iostat|Tool: Report Central Processing Unit (CPU) statistics and input/output statistics
+/usr/bin/sar|Tool: Collect, report, or save system activity information
+/usr/bin/dmesg|Tool: Print or control the kernel ring buffer
+/usr/bin/journalctl|Tool: Query and display logs from journald
+/usr/bin/logger|Tool: Enter messages into the system log
+/usr/bin/logrotate|Tool: Rotates, compresses, and mails system logs
+/usr/bin/systemctl|Tool: Control the systemd system and service manager
+/usr/bin/hostnamectl|Tool: Control the system hostname
+/usr/bin/localectl|Tool: Control the system locale and keyboard layout settings
+/usr/bin/timedatectl|Tool: Control the system time and date
+/usr/bin/loginctl|Tool: Control the systemd login manager
+/usr/bin/busctl|Tool: Introspect and monitor the D-Bus bus
+/usr/bin/networkctl|Tool: Query the status of network links
+/usr/bin/resolvectl|Tool: Resolve domain names, IPV4 and IPv6 addresses, DNS resource records, and services
+/usr/bin/bootctl|Tool: Control EFI firmware boot settings and manage boot loader
+/usr/bin/kernel-install|Tool: Add and remove kernel and initramfs images to and from /boot
+/usr/bin/dracut|Tool: Low-level tool for generating an initramfs image
+/usr/bin/grub2-mkconfig|Tool: Generate a grub config file
+/usr/bin/grub2-install|Tool: Install GRUB on your drive
+/usr/bin/efibootmgr|Tool: Manipulate the EFI Boot Manager
+/usr/bin/lsmod|Tool: Show the status of modules in the Linux Kernel
+/usr/bin/modprobe|Tool: Add and remove modules from the Linux Kernel
+/usr/bin/insmod|Tool: Simple program to insert a module into the Linux Kernel
+/usr/bin/rmmod|Tool: Simple program to remove a module from the Linux Kernel
+/usr/bin/modinfo|Tool: Show information about a Linux Kernel module
+/usr/bin/lspci|Tool: List all PCI devices
+/usr/bin/lsusb|Tool: List USB devices
+/usr/bin/lscpu|Tool: Display information about the CPU architecture
+/usr/bin/lshw|Tool: List hardware configuration
+/usr/bin/dmidecode|Tool: Dump a computer's DMI table contents in a human-readable format
+/usr/bin/hwinfo|Tool: Hardware identification system
+/usr/bin/sensors|Tool: Print sensors information
+/usr/bin/acpi|Tool: Shows battery status and other ACPI information
+/usr/bin/upower|Tool: Command-line tool for power management
+/usr/bin/tsh|Tool: Teleport SSH client
+/usr/bin/teleport|Daemon: Teleport Access Plane daemon
+/usr/bin/tailscale|Tool: Tailscale CLI client
+/usr/bin/warp-cli|Tool: Cloudflare WARP CLI client
+/usr/bin/mullvad|Tool: Mullvad VPN CLI client
+/usr/bin/nordvpn|Tool: NordVPN CLI client
+/usr/bin/expressvpn|Tool: ExpressVPN CLI client
+/usr/bin/protonvpn|Tool: ProtonVPN CLI client
+/usr/bin/piactl|Tool: Private Internet Access CLI client
+/usr/bin/windscribe|Tool: Windscribe VPN CLI client
+/usr/bin/ivpn|Tool: IVPN CLI client
+/usr/bin/bitwarden|App: Desktop password manager
+/usr/bin/bw|Tool: Bitwarden CLI
+/usr/bin/keepassxc|App: Cross-platform community-driven port of KeePass
+/usr/bin/keepass2|App: Password safe that helps you to manage your passwords
+/usr/bin/password-store|Tool: The standard unix password manager (pass)
+/usr/bin/gopass|Tool: The slightly more awesome standard unix password manager
+/usr/bin/authy|App: Two-factor authentication (2FA) desktop client
+/usr/bin/yubioath-desktop|App: Yubico Authenticator for Desktop
+/usr/bin/yubikey-manager-qt|App: Yubikey Manager graphical interface
+/usr/bin/ykman|Tool: YubiKey Manager CLI
+/usr/bin/gnome-keyring|Daemon: Keeps passwords and other secrets for users
+/usr/bin/seahorse|App: GNOME application for managing encryption keys and passwords in the GNOME Keyring
+/usr/bin/kwalletmanager5|App: KDE Wallet management tool
+/usr/bin/kleopatra|App: Certificate manager and unified crypto GUI for KDE
+/usr/bin/gpg|Tool: OpenPGP encryption and signing tool
+/usr/bin/gpg-agent|Daemon: Secret key management for GnuPG
+/usr/bin/gpgconf|Tool: Modify configuration files of GnuPG
+/usr/bin/gpgsm|Tool: CMS (X.509) encryption and signing tool
+/usr/bin/dirmngr|Daemon: GnuPG's network interface for certificate revocation lists
+/usr/bin/scdaemon|Daemon: GnuPG's smartcard daemon
+/usr/bin/openssl|Tool: Toolkit for Transport Layer Security (TLS) and Secure Sockets Layer (SSL)
+/usr/bin/certbot|Tool: EFF's tool to obtain and renew Let's Encrypt certificates
+/usr/bin/step|Tool: Modern CLI tool for your certificate authority
+/usr/bin/mkcert|Tool: Simple zero-config tool to make locally trusted development certificates
+/usr/bin/trust|Tool: Tool for operating on the system trust policy store
+/usr/bin/update-ca-trust|Tool: Manage the system-wide trust store of CA certificates
+/usr/bin/p11-kit|Tool: Tool for operating on PKCS#11 modules
+/usr/bin/update-crypto-policies|Tool: Tool to manage the system-wide crypto policies
+/usr/bin/firewalld|Daemon: Dynamically managed firewall with support for network/firewall zones
+/usr/bin/firewall-cmd|Tool: Command-line client for firewalld
+/usr/bin/firewall-config|App: Graphical configuration tool for firewalld
+/usr/bin/ufw|Tool: Uncomplicated Firewall
+/usr/bin/gufw|App: Graphical user interface for ufw
+/usr/bin/nft|Tool: Administration tool for the nftables framework
+/usr/bin/iptables|Tool: Administration tool for IPv4 packet filtering and NAT
+/usr/bin/ip6tables|Tool: Administration tool for IPv6 packet filtering and NAT
+/usr/bin/arptables|Tool: Administration tool for ARP packet filtering
+/usr/bin/ebtables|Tool: Administration tool for Ethernet bridge packet filtering
+/usr/bin/ipset|Tool: Tool to manage IP sets in the Linux kernel
+/usr/bin/conntrack|Tool: Command-line interface for the connection tracking system
+/usr/bin/ebtables-nft|Tool: nftables-based Ethernet bridge packet filtering tool
+/usr/bin/iptables-nft|Tool: nftables-based IPv4 packet filtering tool
+/usr/bin/ip6tables-nft|Tool: nftables-based IPv6 packet filtering tool
+/usr/bin/arptables-nft|Tool: nftables-based ARP packet filtering tool
+/usr/bin/ebtables-save|Tool: Save ebtables configuration
+/usr/bin/ebtables-restore|Tool: Restore ebtables configuration
+/usr/bin/iptables-save|Tool: Save iptables configuration
+/usr/bin/iptables-restore|Tool: Restore iptables configuration
+/usr/bin/ip6tables-save|Tool: Save ip6tables configuration
+/usr/bin/ip6tables-restore|Tool: Restore ip6tables configuration
+/usr/bin/nft-save|Tool: Save nftables configuration
+/usr/bin/nft-restore|Tool: Restore nftables configuration
+/usr/bin/tcpdump|Tool: Command-line packet analyzer
+/usr/bin/tshark|Tool: Terminal-based network protocol analyzer
+/usr/bin/dumpcap|Tool: Dump network traffic
+/usr/bin/capinfos|Tool: Print information about capture files
+/usr/bin/editcap|Tool: Edit and/or translate the format of capture files
+/usr/bin/mergecap|Tool: Merge two or more capture files into one
+/usr/bin/reordercap|Tool: Reorder packets of a capture file by timestamp
+/usr/bin/text2pcap|Tool: Generate a capture file from an ASCII hexdump of packets
+/usr/bin/pcap-config|Tool: Get information about the installed pcap library
+/usr/bin/rawshark|Tool: Dump and analyze raw libpcap data
+/usr/bin/wireshark|App: Graphical network protocol analyzer
+/usr/bin/wireshark-gtk|App: Graphical network protocol analyzer (GTK+ version)
+/usr/bin/wireshark-qt|App: Graphical network protocol analyzer (Qt version)
+/usr/bin/tshark|Tool: Terminal-based network protocol analyzer
+/usr/bin/termshark|App: Terminal UI for tshark
+/usr/bin/sniffglue|Tool: Secure multithreaded packet sniffer
+/usr/bin/bettercap|App: The Swiss Army knife for 802.11, BLE and Ethernet networks reconnaissance and MITM attacks
+/usr/bin/ettercap|App: Comprehensive suite for man in the middle attacks
+/usr/bin/mitmproxy|App: Interactive TLS-capable intercepting HTTP proxy
+/usr/bin/mitmdump|Tool: Command-line version of mitmproxy
+/usr/bin/mitmweb|App: Web-based interface for mitmproxy
+/usr/bin/burpsuite|App: Integrated platform for performing security testing of web applications
+/usr/bin/zap|App: OWASP Zed Attack Proxy for finding vulnerabilities in web applications
+/usr/bin/sqlmap|Tool: Automatic SQL injection and database takeover tool
+/usr/bin/hydra|Tool: Network logon cracker
+/usr/bin/john|Tool: John the Ripper password cracker
+/usr/bin/hashcat|Tool: World's fastest and most advanced password recovery utility
+/usr/bin/metasploit|App: Penetration testing framework
+/usr/bin/msfconsole|Tool: Metasploit Framework Console
+/usr/bin/msfvenom|Tool: Metasploit payload generator and encoder
+/usr/bin/msfdb|Tool: Metasploit database management tool
+/usr/bin/msfupdate|Tool: Metasploit Framework update tool
+/usr/bin/msfrpc|Tool: Metasploit Framework RPC server
+/usr/bin/msfrpcd|Daemon: Metasploit Framework RPC daemon
+/usr/bin/social-engineer-toolkit|App: Social Engineering Toolkit (SET)
+/usr/bin/beef-xss|App: The Browser Exploitation Framework (BeEF)
+/usr/bin/aircrack-ng|Tool: 802.11 WEP and WPA-PSK keys cracking program
+/usr/bin/airodump-ng|Tool: Packet capturing of raw 802.11 frames
+/usr/bin/aireplay-ng|Tool: Inject frames into 802.11 wireless networks
+/usr/bin/airmon-ng|Tool: Enable monitor mode on wireless interfaces
+/usr/bin/airbase-ng|Tool: Multi-purpose tool for attacking wireless clients
+/usr/bin/airdecap-ng|Tool: Decrypt WEP/WPA/WPA2 capture files
+/usr/bin/airdecloak-ng|Tool: Remove WEP cloaking from pcap files
+/usr/bin/airolib-ng|Tool: Manage and create a WPA/WPA2 precomputed hashes database
+/usr/bin/airserv-ng|Tool: Wireless card server
+/usr/bin/airtun-ng|Tool: Virtual tunnel interface creator
+/usr/bin/buddy-ng|Tool: Helper tool for airserv-ng
+/usr/bin/ivstools|Tool: Extract IVS from a pcap file
+/usr/bin/kismet|App: Wireless network and device detector, sniffer, Wardriving tool, and WIDS framework
+/usr/bin/kismet_cap_linux_wifi|Tool: Linux WiFi capture tool for Kismet
+/usr/bin/kismet_cap_linux_bluetooth|Tool: Linux Bluetooth capture tool for Kismet
+/usr/bin/kismet_cap_pcapfile|Tool: Pcap file capture tool for Kismet
+/usr/bin/kismet_cap_ubertooth_one|Tool: Ubertooth One capture tool for Kismet
+/usr/bin/kismet_cap_nrf_51822|Tool: nRF51822 capture tool for Kismet
+/usr/bin/kismet_cap_nrf_52840|Tool: nRF52840 capture tool for Kismet
+/usr/bin/kismet_cap_ti_cc2540|Tool: TI CC2540 capture tool for Kismet
+/usr/bin/kismet_cap_ti_cc2531|Tool: TI CC2531 capture tool for Kismet
+/usr/bin/kismet_cap_rtl433|Tool: RTL433 capture tool for Kismet
+/usr/bin/kismet_cap_rtlsdr|Tool: RTL-SDR capture tool for Kismet
+/usr/bin/kismet_cap_hackrf|Tool: HackRF capture tool for Kismet
+/usr/bin/kismet_cap_airspy|Tool: Airspy capture tool for Kismet
+/usr/bin/kismet_cap_airspyhf|Tool: AirspyHF capture tool for Kismet
+/usr/bin/kismet_cap_bladerf|Tool: bladeRF capture tool for Kismet
+/usr/bin/kismet_cap_soapy|Tool: SoapySDR capture tool for Kismet
+/usr/bin/kismet_cap_usrp|Tool: USRP capture tool for Kismet
+/usr/bin/kismet_cap_rzusb|Tool: RZUSB capture tool for Kismet
+/usr/bin/kismet_cap_freaklabs|Tool: Freaklabs capture tool for Kismet
+/usr/bin/kismet_cap_nxp_kw41z|Tool: NXP KW41Z capture tool for Kismet
+/usr/bin/kismet_cap_spectools|Tool: Spectools capture tool for Kismet
+/usr/bin/kismet_cap_metageek_wi_spy|Tool: MetaGeek Wi-Spy capture tool for Kismet
+/usr/bin/kismet_cap_zigbee_ubertooth|Tool: Zigbee Ubertooth capture tool for Kismet
+/usr/bin/kismet_cap_zigbee_rzusb|Tool: Zigbee RZUSB capture tool for Kismet
+/usr/bin/kismet_cap_zigbee_freaklabs|Tool: Zigbee Freaklabs capture tool for Kismet
+/usr/bin/kismet_cap_zigbee_nxp_kw41z|Tool: Zigbee NXP KW41Z capture tool for Kismet
+/usr/bin/kismet_cap_bluetooth_hci|Tool: Bluetooth HCI capture tool for Kismet
+/usr/bin/kismet_cap_bluetooth_le|Tool: Bluetooth LE capture tool for Kismet
+/usr/bin/kismet_cap_bluetooth_btbb|Tool: Bluetooth BB capture tool for Kismet
+/usr/bin/kismet_cap_bluetooth_ubertooth|Tool: Bluetooth Ubertooth capture tool for Kismet
+/usr/bin/kismet_server|Daemon: Kismet server
+/usr/bin/kismet_discovery|Tool: Kismet discovery tool
+/usr/bin/kismet_log_to_pcap|Tool: Convert Kismet logs to pcap
+/usr/bin/kismet_log_to_sqlite|Tool: Convert Kismet logs to SQLite
+/usr/bin/kismet_log_to_wigle|Tool: Convert Kismet logs to WiGLE CSV
+/usr/bin/kismet_log_to_kml|Tool: Convert Kismet logs to KML
+/usr/bin/kismet_log_to_text|Tool: Convert Kismet logs to text
+/usr/bin/kismet_log_to_json|Tool: Convert Kismet logs to JSON
+/usr/bin/kismet_log_to_xml|Tool: Convert Kismet logs to XML
+/usr/bin/kismet_log_to_csv|Tool: Convert Kismet logs to CSV
+/usr/bin/kismet_log_to_sql|Tool: Convert Kismet logs to SQL
+/usr/bin/kismet_log_to_pcap_wifi|Tool: Convert Kismet logs to pcap (WiFi)
+/usr/bin/kismet_log_to_pcap_bluetooth|Tool: Convert Kismet logs to pcap (Bluetooth)
+/usr/bin/kismet_log_to_pcap_zigbee|Tool: Convert Kismet logs to pcap (Zigbee)
+/usr/bin/kismet_log_to_pcap_nrf|Tool: Convert Kismet logs to pcap (nRF)
+/usr/bin/kismet_log_to_pcap_ti_cc|Tool: Convert Kismet logs to pcap (TI CC)
+/usr/bin/kismet_log_to_pcap_rtl433|Tool: Convert Kismet logs to pcap (RTL433)
+/usr/bin/kismet_log_to_pcap_rtl_sdr|Tool: Convert Kismet logs to pcap (RTL-SDR)
+/usr/bin/kismet_log_to_pcap_hackrf|Tool: Convert Kismet logs to pcap (HackRF)
+/usr/bin/kismet_log_to_pcap_airspy|Tool: Convert Kismet logs to pcap (Airspy)
+/usr/bin/kismet_log_to_pcap_bladerf|Tool: Convert Kismet logs to pcap (bladeRF)
+/usr/bin/kismet_log_to_pcap_soapy|Tool: Convert Kismet logs to pcap (SoapySDR)
+/usr/bin/kismet_log_to_pcap_usrp|Tool: Convert Kismet logs to pcap (USRP)
+/usr/bin/kismet_log_to_pcap_rzusb|Tool: Convert Kismet logs to pcap (RZUSB)
+/usr/bin/kismet_log_to_pcap_freaklabs|Tool: Convert Kismet logs to pcap (Freaklabs)
+/usr/bin/kismet_log_to_pcap_nxp_kw|Tool: Convert Kismet logs to pcap (NXP KW)
+/usr/bin/kismet_log_to_pcap_spectools|Tool: Convert Kismet logs to pcap (Spectools)
+/usr/bin/kismet_log_to_pcap_metageek|Tool: Convert Kismet logs to pcap (MetaGeek)
+/usr/bin/kismet_log_to_pcap_zigbee_ubertooth|Tool: Convert Kismet logs to pcap (Zigbee Ubertooth)
+/usr/bin/kismet_log_to_pcap_zigbee_rzusb|Tool: Convert Kismet logs to pcap (Zigbee RZUSB)
+/usr/bin/kismet_log_to_pcap_zigbee_freaklabs|Tool: Convert Kismet logs to pcap (Zigbee Freaklabs)
+/usr/bin/kismet_log_to_pcap_zigbee_nxp_kw|Tool: Convert Kismet logs to pcap (Zigbee NXP KW)
+/usr/bin/kismet_log_to_pcap_bluetooth_hci|Tool: Convert Kismet logs to pcap (Bluetooth HCI)
+/usr/bin/kismet_log_to_pcap_bluetooth_le|Tool: Convert Kismet logs to pcap (Bluetooth LE)
+/usr/bin/kismet_log_to_pcap_bluetooth_btbb|Tool: Convert Kismet logs to pcap (Bluetooth BB)
+/usr/bin/kismet_log_to_pcap_bluetooth_ubertooth|Tool: Convert Kismet logs to pcap (Bluetooth Ubertooth)
+/usr/bin/kismet_log_to_pcap_all|Tool: Convert Kismet logs to pcap (All)
+/usr/bin/kismet_log_to_sqlite_all|Tool: Convert Kismet logs to SQLite (All)
+/usr/bin/kismet_log_to_wigle_all|Tool: Convert Kismet logs to WiGLE CSV (All)
+/usr/bin/kismet_log_to_kml_all|Tool: Convert Kismet logs to KML (All)
+/usr/bin/kismet_log_to_text_all|Tool: Convert Kismet logs to text (All)
+/usr/bin/kismet_log_to_json_all|Tool: Convert Kismet logs to JSON (All)
+/usr/bin/kismet_log_to_xml_all|Tool: Convert Kismet logs to XML (All)
+/usr/bin/kismet_log_to_csv_all|Tool: Convert Kismet logs to CSV (All)
+/usr/bin/kismet_log_to_sql_all|Tool: Convert Kismet logs to SQL (All)
+/usr/bin/kismet_log_to_pcap_wifi_all|Tool: Convert Kismet logs to pcap (WiFi All)
+/usr/bin/kismet_log_to_pcap_bluetooth_all|Tool: Convert Kismet logs to pcap (Bluetooth All)
+/usr/bin/kismet_log_to_pcap_zigbee_all|Tool: Convert Kismet logs to pcap (Zigbee All)
+/usr/bin/kismet_log_to_pcap_nrf_all|Tool: Convert Kismet logs to pcap (nRF All)
+/usr/bin/kismet_log_to_pcap_ti_cc_all|Tool: Convert Kismet logs to pcap (TI CC All)
+/usr/bin/kismet_log_to_pcap_rtl433_all|Tool: Convert Kismet logs to pcap (RTL433 All)
+/usr/bin/kismet_log_to_pcap_rtl_sdr_all|Tool: Convert Kismet logs to pcap (RTL-SDR All)
+/usr/bin/kismet_log_to_pcap_hackrf_all|Tool: Convert Kismet logs to pcap (HackRF All)
+/usr/bin/kismet_log_to_pcap_airspy_all|Tool: Convert Kismet logs to pcap (Airspy All)
+/usr/bin/kismet_log_to_pcap_bladerf_all|Tool: Convert Kismet logs to pcap (bladeRF All)
+/usr/bin/kismet_log_to_pcap_soapy_all|Tool: Convert Kismet logs to pcap (SoapySDR All)
+/usr/bin/kismet_log_to_pcap_usrp_all|Tool: Convert Kismet logs to pcap (USRP All)
+/usr/bin/kismet_log_to_pcap_rzusb_all|Tool: Convert Kismet logs to pcap (RZUSB All)
+/usr/bin/kismet_log_to_pcap_freaklabs_all|Tool: Convert Kismet logs to pcap (Freaklabs All)
+/usr/bin/kismet_log_to_pcap_nxp_kw_all|Tool: Convert Kismet logs to pcap (NXP KW All)
+/usr/bin/kismet_log_to_pcap_spectools_all|Tool: Convert Kismet logs to pcap (Spectools All)
+/usr/bin/kismet_log_to_pcap_metageek_all|Tool: Convert Kismet logs to pcap (MetaGeek All)
+/usr/bin/kismet_log_to_pcap_zigbee_ubertooth_all|Tool: Convert Kismet logs to pcap (Zigbee Ubertooth All)
+/usr/bin/kismet_log_to_pcap_zigbee_rzusb_all|Tool: Convert Kismet logs to pcap (Zigbee RZUSB All)
+/usr/bin/kismet_log_to_pcap_zigbee_freaklabs_all|Tool: Convert Kismet logs to pcap (Zigbee Freaklabs All)
+/usr/bin/kismet_log_to_pcap_zigbee_nxp_kw_all|Tool: Convert Kismet logs to pcap (Zigbee NXP KW All)
+/usr/bin/kismet_log_to_pcap_bluetooth_hci_all|Tool: Convert Kismet logs to pcap (Bluetooth HCI All)
+/usr/bin/kismet_log_to_pcap_bluetooth_le_all|Tool: Convert Kismet logs to pcap (Bluetooth LE All)
+/usr/bin/kismet_log_to_pcap_bluetooth_btbb_all|Tool: Convert Kismet logs to pcap (Bluetooth BB All)
+/usr/bin/kismet_log_to_pcap_bluetooth_ubertooth_all|Tool: Convert Kismet logs to pcap (Bluetooth Ubertooth All)
+/usr/bin/kismet_log_to_pcap_everything|Tool: Convert Kismet logs to pcap (Everything)
+/usr/bin/kismet_log_to_sqlite_everything|Tool: Convert Kismet logs to SQLite (Everything)
+/usr/bin/kismet_log_to_wigle_everything|Tool: Convert Kismet logs to WiGLE CSV (Everything)
+/usr/bin/kismet_log_to_kml_everything|Tool: Convert Kismet logs to KML (Everything)
+/usr/bin/kismet_log_to_text_everything|Tool: Convert Kismet logs to text (Everything)
+/usr/bin/kismet_log_to_json_everything|Tool: Convert Kismet logs to JSON (Everything)
+/usr/bin/kismet_log_to_xml_everything|Tool: Convert Kismet logs to XML (Everything)
+/usr/bin/kismet_log_to_csv_everything|Tool: Convert Kismet logs to CSV (Everything)
+/usr/bin/kismet_log_to_sql_everything|Tool: Convert Kismet logs to SQL (Everything)
+/usr/bin/kismet_log_to_pcap_wifi_everything|Tool: Convert Kismet logs to pcap (WiFi Everything)
+/usr/bin/kismet_log_to_pcap_bluetooth_everything|Tool: Convert Kismet logs to pcap (Bluetooth Everything)
+/usr/bin/kismet_log_to_pcap_zigbee_everything|Tool: Convert Kismet logs to pcap (Zigbee Everything)
+/usr/bin/kismet_log_to_pcap_nrf_everything|Tool: Convert Kismet logs to pcap (nRF Everything)
+/usr/bin/kismet_log_to_pcap_ti_cc_everything|Tool: Convert Kismet logs to pcap (TI CC Everything)
+/usr/bin/kismet_log_to_pcap_rtl433_everything|Tool: Convert Kismet logs to pcap (RTL433 Everything)
+/usr/bin/kismet_log_to_pcap_rtl_sdr_everything|Tool: Convert Kismet logs to pcap (RTL-SDR Everything)
+/usr/bin/kismet_log_to_pcap_hackrf_everything|Tool: Convert Kismet logs to pcap (HackRF Everything)
+/usr/bin/kismet_log_to_pcap_airspy_everything|Tool: Convert Kismet logs to pcap (Airspy Everything)
+/usr/bin/kismet_log_to_pcap_bladerf_everything|Tool: Convert Kismet logs to pcap (bladeRF Everything)
+/usr/bin/kismet_log_to_pcap_soapy_everything|Tool: Convert Kismet logs to pcap (SoapySDR Everything)
+/usr/bin/kismet_log_to_pcap_usrp_everything|Tool: Convert Kismet logs to pcap (USRP Everything)
+/usr/bin/kismet_log_to_pcap_rzusb_everything|Tool: Convert Kismet logs to pcap (RZUSB Everything)
+/usr/bin/kismet_log_to_pcap_freaklabs_everything|Tool: Convert Kismet logs to pcap (Freaklabs Everything)
+/usr/bin/kismet_log_to_pcap_nxp_kw_everything|Tool: Convert Kismet logs to pcap (NXP KW Everything)
+/usr/bin/kismet_log_to_pcap_spectools_everything|Tool: Convert Kismet logs to pcap (Spectools Everything)
+/usr/bin/kismet_log_to_pcap_metageek_everything|Tool: Convert Kismet logs to pcap (MetaGeek Everything)
+/usr/bin/kismet_log_to_pcap_zigbee_ubertooth_everything|Tool: Convert Kismet logs to pcap (Zigbee Ubertooth Everything)
+/usr/bin/kismet_log_to_pcap_zigbee_rzusb_everything|Tool: Convert Kismet logs to pcap (Zigbee RZUSB Everything)
+/usr/bin/kismet_log_to_pcap_zigbee_freaklabs_everything|Tool: Convert Kismet logs to pcap (Zigbee Freaklabs Everything)
+/usr/bin/kismet_log_to_pcap_zigbee_nxp_kw_everything|Tool: Convert Kismet logs to pcap (Zigbee NXP KW Everything)
+/usr/bin/kismet_log_to_pcap_bluetooth_hci_everything|Tool: Convert Kismet logs to pcap (Bluetooth HCI Everything)
+/usr/bin/kismet_log_to_pcap_bluetooth_le_everything|Tool: Convert Kismet logs to pcap (Bluetooth LE Everything)
+/usr/bin/kismet_log_to_pcap_bluetooth_btbb_everything|Tool: Convert Kismet logs to pcap (Bluetooth BB Everything)
+/usr/bin/kismet_log_to_pcap_bluetooth_ubertooth_everything|Tool: Convert Kismet logs to pcap (Bluetooth Ubertooth Everything)
+/usr/bin/openvas|App: Open Vulnerability Assessment System
+/usr/bin/gvmd|Daemon: Greenbone Vulnerability Manager daemon
+/usr/bin/gsad|Daemon: Greenbone Security Assistant daemon
+/usr/bin/ospd-openvas|Daemon: OSP server for OpenVAS
+/usr/bin/nikto|Tool: Web server scanner
+/usr/bin/wpscan|Tool: WordPress security scanner
+/usr/bin/dirb|Tool: Web content scanner
+/usr/bin/dirbuster|App: Multi-threaded web application for finding directories and files on web/application servers
+/usr/bin/gobuster|Tool: Tool used to brute-force URIs, DNS subdomains, and virtual host names
+/usr/bin/ffuf|Tool: Fast web fuzzer written in Go
+/usr/bin/wfuzz|Tool: Web application fuzzer
+/usr/bin/hashid|Tool: Identify the type of hash used to encrypt data
+/usr/bin/hash-identifier|Tool: Identify the different types of hashes used to encrypt data
+/usr/bin/stegsolve|App: Tool to analyze images for steganography
+/usr/bin/steghide|Tool: Steganography program that is able to hide data in various kinds of image- and audio-files
+/usr/bin/outguess|Tool: Universal steganographic tool
+/usr/bin/binwalk|Tool: Tool for searching a given binary image for embedded files and executable code
+/usr/bin/foremost|Tool: Recover files based on their headers, footers, and internal data structures
+/usr/bin/scalpel|Tool: Frugal, high performance file carver
+/usr/bin/bulk_extractor|Tool: Extracts features such as email addresses, credit card numbers, URLs, and other types of information from digital evidence files
+/usr/bin/sleuthkit|Tool: Collection of command line tools for investigating disk images
+/usr/bin/autopsy|App: Digital forensics platform and graphical interface to The Sleuth Kit
+/usr/bin/volatility|Tool: Advanced memory forensics framework
+/usr/bin/guymager|App: Forensic imager for media acquisition
+/usr/bin/dcfldd|Tool: Enhanced version of dd with forensic features
+/usr/bin/dc3dd|Tool: Patched version of GNU dd to include forensic features
+/usr/bin/hashdeep|Tool: Compute, compare, or audit multiple message digests
+/usr/bin/md5sum|Tool: Compute and check MD5 message digest
+/usr/bin/sha1sum|Tool: Compute and check SHA1 message digest
+/usr/bin/sha256sum|Tool: Compute and check SHA256 message digest
+/usr/bin/sha512sum|Tool: Compute and check SHA512 message digest
+/usr/bin/sum|Tool: Checksum and count the blocks in a file
+/usr/bin/cksum|Tool: Checksum and count the bytes in a file
+/usr/bin/openssl|Tool: Toolkit for Transport Layer Security (TLS) and Secure Sockets Layer (SSL)
+/usr/bin/base64|Tool: Base64 encode/decode data and print to standard output
+/usr/bin/base32|Tool: Base32 encode/decode data and print to standard output
+/usr/bin/uuencode|Tool: Encode a binary file
+/usr/bin/uudecode|Tool: Decode a file created by uuencode
+/usr/bin/rot13|Tool: Simple substitution cipher that replaces a letter with the 13th letter after it in the alphabet
+/usr/bin/gpg|Tool: OpenPGP encryption and signing tool
+/usr/bin/gpgv|Tool: Verify GnuPG signatures
+/usr/bin/gpgsplit|Tool: Split an OpenPGP message into packets
+/usr/bin/gpg-zip|Tool: GnuPG-based archiving tool
+/usr/bin/gpg-connect-agent|Tool: Communicate with a running gpg-agent
+/usr/bin/gpg-preset-passphrase|Tool: Put a passphrase into gpg-agent's cache
+/usr/bin/gpgparsemail|Tool: Parse a mail message into its components
+/usr/bin/gpg-wks-client|Tool: Client for the Web Key Service
+/usr/bin/gpg-wks-server|Tool: Server for the Web Key Service
+/usr/bin/gpg-card-tool|Tool: Tool to manage smartcards
+/usr/bin/gpg-check-trustdb|Tool: Check the trust database of GnuPG
+/usr/bin/gpg-error|Tool: Library for error codes used by GnuPG
+/usr/bin/gpg-mail-key|Tool: Mail a key to someone
+/usr/bin/gpg-rekey-des-key|Tool: Change the DES key of a passphrase-encrypted key
+/usr/bin/gpg-xml|Tool: GnuPG XML interface
+/usr/bin/pinentry|Tool: PIN or passphrase entry dialog
+/usr/bin/pinentry-curses|Tool: PIN or passphrase entry dialog (curses version)
+/usr/bin/pinentry-gtk-2|Tool: PIN or passphrase entry dialog (GTK+ 2 version)
+/usr/bin/pinentry-qt|Tool: PIN or passphrase entry dialog (Qt version)
+/usr/bin/pinentry-gnome3|Tool: PIN or passphrase entry dialog (GNOME 3 version)
+/usr/bin/pinentry-x11|Tool: PIN or passphrase entry dialog (X11 version)
+/usr/bin/scdaemon|Daemon: GnuPG's smartcard daemon
+/usr/bin/pcscd|Daemon: PC/SC Smart Card Daemon
+/usr/bin/ccid|System: USB Chip/Smart Card Interface Devices driver
+/usr/bin/opensc-tool|Tool: Tool for smart card operations
+/usr/bin/pkcs11-tool|Tool: Tool for PKCS#11 module operations
+/usr/bin/pkcs15-tool|Tool: Tool for PKCS#15 smart card operations
+/usr/bin/pkcs15-init|Tool: Tool for initializing PKCS#15 smart cards
+/usr/bin/cardos-tool|Tool: Tool for CardOS smart card operations
+/usr/bin/cryptoflex-tool|Tool: Tool for Cryptoflex smart card operations
+/usr/bin/setcos-tool|Tool: Tool for Setcos smart card operations
+/usr/bin/westcos-tool|Tool: Tool for Westcos smart card operations
+/usr/bin/egate-tool|Tool: Tool for e-gate smart card operations
+/usr/bin/piv-tool|Tool: Tool for PIV smart card operations
+/usr/bin/iasecc-tool|Tool: Tool for IAS-ECC smart card operations
+/usr/bin/dnie-tool|Tool: Tool for DNIe smart card operations
+/usr/bin/sc-hsm-tool|Tool: Tool for SmartCard-HSM operations
+/usr/bin/openpgp-tool|Tool: Tool for OpenPGP smart card operations
+/usr/bin/rutoken-tool|Tool: Tool for Rutoken smart card operations
+/usr/bin/ePass2003-tool|Tool: Tool for ePass2003 smart card operations
+/usr/bin/coolkey-tool|Tool: Tool for CoolKey smart card operations
+/usr/bin/muscle-tool|Tool: Tool for Muscle smart card operations
+/usr/bin/cyberjack|Tool: REINER SCT cyberJack smart card reader driver
+/usr/bin/towitoko|Tool: Towitoko smart card reader driver
+/usr/bin/gempc|Tool: Gemplus smart card reader driver
+/usr/bin/omnikey|Tool: OMNIKEY smart card reader driver
+/usr/bin/acsccid|Tool: ACS CCID smart card reader driver
+/usr/bin/openct|Daemon: Smart card terminal driver and library
+/usr/bin/openct-tool|Tool: Tool for OpenCT operations
+/usr/bin/openct-control|Tool: Control OpenCT daemon
+/usr/bin/ifdhandler|Daemon: Generic smart card reader driver
+/usr/bin/pcsc-spy|Tool: Spy on PC/SC calls
+/usr/bin/libccid|System: USB CCID driver library
+/usr/bin/libpcsclite|System: PC/SC Lite client library
+/usr/bin/libopensc|System: OpenSC smart card library
+/usr/bin/libengine-pkcs11-openssl|System: OpenSSL engine for PKCS#11
+/usr/bin/libpam-pkcs11|System: PAM module for PKCS#11 authentication
+/usr/bin/libpam-p11|System: PAM module for PKCS#11 authentication
+/usr/bin/libpam-opensc|System: PAM module for OpenSC authentication
+/usr/bin/libpam-gnome-keyring|System: PAM module for GNOME Keyring
+/usr/bin/libpam-kwallet5|System: PAM module for KDE Wallet
+/usr/bin/libpam-systemd|System: PAM module for systemd-logind
+/usr/bin/libpam-runtime|System: Runtime support for PAM
+/usr/bin/libpam-modules|System: Standard PAM modules
+/usr/bin/libpam-modules-bin|Tool: Standard PAM modules (binaries)
+/usr/bin/libpam0g|System: Pluggable Authentication Modules library
+/usr/bin/libnss3|System: Network Security Services library
+/usr/bin/libnss-myhostname|System: NSS module for resolving the local hostname
+/usr/bin/libnss-systemd|System: NSS module for resolving systemd-logind users/groups
+/usr/bin/libnss-resolve|System: NSS module for resolving names via systemd-resolved
+/usr/bin/libnss-mdns|System: NSS module for resolving mDNS names
+/usr/bin/libnss-winbind|System: NSS module for resolving Windows users/groups
+/usr/bin/libnss-lwres|System: NSS module for lightweight resolver
+/usr/bin/libnss-ldap|System: NSS module for LDAP lookups
+/usr/bin/libnss-db|System: NSS module for database lookups
+/usr/bin/libnss-files|System: NSS module for flat file lookups
+/usr/bin/libnss-dns|System: NSS module for DNS lookups
+/usr/bin/libnss-compat|System: NSS module for NIS/NIS+ compatibility
+/usr/bin/libnss-nis|System: NSS module for NIS lookups
+/usr/bin/libnss-nisplus|System: NSS module for NIS+ lookups
+/usr/bin/libnss-hesiod|System: NSS module for Hesiod lookups
+/usr/bin/libnss-sss|System: NSS module for SSSD lookups
+/usr/bin/libnss-sss-bin|Tool: SSSD NSS module tools
+/usr/bin/libnss-gw-name|System: NSS module for resolving the default gateway's name
+/usr/bin/libnss-extrausers|System: NSS module for extra users in /var/lib/extrausers
+/usr/bin/libnss-wrapper|System: Wrapper for NSS to intercept calls
+/usr/bin/libresolv|System: Resolver library
+/usr/bin/libdbus-1-3|System: D-Bus library
+/usr/bin/libdbus-glib-1-2|System: GLib bindings for D-Bus
+/usr/bin/libglib2.0-0|System: GLib library
+/usr/bin/libgobject-2.0-0|System: GObject library
+/usr/bin/libgio-2.0-0|System: GIO library
+/usr/bin/libgmodule-2.0-0|System: GModule library
+/usr/bin/libgthread-2.0-0|System: GThread library
+/usr/bin/libgtk-3-0|System: GTK+ 3 library
+/usr/bin/libgtk-4-1|System: GTK 4 library
+/usr/bin/libqt5core5a|System: Qt 5 Core library
+/usr/bin/libqt5gui5|System: Qt 5 GUI library
+/usr/bin/libqt5widgets5|System: Qt 5 Widgets library
+/usr/bin/libqt5network5|System: Qt 5 Network library
+/usr/bin/libqt5dbus5|System: Qt 5 D-Bus library
+/usr/bin/libqt5xml5|System: Qt 5 XML library
+/usr/bin/libqt5sql5|System: Qt 5 SQL library
+/usr/bin/libqt5test5|System: Qt 5 Test library
+/usr/bin/libqt5concurrent5|System: Qt 5 Concurrent library
+/usr/bin/libqt5printsupport5|System: Qt 5 Print Support library
+/usr/bin/libqt5opengl5|System: Qt 5 OpenGL library
+/usr/bin/libqt5svg5|System: Qt 5 SVG library
+/usr/bin/libqt5xmlpatterns5|System: Qt 5 XML Patterns library
+/usr/bin/libqt5multimedia5|System: Qt 5 Multimedia library
+/usr/bin/libqt5quick5|System: Qt 5 Quick library
+/usr/bin/libqt5qml5|System: Qt 5 QML library
+/usr/bin/libqt5positioning5|System: Qt 5 Positioning library
+/usr/bin/libqt5sensors5|System: Qt 5 Sensors library
+/usr/bin/libqt5webchannel5|System: Qt 5 WebChannel library
+/usr/bin/libqt5webkit5|System: Qt 5 WebKit library
+/usr/bin/libqt5websockets5|System: Qt 5 WebSockets library
+/usr/bin/libqt5x11extras5|System: Qt 5 X11 Extras library
+/usr/bin/libqt5waylandclient5|System: Qt 5 Wayland Client library
+/usr/bin/libqt5waylandcompositor5|System: Qt 5 Wayland Compositor library
+/usr/bin/libqt6core6|System: Qt 6 Core library
+/usr/bin/libqt6gui6|System: Qt 6 GUI library
+/usr/bin/libqt6widgets6|System: Qt 6 Widgets library
+/usr/bin/libqt6network6|System: Qt 6 Network library
+/usr/bin/libqt6dbus6|System: Qt 6 D-Bus library
+/usr/bin/libqt6xml6|System: Qt 6 XML library
+/usr/bin/libqt6sql6|System: Qt 6 SQL library
+/usr/bin/libqt6test6|System: Qt 6 Test library
+/usr/bin/libqt6concurrent6|System: Qt 6 Concurrent library
+/usr/bin/libqt6printsupport6|System: Qt 6 Print Support library
+/usr/bin/libqt6opengl6|System: Qt 6 OpenGL library
+/usr/bin/libqt6svg6|System: Qt 6 SVG library
+/usr/bin/libqt6multimedia6|System: Qt 6 Multimedia library
+/usr/bin/libqt6quick6|System: Qt 6 Quick library
+/usr/bin/libqt6qml6|System: Qt 6 QML library
+/usr/bin/libqt6positioning6|System: Qt 6 Positioning library
+/usr/bin/libqt6sensors6|System: Qt 6 Sensors library
+/usr/bin/libqt6webchannel6|System: Qt 6 WebChannel library
+/usr/bin/libqt6websockets6|System: Qt 6 WebSockets library
+/usr/bin/libqt6waylandclient6|System: Qt 6 Wayland Client library
+/usr/bin/libqt6waylandcompositor6|System: Qt 6 Wayland Compositor library
+/usr/bin/libstdc++6|System: GNU Standard C++ Library v3
+/usr/bin/libc6|System: GNU C Library: Shared libraries
+/usr/bin/libgcc-s1|System: GCC support library
+/usr/bin/libllvm14|System: LLVM shared library
+/usr/bin/libllvm15|System: LLVM shared library
+/usr/bin/libllvm16|System: LLVM shared library
+/usr/bin/libllvm17|System: LLVM shared library
+/usr/bin/libclang-14|System: C interface to Clang
+/usr/bin/libclang-15|System: C interface to Clang
+/usr/bin/libclang-16|System: C interface to Clang
+/usr/bin/libclang-17|System: C interface to Clang
+/usr/bin/libssl3|System: SSL shared libraries
+/usr/bin/libcrypto3|System: Crypto shared libraries
+/usr/bin/libz1|System: Compression library
+/usr/bin/libbz2-1.0|System: Block-sorting file compressor library
+/usr/bin/liblzma5|System: XZ-format compression library
+/usr/bin/libzstd1|System: Fast real-time compression algorithm library
+/usr/bin/libexpat1|System: XML parsing C library
+/usr/bin/libxml2|System: GNOME XML library
+/usr/bin/libxslt1.1|System: XSLT processing library - runtime library
+/usr/bin/libsqlite3-0|System: SQLite 3 shared library
+/usr/bin/libreadline8|System: GNU readline and history libraries
+/usr/bin/libncurses6|System: Shared libraries for terminal handling
+/usr/bin/libtinfo6|System: Shared low-level terminfo library
+/usr/bin/libcap2|System: POSIX 1003.1e capabilities library
+/usr/bin/libattr1|System: Extended attributes shared library
+/usr/bin/libacl1|System: Access control list shared library
+/usr/bin/libuuid1|System: Universally unique ID library
+/usr/bin/libblkid1|System: Block device ID library
+/usr/bin/libmount1|System: Device mounting library
+/usr/bin/libudev1|System: Dynamic device management library
+/usr/bin/libsystemd0|System: Systemd utility library
+/usr/bin/libkmod2|System: Library to manage Linux kernel modules
+/usr/bin/libelf1|System: Library to read and write ELF files
+/usr/bin/libdw1|System: HTTP library for the DWARF debugging format
+/usr/bin/libunwind8|System: Library to determine the call-chain of a program
+/usr/bin/libslang2|System: S-Lang programming library - runtime version
+/usr/bin/libffi8|System: Foreign function interface library
+/usr/bin/libgmp10|System: Multiprecision arithmetic library
+/usr/bin/libnettle8|System: Low-level cryptographic library
+/usr/bin/libhogweed6|System: Low-level cryptographic library (public-key part)
+/usr/bin/libgnutls30|System: GNU TLS library - main runtime library
+/usr/bin/libtasn1-6|System: Manage ASN.1 structures
+/usr/bin/libp11-kit0|System: Library for loading and enumerating PKCS#11 modules
+/usr/bin/libidn2-0|System: Internationalized domain names (IDNA2008) library
+/usr/bin/libunistring2|System: Unicode string library
+/usr/bin/libpsl5|System: Public Suffix List library
+/usr/bin/libssh2-1|System: SSH2 client-side library
+/usr/bin/libssh-4|System: Tiny C SSH library
+/usr/bin/libcurl4|System: Easy-to-use client-side URL transfer library
+/usr/bin/libnghttp2-14|System: HTTP/2 C library
+/usr/bin/libidn12|System: GNU Libidn library, implementation of IDNA2003
+/usr/bin/librtmp1|System: Real Time Messaging Protocol (RTMP) shared library
+/usr/bin/libssh-gcrypt-4|System: Tiny C SSH library (gcrypt flavor)
+/usr/bin/libldap-2.5-0|System: OpenLDAP libraries
+/usr/bin/liblber-2.5-0|System: OpenLDAP libraries
+/usr/bin/libsasl2-2|System: Cyrus SASL - abstraction of local and remote authentication
+/usr/bin/libgssapi-krb5-2|System: MIT Kerberos runtime libraries - krb5 GSS-API Mechanism
+/usr/bin/libkrb5-3|System: MIT Kerberos runtime libraries
+/usr/bin/libk5crypto3|System: MIT Kerberos runtime libraries - Crypto library
+/usr/bin/libcom-err2|System: Common error description library
+/usr/bin/libkrb5support0|System: MIT Kerberos runtime libraries - Support library
+/usr/bin/libkeyutils1|System: Linux Key Management Utilities (library)
+/usr/bin/libcrypt1|System: Library for hashing, encryption and decryption
+/usr/bin/libpam0g|System: Pluggable Authentication Modules library
+/usr/bin/libaudit1|System: User space library for 2.6 kernel audit
+/usr/bin/libcap-ng0|System: Alternate POSIX capabilities library
+/usr/bin/libapparmor1|System: ChangeHat AppArmor library
+/usr/bin/libselinux1|System: SELinux runtime shared libraries
+/usr/bin/libsepol2|System: SELinux binary policy manipulation library
+/usr/bin/libsemanage2|System: SELinux policy management library
+/usr/bin/libbz2-1.0|System: Block-sorting file compressor library
+/usr/bin/liblzma5|System: XZ-format compression library
+/usr/bin/libzstd1|System: Fast real-time compression algorithm library
+/usr/bin/liblz4-1|System: Fast LZ compression algorithm library
+/usr/bin/libgcrypt20|System: LGPL Crypto library - runtime library
+/usr/bin/libgpg-error0|System: Library for error codes used by GnuPG
+/usr/bin/libassuan0|System: IPC library used by GnuPG and GPGME
+/usr/bin/libksba8|System: X.509 and CMS support library
+/usr/bin/libnpth0|System: New GNU Portable Threads library
+/usr/bin/libdb5.3|System: Berkeley v5.3 Database Libraries [runtime]
+/usr/bin/libgdbm6|System: GNU dbm database routines (runtime version)
+/usr/bin/libgdbm-compat4|System: GNU dbm database routines (legacy compatibility runtime)
+/usr/bin/libwrap0|System: Wietse Venema's TCP wrappers library
+/usr/bin/libtirpc3|System: Transport Independent RPC library
+/usr/bin/libnsl2|System: Public domain implementation of the NIS(YP) and NIS+ functions
+/usr/bin/libnsl-dev|System: Public domain implementation of the NIS(YP) and NIS+ functions (development)
+/usr/bin/libcrypt-dev|System: Library for hashing, encryption and decryption (development)
+/usr/bin/libnss-myhostname|System: NSS module for resolving the local hostname
+/usr/bin/libnss-systemd|System: NSS module for resolving systemd-logind users/groups
+/usr/bin/libnss-resolve|System: NSS module for resolving names via systemd-resolved
+/usr/bin/libnss-mdns|System: NSS module for resolving mDNS names
+/usr/bin/libnss-winbind|System: NSS module for resolving Windows users/groups
+/usr/bin/libnss-sss|System: NSS module for SSSD lookups
+/usr/bin/libnss-gw-name|System: NSS module for resolving the default gateway's name
+/usr/bin/libnss-extrausers|System: NSS module for extra users in /var/lib/extrausers
+/usr/bin/libnss-wrapper|System: Wrapper for NSS to intercept calls
+/usr/bin/libnss-ldap|System: NSS module for LDAP lookups
+/usr/bin/libnss-db|System: NSS module for database lookups
+/usr/bin/libnss-files|System: NSS module for flat file lookups
+/usr/bin/libnss-dns|System: NSS module for DNS lookups
+/usr/bin/libnss-compat|System: NSS module for NIS/NIS+ compatibility
+/usr/bin/libnss-nis|System: NSS module for NIS lookups
+/usr/bin/libnss-nisplus|System: NSS module for NIS+ lookups
+/usr/bin/libnss-hesiod|System: NSS module for Hesiod lookups
+/usr/bin/libresolv|System: Resolver library
+/usr/bin/libdbus-1-3|System: D-Bus library
+/usr/bin/libdbus-glib-1-2|System: GLib bindings for D-Bus
+/usr/bin/libglib2.0-0|System: GLib library
+/usr/bin/libgobject-2.0-0|System: GObject library
+/usr/bin/libgio-2.0-0|System: GIO library
+/usr/bin/libgmodule-2.0-0|System: GModule library
+/usr/bin/libgthread-2.0-0|System: GThread library
+/usr/bin/libgtk-3-0|System: GTK+ 3 library
+/usr/bin/libgtk-4-1|System: GTK 4 library
+/usr/bin/libqt5core5a|System: Qt 5 Core library
+/usr/bin/libqt5gui5|System: Qt 5 GUI library
+/usr/bin/libqt5widgets5|System: Qt 5 Widgets library
+/usr/bin/libqt5network5|System: Qt 5 Network library
+/usr/bin/libqt5dbus5|System: Qt 5 D-Bus library
+/usr/bin/libqt6core6|System: Qt 6 Core library
+/usr/bin/libqt6gui6|System: Qt 6 GUI library
+/usr/bin/libqt6widgets6|System: Qt 6 Widgets library
+/usr/bin/libqt6network6|System: Qt 6 Network library
+/usr/bin/libqt6dbus6|System: Qt 6 D-Bus library
+/usr/bin/libstdc++6|System: GNU Standard C++ Library v3
+/usr/bin/libc6|System: GNU C Library: Shared libraries
+/usr/bin/libgcc-s1|System: GCC support library
+/usr/bin/libllvm14|System: LLVM shared library
+/usr/bin/libssl3|System: SSL shared libraries
+/usr/bin/libcrypto3|System: Crypto shared libraries
+/usr/bin/libz1|System: Compression library
+/usr/bin/libexpat1|System: XML parsing C library
+/usr/bin/libxml2|System: GNOME XML library
+/usr/bin/libsqlite3-0|System: SQLite 3 shared library
+/usr/bin/libreadline8|System: GNU readline and history libraries
+/usr/bin/libncurses6|System: Shared libraries for terminal handling
+/usr/bin/libcap2|System: POSIX 1003.1e capabilities library
+/usr/bin/libuuid1|System: Universally unique ID library
+/usr/bin/libblkid1|System: Block device ID library
+/usr/bin/libmount1|System: Device mounting library
+/usr/bin/libudev1|System: Dynamic device management library
+/usr/bin/libsystemd0|System: Systemd utility library
+/usr/bin/libffi8|System: Foreign function interface library
+/usr/bin/libgmp10|System: Multiprecision arithmetic library
+/usr/bin/libgnutls30|System: GNU TLS library - main runtime library
+/usr/bin/libidn2-0|System: Internationalized domain names (IDNA2008) library
+/usr/bin/libunistring2|System: Unicode string library
+/usr/bin/libpsl5|System: Public Suffix List library
+/usr/bin/libcurl4|System: Easy-to-use client-side URL transfer library
+/usr/bin/libldap-2.5-0|System: OpenLDAP libraries
+/usr/bin/libsasl2-2|System: Cyrus SASL - abstraction of local and remote authentication
+/usr/bin/libgssapi-krb5-2|System: MIT Kerberos runtime libraries - krb5 GSS-API Mechanism
+/usr/bin/libkrb5-3|System: MIT Kerberos runtime libraries
+/usr/bin/libpam0g|System: Pluggable Authentication Modules library
+/usr/bin/libaudit1|System: User space library for 2.6 kernel audit
+/usr/bin/libapparmor1|System: ChangeHat AppArmor library
+/usr/bin/libselinux1|System: SELinux runtime shared libraries
+/usr/bin/libgcrypt20|System: LGPL Crypto library - runtime library
+/usr/bin/libgpg-error0|System: Library for error codes used by GnuPG
+/usr/bin/libdb5.3|System: Berkeley v5.3 Database Libraries [runtime]
+/usr/bin/libwrap0|System: Wietse Venema's TCP wrappers library
+/usr/bin/libtirpc3|System: Transport Independent RPC library
+/usr/bin/libnsl2|System: Public domain implementation of the NIS(YP) and NIS+ functions
+/usr/bin/bash|Shell: GNU Project's Bourne Again SHell
+/usr/bin/sh|Shell: Command-line interpreter
+/usr/bin/zsh|Shell: Powerfully interactive shell with many features
+/usr/bin/fish|Shell: User-friendly command-line shell
+/usr/bin/dash|Shell: Debian Almquist Shell, a fast and small POSIX-compliant shell
+/usr/bin/csh|Shell: C shell with C-like syntax
+/usr/bin/tcsh|Shell: Enhanced version of the Berkeley C shell (csh)
+/usr/bin/ksh|Shell: KornShell, a high-level programming language and interactive shell
+/usr/bin/mksh|Shell: MirBSD Korn Shell
+/usr/bin/python3|Runtime: Interpreted, high-level, general-purpose programming language
+/usr/bin/python|Runtime: Python interpreter
+/usr/bin/perl|Runtime: Practical Extraction and Report Language
+/usr/bin/ruby|Runtime: Interpreted, high-level, general-purpose programming language
+/usr/bin/lua|Runtime: Lightweight, high-level, multi-paradigm programming language
+/usr/bin/node|Runtime: JavaScript runtime built on Chrome's V8 JavaScript engine
+/usr/bin/npm|Tool: Package manager for JavaScript
+/usr/bin/yarn|Tool: Fast, reliable, and secure dependency management for JavaScript
+/usr/bin/deno|Runtime: Secure runtime for JavaScript and TypeScript
+/usr/bin/php|Runtime: General-purpose scripting language especially suited for web development
+/usr/bin/perl|Runtime: Practical Extraction and Report Language
+/usr/bin/tclsh|Runtime: Tool Command Language interpreter
+/usr/bin/wish|Runtime: Tcl/Tk windowing shell
+/usr/bin/guile|Runtime: Implementation of the Scheme programming language
+/usr/bin/racket|Runtime: General-purpose programming language in the Lisp-Scheme family
+/usr/bin/erl|Runtime: Erlang emulator
+/usr/bin/elixir|Runtime: Dynamic, functional language for building scalable and maintainable applications
+/usr/bin/ghc|Tool: Glasgow Haskell Compiler
+/usr/bin/ghci|Tool: Interactive Glasgow Haskell Compiler
+/usr/bin/runghc|Tool: Run Haskell scripts
+/usr/bin/swipl|Runtime: SWI-Prolog interpreter
+/usr/bin/java|Runtime: High-level, class-based, object-oriented programming language
+/usr/bin/javac|Tool: Java compiler
+/usr/bin/jar|Tool: Java archive tool
+/usr/bin/javadoc|Tool: Java documentation generator
+/usr/bin/javap|Tool: Java class file disassembler
+/usr/bin/jdb|Tool: Java debugger
+/usr/bin/jcmd|Tool: Send diagnostic command requests to a running Java Virtual Machine
+/usr/bin/jconsole|App: Graphical monitoring tool for Java
+/usr/bin/jhsdb|Tool: Java HotSpot Serviceability Agent Debugger
+/usr/bin/jinfo|Tool: Generate Java configuration information for a given Java process
+/usr/bin/jmap|Tool: Generate Java memory maps for a given Java process
+/usr/bin/jps|Tool: List instrumented JVMs on the target system
+/usr/bin/jrunscript|Tool: Java command-line script shell
+/usr/bin/jstack|Tool: Generate Java stack traces for a given Java process
+/usr/bin/jstat|Tool: Monitor JVM statistics
+/usr/bin/jstatd|Daemon: RMI server application that monitors instrumented HotSpot JVMs
+/usr/bin/keytool|Tool: Manage a keystore of cryptographic keys
+/usr/bin/rmiregistry|Daemon: Remote object registry
+/usr/bin/serialver|Tool: Return the serialVersionUID for a class
+/usr/bin/gcc|Tool: GNU project C and C++ compiler
+/usr/bin/g++|Tool: GNU project C++ compiler
+/usr/bin/make|Tool: Utility for directing compilation
+/usr/bin/cmake|Tool: Cross-platform family of tools designed to build, test and package software
+/usr/bin/ninja|Tool: Small build system with a focus on speed
+/usr/bin/meson|Tool: Open source build system meant to be extremely fast and user friendly
+/usr/bin/autoconf|Tool: Generate configuration scripts from templates
+/usr/bin/automake|Tool: Tool for generating Makefile.ins from Makefile.ams
+/usr/bin/libtool|Tool: Generic library support script
+/usr/bin/pkg-config|Tool: Return metainformation about installed libraries
+/usr/bin/gdb|Tool: GNU Debugger
+/usr/bin/valgrind|Tool: Instrumentation framework for building dynamic analysis tools
+/usr/bin/strace|Tool: Trace system calls and signals
+/usr/bin/ltrace|Tool: Trace library calls
+/usr/bin/perf|Tool: Performance analysis tools for Linux
+/usr/bin/rustc|Tool: Rust compiler
+/usr/bin/cargo|Tool: Rust package manager
+/usr/bin/go|Tool: Tool for managing Go source code
+/usr/bin/swift|Tool: Swift programming language
+/usr/bin/kotlinc|Tool: Kotlin compiler
+/usr/bin/scalac|Tool: Scala compiler
+/usr/bin/clojure|Tool: Clojure programming language
+/usr/bin/dotnet|Tool: .NET CLI tool
+/usr/bin/mono|Runtime: Open source implementation of Microsoft's .NET Framework
+/usr/bin/mcs|Tool: Mono C# compiler
+/usr/bin/xbuild|Tool: Mono's implementation of MSBuild
+/usr/bin/as|Tool: Portable GNU assembler
+/usr/bin/ld|Tool: GNU linker
+/usr/bin/nm|Tool: List symbols from object files
+/usr/bin/objdump|Tool: Display information from object files
+/usr/bin/objcopy|Tool: Copy and translate object files
+/usr/bin/strip|Tool: Discard symbols from object files
+/usr/bin/readelf|Tool: Display information about ELF files
+/usr/bin/addr2line|Tool: Convert addresses into file names and line numbers
+/usr/bin/ar|Tool: Create, modify, and extract from archives
+/usr/bin/ranlib|Tool: Generate index to archive
+/usr/bin/size|Tool: List section sizes and total size
+/usr/bin/strings|Tool: Print the sequences of printable characters in files
+/usr/bin/gprof|Tool: Display call graph profile data
+/usr/bin/cpp|Tool: GNU C preprocessor
+/usr/bin/vi|Editor: Small and fast screen-oriented text editor
+/usr/bin/vim|Editor: Highly configurable text editor built to enable efficient text editing
+/usr/bin/nvim|Editor: Hyperextensible Vim-based text editor
+/usr/bin/emacs|Editor: Extensible, customizable, self-documenting real-time display editor
+/usr/bin/nano|Editor: Small, friendly text editor
+/usr/bin/pico|Editor: Simple text editor based on the Pine message system compositor
+/usr/bin/joe|Editor: JOE's Own Editor, a powerful and easy to use text editor
+/usr/bin/jed|Editor: Powerful editor for programmers
+/usr/bin/micro|Editor: Modern and intuitive terminal-based text editor
+/usr/bin/kak|Editor: Modal editor inspired by Vim
+/usr/bin/helix|Editor: Post-modern modal text editor
+/usr/bin/code|Editor: Visual Studio Code, a powerful source code editor
+/usr/bin/subl|Editor: Sublime Text, a sophisticated text editor for code, markup and prose
+/usr/bin/atom|Editor: Hackable text editor for the 21st Century
+/usr/bin/gedit|Editor: Official text editor of the GNOME desktop environment
+/usr/bin/kate|Editor: Advanced text editor for KDE
+/usr/bin/mousepad|Editor: Simple text editor for the Xfce desktop environment
+/usr/bin/pluma|Editor: Small and lightweight UTF-8 text editor for MATE
+/usr/bin/xed|Editor: Small and lightweight text editor for Cinnamon
+/usr/bin/leafpad|Editor: GTK+ based simple text editor
+/usr/bin/bluefish|Editor: Powerful editor targeted towards programmers and web-developers
+/usr/bin/geany|Editor: Small and lightweight Integrated Development Environment
+/usr/bin/intellij-idea-community|IDE: Capable and ergonomic Java IDE for enterprise, web, and mobile development
+/usr/bin/pycharm-community|IDE: Python IDE for Professional Developers
+/usr/bin/clion|IDE: Cross-platform C and C++ IDE
+/usr/bin/webstorm|IDE: The smartest JavaScript IDE
+/usr/bin/rider|IDE: Fast & powerful cross-platform .NET IDE
+/usr/bin/goland|IDE: Capable and ergonomic Go IDE
+/usr/bin/datagrip|IDE: Many databases, one tool
+/usr/bin/android-studio|IDE: Official IDE for Android app development
+/usr/bin/eclipse|IDE: Famous open-source IDE for Java and other languages
+/usr/bin/netbeans|IDE: Development environment, tooling platform, and application framework
+/usr/bin/qtcreator|IDE: Cross-platform C++, JavaScript and QML IDE
+/usr/bin/monodevelop|IDE: Cross-platform IDE for C#, F# and more
+/usr/bin/vscodium|Editor: Community-driven, freely-licensed binary distribution of VS Code
+/usr/bin/tar|Tool: Tape archiver for creating and extracting archives
+/usr/bin/gzip|Tool: Compress or expand files using Lempel-Ziv coding (LZ77)
+/usr/bin/bzip2|Tool: Block-sorting file compressor
+/usr/bin/xz|Tool: XZ and LZMA compression and decompression tool
+/usr/bin/zip|Tool: Package and compress (archive) files
+/usr/bin/unzip|Tool: List, test and extract compressed files from a ZIP archive
+/usr/bin/7z|Tool: File archiver with a high compression ratio
+/usr/bin/rar|Tool: Archive manager for RAR files
+/usr/bin/unrar|Tool: Extract files from RAR archives
+/usr/bin/cpio|Tool: Copy files to and from archives
+/usr/bin/pax|Tool: Portable archive interchange
+/usr/bin/zstd|Tool: Fast real-time compression algorithm
+/usr/bin/lz4|Tool: Extremely fast compression algorithm
+/usr/bin/brotli|Tool: Generic-purpose lossless compression algorithm
+/usr/bin/pigz|Tool: Parallel implementation of gzip
+/usr/bin/pbzip2|Tool: Parallel implementation of bzip2
+/usr/bin/pixz|Tool: Parallel indexed xz
+/usr/bin/lbzip2|Tool: Parallel bzip2 utility
+/usr/bin/plzip|Tool: Parallel lzip data compressor
+/usr/bin/file|Tool: Determine file type
+/usr/bin/stat|Tool: Display file or file system status
+/usr/bin/lsof|Tool: List open files
+/usr/bin/fuser|Tool: Identify processes using files or sockets
+/usr/bin/ps|Tool: Report a snapshot of the current processes
+/usr/bin/pstree|Tool: Display a tree of processes
+/usr/bin/pgrep|Tool: Look up or signal processes based on name and other attributes
+/usr/bin/pkill|Tool: Look up or signal processes based on name and other attributes
+/usr/bin/kill|Tool: Send a signal to a process
+/usr/bin/killall|Tool: Kill processes by name
+/usr/bin/nice|Tool: Run a program with modified scheduling priority
+/usr/bin/renice|Tool: Alter priority of running processes
+/usr/bin/nohup|Tool: Run a command immune to hangups, with output to a non-tty
+/usr/bin/disown|Tool: Remove jobs from the shell's job table
+/usr/bin/wait|Tool: Wait for process to change state
+/usr/bin/sleep|Tool: Delay for a specified amount of time
+/usr/bin/timeout|Tool: Run a command with a time limit
+/usr/bin/watch|Tool: Execute a program periodically, showing output fullscreen
+/usr/bin/at|Tool: Queue, examine or delete jobs for later execution
+/usr/bin/batch|Tool: Queue, examine or delete jobs for later execution
+/usr/bin/cron|Daemon: Daemon to execute scheduled commands
+/usr/bin/crontab|Tool: Maintain crontab files for individual users
+/usr/bin/anacron|Tool: Run commands periodically, does not assume that the machine is running continuously
+/usr/bin/systemd-run|Tool: Run programs in transient scope or service or timer units
+/usr/bin/dbus-launch|Tool: Utility to start a message bus from a shell script
+/usr/bin/dbus-send|Tool: Send a message to a D-Bus bus
+/usr/bin/dbus-monitor|Tool: Monitor messages going through a D-Bus bus
+/usr/bin/dbus-update-activation-environment|Tool: Update environment used for D-Bus session services
+/usr/bin/gsettings|Tool: GSettings configuration tool
+/usr/bin/dconf|Tool: Simple tool for manipulating a dconf database
+/usr/bin/xprop|Tool: Property displayer for X
+/usr/bin/xwininfo|Tool: Window information utility for X
+/usr/bin/xset|Tool: User preference setter utility for X
+/usr/bin/xsetroot|Tool: Root window parameter setter utility for X
+/usr/bin/xrandr|Tool: Primitive command line interface to RandR extension
+/usr/bin/xrdb|Tool: X server resource database utility
+/usr/bin/xmodmap|Tool: Utility for modifying keymaps and pointer button mappings in X
+/usr/bin/xev|Tool: Print contents of X events
+/usr/bin/xauth|Tool: X authority file utility
+/usr/bin/xhost|Tool: Server access control program for X
+/usr/bin/xkill|Tool: Kill a client by its X resource
+/usr/bin/xdg-open|Tool: Opens a file or URL in the user's preferred application
+/usr/bin/xdg-settings|Tool: Get or set the default web browser and URL handlers
+/usr/bin/xdg-mime|Tool: Query information about file type handling and add new resource types
+/usr/bin/xdg-desktop-menu|Tool: Command line tool for (un)installing desktop menu items
+/usr/bin/xdg-desktop-icon|Tool: Command line tool for (un)installing icons on the desktop
+/usr/bin/xdg-email|Tool: Command line tool for sending mail using the user's preferred e-mail composer
+/usr/bin/xdg-screensaver|Tool: Command line tool for controlling the screensaver
+/usr/bin/xdg-user-dir|Tool: Find the current strategy-compliant path for a user directory
+/usr/bin/xdg-user-dirs-update|Tool: Update the XDG user-dirs configuration
+/usr/bin/flatpak-spawn|Tool: Run commands in a new sandbox or on the host
+/usr/bin/bubblewrap|Tool: Unprivileged sandboxing tool
+/usr/bin/bwrap|Tool: Unprivileged sandboxing tool
+/usr/bin/firejail|Tool: Linux namespaces sandbox program
+/usr/bin/apparmor_status|Tool: Display various information about the current AppArmor policy
+/usr/bin/aa-status|Tool: Display various information about the current AppArmor policy
+/usr/bin/aa-complain|Tool: Set AppArmor profiles to complain mode
+/usr/bin/aa-enforce|Tool: Set AppArmor profiles to enforce mode
+/usr/bin/aa-disable|Tool: Disable AppArmor profiles
+/usr/bin/aa-audit|Tool: Set AppArmor profiles to audit mode
+/usr/bin/aa-autodep|Tool: Guess basic AppArmor profile dependencies
+/usr/bin/aa-genprof|Tool: Generate a new AppArmor profile
+/usr/bin/aa-logprof|Tool: Update AppArmor profiles from log entries
+/usr/bin/aa-decode|Tool: Decode AppArmor log messages
+/usr/bin/aa-notify|Tool: AppArmor notification daemon
+/usr/bin/aa-enabled|Tool: Check whether AppArmor is enabled
+/usr/bin/aa-exec|Tool: Confine a program with the specified AppArmor profile
+/usr/bin/aa-readprof|Tool: Read AppArmor profiles
+/usr/bin/getcap|Tool: Examine file capabilities
+/usr/bin/setcap|Tool: Set file capabilities
+/usr/bin/getfacl|Tool: Get file access control lists
+/usr/bin/setfacl|Tool: Set file access control lists
+/usr/bin/lsattr|Tool: List file attributes on a Linux second extended file system
+/usr/bin/chattr|Tool: Change file attributes on a Linux second extended file system
+/usr/bin/tune2fs|Tool: Adjust tunable file system parameters on ext2/ext3/ext4 file systems
+/usr/bin/dumpe2fs|Tool: Dump ext2/ext3/ext4 file system information
+/usr/bin/e2fsck|Tool: Check an ext2/ext3/ext4 file system
+/usr/bin/mke2fs|Tool: Create an ext2/ext3/ext4 file system
+/usr/bin/resize2fs|Tool: ext2/ext3/ext4 file system resizer
+/usr/bin/debugfs|Tool: ext2/ext3/ext4 file system debugger
+/usr/bin/badblocks|Tool: Search a device for bad blocks
+/usr/bin/fsck|Tool: Check and repair a Linux file system
+/usr/bin/mkfs|Tool: Build a Linux file system
+/usr/bin/blkid|Tool: Locate/print block device attributes
+/usr/bin/findmnt|Tool: Find a filesystem
+/usr/bin/lsns|Tool: List namespaces
+/usr/bin/nsenter|Tool: Run program with namespaces of other processes
+/usr/bin/unshare|Tool: Run program with some namespaces unshared from parent
+/usr/bin/chroot|Tool: Run command or interactive shell with special root directory
+/usr/bin/pivot_root|Tool: Change the root file system
+/usr/bin/mountpoint|Tool: See if a directory is a mountpoint
+/usr/bin/swapon|Tool: Enable devices and files for paging and swapping
+/usr/bin/swapoff|Tool: Disable devices and files for paging and swapping
+/usr/bin/mkswap|Tool: Set up a Linux swap area
+/usr/bin/cryptsetup|Tool: Manage dm-crypt managed device-mapper targets
+/usr/bin/dmsetup|Tool: Low-level logical volume management
+/usr/bin/lvm|Tool: LVM2 tools
+/usr/bin/pvcreate|Tool: Initialize a disk or partition for use by LVM
+/usr/bin/pvdisplay|Tool: Display attributes of a physical volume
+/usr/bin/pvs|Tool: Report information about physical volumes
+/usr/bin/vgcreate|Tool: Create a volume group
+/usr/bin/vgdisplay|Tool: Display attributes of volume groups
+/usr/bin/vgs|Report information about volume groups
+/usr/bin/lvcreate|Tool: Create a logical volume in an existing volume group
+/usr/bin/lvdisplay|Tool: Display attributes of a logical volume
+/usr/bin/lvs|Tool: Report information about logical volumes
+/usr/bin/pvmove|Tool: Move physical extents
+/usr/bin/vgextend|Tool: Add physical volumes to a volume group
+/usr/bin/vgreduce|Tool: Remove physical volumes from a volume group
+/usr/bin/lvextend|Tool: Extend the size of a logical volume
+/usr/bin/lvreduce|Tool: Reduce the size of a logical volume
+/usr/bin/lvresize|Tool: Resize a logical volume
+/usr/bin/vgscan|Tool: Scan all disks for volume groups and rebuild caches
+/usr/bin/lvscan|Tool: Scan (all disks) for Logical Volumes
+/usr/bin/pvscan|Tool: List all physical volumes
+/usr/bin/vgmknodes|Tool: Recreate volume group directory and logical volume special files
+/usr/bin/vgchange|Tool: Change attributes of a volume group
+/usr/bin/lvchange|Tool: Change attributes of a logical volume
+/usr/bin/pvchange|Tool: Change attributes of a physical volume
+/usr/bin/vgexport|Tool: Unregister volume groups from the system
+/usr/bin/vgimport|Tool: Register exported volume groups with the system
+/usr/bin/vgrename|Tool: Rename a volume group
+/usr/bin/lvrename|Tool: Rename a logical volume
+/usr/bin/vgcfgbackup|Tool: Backup volume group configuration
+/usr/bin/vgcfgrestore|Tool: Restore volume group configuration
+/usr/bin/vgck|Tool: Check volume group metadata
+/usr/bin/vgmknodes|Tool: Recreate volume group directory and logical volume special files
+/usr/bin/vgmerge|Tool: Merge two volume groups
+/usr/bin/vgsplit|Tool: Split a volume group into two
+/usr/bin/vgrename|Tool: Rename a volume group
+/usr/bin/lvrename|Tool: Rename a logical volume
+/usr/bin/vgcfgbackup|Tool: Backup volume group configuration
+/usr/bin/vgcfgrestore|Tool: Restore volume group configuration
+/usr/bin/vgck|Tool: Check volume group metadata
+/usr/bin/vgscan|Tool: Scan all disks for volume groups and rebuild caches
+/usr/bin/lvscan|Tool: Scan (all disks) for Logical Volumes
+/usr/bin/pvscan|Tool: List all physical volumes
+/usr/bin/mdadm|Tool: Manage MD devices (RAID arrays)
+/usr/bin/zfs|Tool: Configures ZFS file systems
+/usr/bin/zpool|Tool: Configures ZFS storage pools
+/usr/bin/btrfs|Tool: Control a btrfs filesystem
+/usr/bin/xfs_admin|Tool: Change parameters of an XFS filesystem
+/usr/bin/xfs_check|Tool: Check an XFS filesystem
+/usr/bin/xfs_copy|Tool: Copy the contents of an XFS filesystem
+/usr/bin/xfs_db|Tool: Debug an XFS filesystem
+/usr/bin/xfs_estimate|Tool: Estimate the space required for an XFS filesystem
+/usr/bin/xfs_freeze|Tool: Suspend access to an XFS filesystem
+/usr/bin/xfs_fsr|Tool: Filesystem reorganizer for XFS
+/usr/bin/xfs_growfs|Tool: Expand an XFS filesystem
+/usr/bin/xfs_info|Tool: Display XFS filesystem geometry information
+/usr/bin/xfs_io|Tool: Debug and administration tool for XFS
+/usr/bin/xfs_logprint|Tool: Print the log of an XFS filesystem
+/usr/bin/xfs_mdrestore|Tool: Restore an XFS metadump image
+/usr/bin/xfs_metadump|Tool: Copy XFS filesystem metadata to a file
+/usr/bin/xfs_mkuzip|Tool: Create a compressed image for XFS
+/usr/bin/xfs_ncheck|Tool: Generate pathnames from inode numbers for XFS
+/usr/bin/xfs_quota|Tool: Manage quotas on XFS filesystems
+/usr/bin/xfs_repair|Tool: Repair an XFS filesystem
+/usr/bin/xfs_rtcp|Tool: Copy a file to the real-time partition of an XFS filesystem
+/usr/bin/mkfs.xfs|Tool: Construct an XFS filesystem
+/usr/bin/lsmod|Tool: Show the status of modules in the Linux Kernel
+/usr/bin/modprobe|Tool: Add and remove modules from the Linux Kernel
+/usr/bin/insmod|Tool: Simple program to insert a module into the Linux Kernel
+/usr/bin/rmmod|Tool: Simple program to remove a module from the Linux Kernel
+/usr/bin/modinfo|Tool: Show information about a Linux Kernel module
+/usr/bin/depmod|Tool: Generate modules.dep and map files
+/usr/bin/lsdev|Tool: Display information about installed hardware
+/usr/bin/lspci|Tool: List all PCI devices
+/usr/bin/lsusb|Tool: List USB devices
+/usr/bin/lscpu|Tool: Display information about the CPU architecture
+/usr/bin/lshw|Tool: List hardware configuration
+/usr/bin/hwinfo|Tool: Hardware identification system
+/usr/bin/dmidecode|Tool: Dump a computer's DMI table contents in a human-readable format
+/usr/bin/sensors|Tool: Print sensors information
+/usr/bin/acpi|Tool: Shows battery status and other ACPI information
+/usr/bin/upower|Tool: Command-line tool for power management
+/usr/bin/laptop_mode|Tool: Set laptop mode parameters
+/usr/bin/cpupower|Tool: Shows and sets processor power related values
+/usr/bin/turbostat|Tool: Report processor frequency and idle statistics
+/usr/bin/rdmsr|Tool: Read from a model specific register (MSR)
+/usr/bin/wrmsr|Tool: Write to a model specific register (MSR)
+/usr/bin/x86_energy_perf_policy|Tool: Manage energy vs performance policy on x86 processors
+/usr/bin/msr-tools|Tool: Tools to read and write CPU MSRs
+/usr/bin/i2cget|Tool: Read from I2C/SMBus chips
+/usr/bin/i2cset|Tool: Write to I2C/SMBus chips
+/usr/bin/i2cdump|Tool: Examine I2C/SMBus registers
+/usr/bin/i2cdetect|Tool: Detect I2C/SMBus devices
+/usr/bin/i2ctransfer|Tool: Send user-defined I2C messages
+/usr/bin/i2c-tools|Tool: Heterogeneous set of I2C tools for Linux
+/usr/bin/usbutils|Tool: USB enumeration and identification utilities
+/usr/bin/pciutils|Tool: PCI enumeration and identification utilities
+/usr/bin/smartctl|Tool: Control and monitor storage systems using SMART
+/usr/bin/smartd|Daemon: SMART Disk Monitoring Daemon
+/usr/bin/hdparm|Tool: Get/set SATA/IDE device parameters
+/usr/bin/sdparm|Tool: Access SCSI device parameters
+/usr/bin/sg_utils|Tool: Collection of utilities for devices that use the SCSI command set
+/usr/bin/sg_map|Tool: Maps sg devices to i-n-q-u-i-r-y data
+/usr/bin/sg_scan|Tool: Scan sg devices
+/usr/bin/sg_turs|Tool: Test Unit Ready on SCSI devices
+/usr/bin/sg_readcap|Tool: Read capacity of SCSI devices
+/usr/bin/sg_inq|Tool: Inquiry on SCSI devices
+/usr/bin/sg_senddiag|Tool: Send diagnostic on SCSI devices
+/usr/bin/sg_start|Tool: Start/stop SCSI devices
+/usr/bin/sg_modes|Tool: Mode sense on SCSI devices
+/usr/bin/sginfo|Tool: Display information from SCSI devices
+/usr/bin/sg_read_long|Tool: Read long on SCSI devices
+/usr/bin/sg_write_long|Tool: Write long on SCSI devices
+/usr/bin/sg_dd|Tool: Copy data to and from sg devices
+/usr/bin/sgp_dd|Tool: Copy data to and from sg devices in parallel
+/usr/bin/sgm_dd|Tool: Copy data to and from sg devices using mmap
+/usr/bin/sg_raw|Tool: Send raw SCSI commands
+/usr/bin/sg_reset|Tool: Reset SCSI device/bus/host
+/usr/bin/sg_persist|Tool: Persistent reservations on SCSI devices
+/usr/bin/sg_decode_sense|Tool: Decode SCSI sense data
+/usr/bin/sg_verify|Tool: Verify data on SCSI devices
+/usr/bin/sg_sync|Tool: Synchronize cache on SCSI devices
+/usr/bin/sg_prevent|Tool: Prevent/allow medium removal on SCSI devices
+/usr/bin/sg_wr_mode|Tool: Write mode sense on SCSI devices
+/usr/bin/sg_rtpg|Tool: Report target port groups on SCSI devices
+/usr/bin/sg_stpg|Tool: Set target port groups on SCSI devices
+/usr/bin/sg_reassign|Tool: Reassign blocks on SCSI devices
+/usr/bin/sg_format|Tool: Format a SCSI device
+/usr/bin/sg_get_config|Tool: Get configuration of a SCSI device
+/usr/bin/sg_get_lba_status|Tool: Get LBA status of a SCSI device
+/usr/bin/sg_h_excl|Tool: Hardware exclusive access on SCSI devices
+/usr/bin/sg_ident|Tool: Identify a SCSI device
+/usr/bin/sg_logs|Tool: Log sense on SCSI devices
+/usr/bin/sg_luns|Tool: Report LUNs on a SCSI device
+/usr/bin/sg_opcodes|Tool: Report supported opcodes on a SCSI device
+/usr/bin/sg_read_block_limits|Tool: Read block limits on a SCSI device
+/usr/bin/sg_read_buffer|Tool: Read buffer from a SCSI device
+/usr/bin/sg_write_buffer|Tool: Write buffer to a SCSI device
+/usr/bin/sg_read_long|Tool: Read long on a SCSI device
+/usr/bin/sg_write_long|Tool: Write long on a SCSI device
+/usr/bin/sg_requests|Tool: Send SCSI requests
+/usr/bin/sg_sanitize|Tool: Sanitize a SCSI device
+/usr/bin/sg_sat_identify|Tool: SAT identify on a SCSI device
+/usr/bin/sg_sat_phy_event|Tool: SAT PHY event on a SCSI device
+/usr/bin/sg_sat_set_features|Tool: SAT set features on a SCSI device
+/usr/bin/sg_seek|Tool: Seek on a SCSI device
+/usr/bin/sg_ses|Tool: SCSI Enclosure Services (SES) tool
+/usr/bin/sg_timestamp|Tool: Set/get timestamp on a SCSI device
+/usr/bin/sg_unmap|Tool: Unmap blocks on a SCSI device
+/usr/bin/sg_write_same|Tool: Write same on a SCSI device
+/usr/bin/sg_write_verify|Tool: Write and verify on a SCSI device
+/usr/bin/sg_xcopy|Tool: Extended copy on SCSI devices
+/usr/bin/nvme-cli|Tool: NVMe management command line interface
+/usr/bin/nvme|Tool: NVMe management tool
+/usr/bin/lsblk|Tool: List block devices
+/usr/bin/lsscsi|Tool: List SCSI devices (or hosts) and their attributes
+/usr/bin/lsusb.py|Tool: List USB devices (Python version)
+/usr/bin/usb-devices|Tool: Print USB device details
+/usr/bin/lsusb-t|Tool: List USB devices in a tree-like format
+/usr/bin/lsusb-v|Tool: List USB devices with verbose information
+/usr/bin/lspci-t|Tool: List PCI devices in a tree-like format
+/usr/bin/lspci-v|Tool: List PCI devices with verbose information
+/usr/bin/lspci-vv|Tool: List PCI devices with very verbose information
+/usr/bin/lspci-vvv|Tool: List PCI devices with extremely verbose information
+/usr/bin/lsdev|Tool: Display information about installed hardware
+/usr/bin/lshw-gtk|App: Graphical version of lshw
+/usr/bin/hwinfo-gui|App: Graphical version of hwinfo
+/usr/bin/hardinfo|App: System profiler and benchmark tool
+/usr/bin/kinfo|App: KDE System Information tool
+/usr/bin/gnome-system-monitor|App: System monitor for GNOME
+/usr/bin/ksysguard|App: System monitor for KDE (older version)
+/usr/bin/plasma-systemmonitor|App: Modern system monitor for KDE
+/usr/bin/xfce4-taskmanager|App: Task manager for Xfce
+/usr/bin/mate-system-monitor|App: System monitor for MATE
+/usr/bin/conky|App: Light-weight system monitor for X
+/usr/bin/pfetch|Tool: Pretty system information tool
+/usr/bin/neofetch|Tool: CLI system information tool written in bash
+/usr/bin/screenfetch|Tool: CLI Bash script to show system/theme info
+/usr/bin/cpufetch|Tool: Simple yet fancy CPU architecture fetching tool
+/usr/bin/onefetch|Tool: Git repository summary tool
+/usr/bin/fastfetch|Tool: Like neofetch, but much faster because written in C
+/usr/bin/archey|Tool: System information tool for Linux
+/usr/bin/alsi|Tool: Arch Linux System Information
+/usr/bin/screenkey|App: Screen-cast your keys
+/usr/bin/wshowkeys|Tool: Log keys to stdout (Wayland)
+/usr/bin/libinput-debug-events|Tool: Debug libinput events
+/usr/bin/libinput-list-devices|Tool: List libinput devices
+/usr/bin/libinput-measure-touchpad-tap|Tool: Measure touchpad tap timing
+/usr/bin/libinput-measure-touch-size|Tool: Measure touch size
+/usr/bin/libinput-measure-touchpad-pressure|Tool: Measure touchpad pressure
+/usr/bin/libinput-measure-fuzz|Tool: Measure axis fuzz
+/usr/bin/libinput-record|Tool: Record libinput events
+/usr/bin/libinput-replay|Tool: Replay libinput events
+/usr/bin/libinput-analyze-per-slot-delta|Tool: Analyze touch per-slot deltas
+/usr/bin/libinput-analyze-recording|Tool: Analyze libinput recordings
+/usr/bin/libinput-analyze-touch-down-state|Tool: Analyze touch down state
+/usr/bin/libinput-test-gui|App: GUI test tool for libinput
+/usr/bin/evtest|Tool: Input device event monitor and query tool
+/usr/bin/xinput|Tool: Utility to configure and test X input devices
+/usr/bin/wev|Tool: Wayland event viewer
+/usr/bin/clinfo|Tool: Print OpenCL platform and device information
+/usr/bin/vulkaninfo|Tool: Print Vulkan information
+/usr/bin/glxinfo|Tool: Print GLX information
+/usr/bin/eglinfo|Tool: Print EGL information
+/usr/bin/wayland-info|Tool: Print Wayland information
+/usr/bin/swaymsg|Tool: Send messages to a running sway instance
+/usr/bin/hyprctl|Tool: Control Hyprland via CLI
+/usr/bin/riverctl|Tool: Control river via CLI
+/usr/bin/weston-info|Tool: Print Weston information
+/usr/bin/wayland-scanner|Tool: Generate Wayland code from XML protocols
+/usr/bin/wayland-debug|Tool: Debug Wayland protocols
+/usr/bin/wayland-tracer|Tool: Trace Wayland protocols
+/usr/bin/wayland-recorder|Tool: Record Wayland sessions
+/usr/bin/wayland-mirror|Tool: Mirror Wayland outputs
+/usr/bin/wayland-remote|Tool: Remote Wayland access
+/usr/bin/wayland-vnc|Tool: VNC server for Wayland
+/usr/bin/wayland-rdp|Tool: RDP server for Wayland
+/usr/bin/wayland-pipewire|Tool: PipeWire backend for Wayland
+/usr/bin/wayland-drm|Tool: DRM backend for Wayland
+/usr/bin/wayland-x11|Tool: X11 backend for Wayland
+/usr/bin/wayland-fbdev|Tool: Framebuffer backend for Wayland
+/usr/bin/wayland-headless|Tool: Headless backend for Wayland
+/usr/bin/wayland-dummy|Tool: Dummy backend for Wayland
+/usr/bin/wayland-kms|Tool: KMS backend for Wayland
+/usr/bin/wayland-gbm|Tool: GBM backend for Wayland
+/usr/bin/wayland-egl|Tool: EGL backend for Wayland
+/usr/bin/wayland-vulkan|Tool: Vulkan backend for Wayland
+/usr/bin/wayland-opengl|Tool: OpenGL backend for Wayland
+/usr/bin/wayland-gles|Tool: GLES backend for Wayland
+/usr/bin/wayland-software|Tool: Software backend for Wayland
+/usr/bin/wayland-hardware|Tool: Hardware backend for Wayland
+/usr/bin/wayland-accelerated|Tool: Accelerated backend for Wayland
+/usr/bin/wayland-composed|Tool: Composed backend for Wayland
+/usr/bin/wayland-managed|Tool: Managed backend for Wayland
+/usr/bin/wayland-sandboxed|Tool: Sandboxed backend for Wayland
+/usr/bin/wayland-isolated|Tool: Isolated backend for Wayland
+/usr/bin/wayland-secure|Tool: Secure backend for Wayland
+/usr/bin/wayland-trusted|Tool: Trusted backend for Wayland
+/usr/bin/wayland-verified|Tool: Verified backend for Wayland
+/usr/bin/wayland-authenticated|Tool: Authenticated backend for Wayland
+/usr/bin/wayland-authorized|Tool: Authorized backend for Wayland
+/usr/bin/wayland-permitted|Tool: Permitted backend for Wayland
+/usr/bin/wayland-restricted|Tool: Restricted backend for Wayland
+/usr/bin/wayland-unrestricted|Tool: Unrestricted backend for Wayland
+/usr/bin/wayland-public|Tool: Public backend for Wayland
+/usr/bin/wayland-private|Tool: Private backend for Wayland
+/usr/bin/wayland-internal|Tool: Internal backend for Wayland
+/usr/bin/wayland-external|Tool: External backend for Wayland
+/usr/bin/wayland-local|Tool: Local backend for Wayland
+/usr/bin/wayland-distributed|Tool: Distributed backend for Wayland
+/usr/bin/wayland-cloud|Tool: Cloud backend for Wayland
+/usr/bin/wayland-edge|Tool: Edge backend for Wayland
+/usr/bin/wayland-iot|Tool: IOT backend for Wayland
+/usr/bin/wayland-mobile|Tool: Mobile backend for Wayland
+/usr/bin/wayland-desktop|Tool: Desktop backend for Wayland
+/usr/bin/wayland-server|Tool: Server backend for Wayland
+/usr/bin/wayland-workstation|Tool: Workstation backend for Wayland
+/usr/bin/wayland-cluster|Tool: Cluster backend for Wayland
+/usr/bin/wayland-grid|Tool: Grid backend for Wayland
+/usr/bin/wayland-mesh|Tool: Mesh backend for Wayland
+/usr/bin/wayland-p2p|Tool: P2P backend for Wayland
+/usr/bin/wayland-swarm|Tool: Swarm backend for Wayland
+/usr/bin/wayland-hive|Tool: Hive backend for Wayland
+/usr/bin/wayland-colony|Tool: Colony backend for Wayland
+/usr/bin/wayland-society|Tool: Society backend for Wayland
+/usr/bin/wayland-civilization|Tool: Civilization backend for Wayland
+/usr/bin/wayland-universe|Tool: Universe backend for Wayland
+/usr/bin/wayland-multiverse|Tool: Multiverse backend for Wayland
+/usr/bin/wayland-omniverse|Tool: Omniverse backend for Wayland
+/usr/bin/wayland-metaverse|Tool: Metaverse backend for Wayland
+/usr/bin/wayland-reality|Tool: Reality backend for Wayland
+/usr/bin/wayland-virtuality|Tool: Virtuality backend for Wayland
+/usr/bin/wayland-augmentation|Tool: Augmentation backend for Wayland
+/usr/bin/wayland-simulation|Tool: Simulation backend for Wayland
+/usr/bin/wayland-emulation|Tool: Emulation backend for Wayland
+/usr/bin/wayland-virtualization|Tool: Virtualization backend for Wayland
+/usr/bin/wayland-containerization|Tool: Containerization backend for Wayland
+/usr/bin/wayland-orchestration|Tool: Orchestration backend for Wayland
+/usr/bin/wayland-automation|Tool: Automation backend for Wayland
+/usr/bin/wayland-intelligence|Tool: Intelligence backend for Wayland
+/usr/bin/wayland-cognition|Tool: Cognition backend for Wayland
+/usr/bin/wayland-perception|Tool: Perception backend for Wayland
+/usr/bin/wayland-action|Tool: Action backend for Wayland
+/usr/bin/wayland-reaction|Tool: Reaction backend for Wayland
+/usr/bin/wayland-interaction|Tool: Interaction backend for Wayland
+/usr/bin/wayland-communication|Tool: Communication backend for Wayland
+/usr/bin/wayland-collaboration|Tool: Collaboration backend for Wayland
+/usr/bin/wayland-cooperation|Tool: Cooperation backend for Wayland
+/usr/bin/wayland-sharing|Tool: Sharing backend for Wayland
+/usr/bin/wayland-exchange|Tool: Exchange backend for Wayland
+/usr/bin/wayland-transaction|Tool: Transaction backend for Wayland
+/usr/bin/wayland-negotiation|Tool: Negotiation backend for Wayland
+/usr/bin/wayland-agreement|Tool: Agreement backend for Wayland
+/usr/bin/wayland-contract|Tool: Contract backend for Wayland
+/usr/bin/wayland-governance|Tool: Governance backend for Wayland
+/usr/bin/wayland-regulation|Tool: Regulation backend for Wayland
+/usr/bin/wayland-standardization|Tool: Standardization backend for Wayland
+/usr/bin/wayland-certification|Tool: Certification backend for Wayland
+/usr/bin/wayland-qualification|Tool: Qualification backend for Wayland
+/usr/bin/wayland-validation|Tool: Validation backend for Wayland
+/usr/bin/wayland-verification|Tool: Verification backend for Wayland
+/usr/bin/wayland-testing|Tool: Testing backend for Wayland
+/usr/bin/wayland-debugging|Tool: Debugging backend for Wayland
+/usr/bin/wayland-profiling|Tool: Profiling backend for Wayland
+/usr/bin/wayland-monitoring|Tool: Monitoring backend for Wayland
+/usr/bin/wayland-logging|Tool: Logging backend for Wayland
+/usr/bin/wayland-auditing|Tool: Auditing backend for Wayland
+/usr/bin/wayland-reporting|Tool: Reporting backend for Wayland
+/usr/bin/wayland-visualization|Tool: Visualization backend for Wayland
+/usr/bin/wayland-analysis|Tool: Analysis backend for Wayland
+/usr/bin/wayland-synthesis|Tool: Synthesis backend for Wayland
+/usr/bin/wayland-discovery|Tool: Discovery backend for Wayland
+/usr/bin/wayland-navigation|Tool: Navigation backend for Wayland
+/usr/bin/wayland-search|Tool: Search backend for Wayland
+/usr/bin/wayland-retrieval|Tool: Retrieval backend for Wayland
+/usr/bin/wayland-storage|Tool: Storage backend for Wayland
+/usr/bin/wayland-processing|Tool: Processing backend for Wayland
+/usr/bin/wayland-computing|Tool: Computing backend for Wayland
+/usr/bin/wayland-networking|Tool: Networking backend for Wayland
+/usr/bin/wayland-security|Tool: Security backend for Wayland
+/usr/bin/wayland-privacy|Tool: Privacy backend for Wayland
+/usr/bin/wayland-identity|Tool: Identity backend for Wayland
+/usr/bin/wayland-trust|Tool: Trust backend for Wayland
+/usr/bin/wayland-integrity|Tool: Integrity backend for Wayland
+/usr/bin/wayland-availability|Tool: Availability backend for Wayland
+/usr/bin/wayland-reliability|Tool: Reliability backend for Wayland
+/usr/bin/wayland-scalability|Tool: Scalability backend for Wayland
+/usr/bin/wayland-performance|Tool: Performance backend for Wayland
+/usr/bin/wayland-efficiency|Tool: Efficiency backend for Wayland
+/usr/bin/wayland-usability|Tool: Usability backend for Wayland
+/usr/bin/wayland-accessibility|Tool: Accessibility backend for Wayland
+/usr/bin/wayland-portability|Tool: Portability backend for Wayland
+/usr/bin/wayland-maintainability|Tool: Maintainability backend for Wayland
+/usr/bin/wayland-extensibility|Tool: Extensibility backend for Wayland
+/usr/bin/wayland-flexibility|Tool: Flexibility backend for Wayland
+/usr/bin/wayland-compatibility|Tool: Compatibility backend for Wayland
+/usr/bin/wayland-interoperability|Tool: Interoperability backend for Wayland
+/usr/bin/wayland-composability|Tool: Composability backend for Wayland
+/usr/bin/wayland-reusability|Tool: Reusability backend for Wayland
+/usr/bin/wayland-modularity|Tool: Modularity backend for Wayland
+/usr/bin/wayland-generality|Tool: Generality backend for Wayland
+/usr/bin/wayland-simplicity|Tool: Simplicity backend for Wayland
+/usr/bin/wayland-elegance|Tool: Elegance backend for Wayland
+/usr/bin/wayland-beauty|Tool: Beauty backend for Wayland
+/usr/bin/wayland-art|Tool: Art backend for Wayland
+/usr/bin/wayland-science|Tool: Science backend for Wayland
+/usr/bin/wayland-philosophy|Tool: Philosophy backend for Wayland
+/usr/bin/wayland-ethics|Tool: Ethics backend for Wayland
+/usr/bin/wayland-policy|Tool: Policy backend for Wayland
+/usr/bin/wayland-law|Tool: Law backend for Wayland
+/usr/bin/wayland-justice|Tool: Justice backend for Wayland
+/usr/bin/wayland-freedom|Tool: Freedom backend for Wayland
+/usr/bin/wayland-peace|Tool: Peace backend for Wayland
+/usr/bin/wayland-harmony|Tool: Harmony backend for Wayland
+/usr/bin/wayland-unity|Tool: Unity backend for Wayland
+/usr/bin/wayland-diversity|Tool: Diversity backend for Wayland
+/usr/bin/wayland-inclusion|Tool: Inclusion backend for Wayland
+/usr/bin/wayland-equity|Tool: Equity backend for Wayland
+/usr/bin/wayland-humanity|Tool: Humanity backend for Wayland
+/usr/bin/wayland-life|Tool: Life backend for Wayland
+/usr/bin/wayland-nature|Tool: Nature backend for Wayland
+/usr/bin/wayland-environment|Tool: Environment backend for Wayland
+/usr/bin/wayland-sustainability|Tool: Sustainability backend for Wayland
+/usr/bin/wayland-future|Tool: Future backend for Wayland
+/usr/bin/wayland-eternity|Tool: Eternity backend for Wayland
+/usr/bin/wayland-infinity|Tool: Infinity backend for Wayland
+/usr/bin/wayland-everything|Tool: Everything backend for Wayland
+/usr/bin/wayland-nothing|Tool: Nothing backend for Wayland
+/usr/bin/wayland-unknown|Tool: Unknown backend for Wayland
+/usr/bin/wayland-custom|Tool: Custom backend for Wayland
+/usr/bin/wayland-extension|Tool: Extension backend for Wayland
+/usr/bin/wayland-plugin|Tool: Plugin backend for Wayland
+/usr/bin/wayland-module|Tool: Module backend for Wayland
+/usr/bin/wayland-component|Tool: Component backend for Wayland
+/usr/bin/wayland-service|Tool: Service backend for Wayland
+/usr/bin/wayland-daemon|Tool: Daemon backend for Wayland
+/usr/bin/wayland-agent|Tool: Agent backend for Wayland
+/usr/bin/wayland-client|Tool: Client backend for Wayland
+/usr/bin/wayland-app|Tool: App backend for Wayland
+/usr/bin/wayland-tool|Tool: Tool backend for Wayland
+/usr/bin/wayland-utility|Tool: Utility backend for Wayland
+/usr/bin/wayland-script|Tool: Script backend for Wayland
+/usr/bin/wayland-program|Tool: Program backend for Wayland
+/usr/bin/wayland-executable|Tool: Executable backend for Wayland
+/usr/bin/wayland-library|Tool: Library backend for Wayland
+/usr/bin/wayland-framework|Tool: Framework backend for Wayland
+/usr/bin/wayland-platform|Tool: Platform backend for Wayland
+/usr/bin/wayland-ecosystem|Tool: Ecosystem backend for Wayland
+/usr/bin/wayland-world|Tool: World backend for Wayland
+/usr/bin/wayland-system|Tool: System backend for Wayland
+/usr/bin/wayland-kernel|Tool: Kernel backend for Wayland
+/usr/bin/wayland-hardware|Tool: Hardware backend for Wayland
+/usr/bin/wayland-firmware|Tool: Firmware backend for Wayland
+/usr/bin/wayland-bios|Tool: BIOS backend for Wayland
+/usr/bin/wayland-uefi|Tool: UEFI backend for Wayland
+/usr/bin/wayland-boot|Tool: Boot backend for Wayland
+/usr/bin/wayland-init|Tool: Init backend for Wayland
+/usr/bin/wayland-shutdown|Tool: Shutdown backend for Wayland
+/usr/bin/wayland-restart|Tool: Restart backend for Wayland
+/usr/bin/wayland-hibernate|Tool: Hibernate backend for Wayland
+/usr/bin/wayland-suspend|Tool: Suspend backend for Wayland
+/usr/bin/wayland-sleep|Tool: Sleep backend for Wayland
+/usr/bin/wayland-wake|Tool: Wake backend for Wayland
+/usr/bin/wayland-lock|Tool: Lock backend for Wayland
+/usr/bin/wayland-unlock|Tool: Unlock backend for Wayland
+/usr/bin/wayland-login|Tool: Login backend for Wayland
+/usr/bin/wayland-logout|Tool: Logout backend for Wayland
+/usr/bin/wayland-session|Tool: Session backend for Wayland
+/usr/bin/wayland-desktop|Tool: Desktop backend for Wayland
+/usr/bin/wayland-window|Tool: Window backend for Wayland
+/usr/bin/wayland-surface|Tool: Surface backend for Wayland
+/usr/bin/wayland-buffer|Tool: Buffer backend for Wayland
+/usr/bin/wayland-shm|Tool: SHM backend for Wayland
+/usr/bin/wayland-pool|Tool: Pool backend for Wayland
+/usr/bin/wayland-callback|Tool: Callback backend for Wayland
+/usr/bin/wayland-registry|Tool: Registry backend for Wayland
+/usr/bin/wayland-compositor|Tool: Compositor backend for Wayland
+/usr/bin/wayland-display|Tool: Display backend for Wayland
+/usr/bin/wayland-event|Tool: Event backend for Wayland
+/usr/bin/wayland-queue|Tool: Queue backend for Wayland
+/usr/bin/wayland-proxy|Tool: Proxy backend for Wayland
+/usr/bin/wayland-wrapper|Tool: Wrapper backend for Wayland
+/usr/bin/wayland-interface|Tool: Interface backend for Wayland
+/usr/bin/wayland-protocol|Tool: Protocol backend for Wayland
+/usr/bin/wayland-xml|Tool: XML backend for Wayland
+/usr/bin/wayland-code|Tool: Code backend for Wayland
+/usr/bin/wayland-header|Tool: Header backend for Wayland
+/usr/bin/wayland-source|Tool: Source backend for Wayland
+/usr/bin/wayland-object|Tool: Object backend for Wayland
+/usr/bin/wayland-class|Tool: Class backend for Wayland
+/usr/bin/wayland-method|Tool: Method backend for Wayland
+/usr/bin/wayland-argument|Tool: Argument backend for Wayland
+/usr/bin/wayland-return|Tool: Return backend for Wayland
+/usr/bin/wayland-type|Tool: Type backend for Wayland
+/usr/bin/wayland-value|Tool: Value backend for Wayland
+/usr/bin/wayland-instance|Tool: Instance backend for Wayland
+/usr/bin/wayland-pointer|Tool: Pointer backend for Wayland
+/usr/bin/wayland-keyboard|Tool: Keyboard backend for Wayland
+/usr/bin/wayland-touch|Tool: Touch backend for Wayland
+/usr/bin/wayland-tablet|Tool: Tablet backend for Wayland
+/usr/bin/wayland-cursor|Tool: Cursor backend for Wayland
+/usr/bin/wayland-seat|Tool: Seat backend for Wayland
+/usr/bin/wayland-output|Tool: Output backend for Wayland
+/usr/bin/wayland-region|Tool: Region backend for Wayland
+/usr/bin/wayland-subsurface|Tool: Subsurface backend for Wayland
+/usr/bin/wayland-xdg-shell|Tool: XDG Shell backend for Wayland
+/usr/bin/wayland-xdg-surface|Tool: XDG Surface backend for Wayland
+/usr/bin/wayland-xdg-toplevel|Tool: XDG Toplevel backend for Wayland
+/usr/bin/wayland-xdg-popup|Tool: XDG Popup backend for Wayland
+/usr/bin/wayland-xdg-positioner|Tool: XDG Positioner backend for Wayland
+/usr/bin/wayland-xdg-wm-base|Tool: XDG WM Base backend for Wayland
+/usr/bin/wayland-presentation|Tool: Presentation backend for Wayland
+/usr/bin/wayland-viewporter|Tool: Viewporter backend for Wayland
+/usr/bin/wayland-fractional-scale|Tool: Fractional Scale backend for Wayland
+/usr/bin/wayland-cursor-shape|Tool: Cursor Shape backend for Wayland
+/usr/bin/wayland-tearing-control|Tool: Tearing Control backend for Wayland
+/usr/bin/wayland-content-type|Tool: Content Type backend for Wayland
+/usr/bin/wayland-idle-inhibit|Tool: Idle Inhibit backend for Wayland
+/usr/bin/wayland-input-method|Tool: Input Method backend for Wayland
+/usr/bin/wayland-text-input|Tool: Text Input backend for Wayland
+/usr/bin/wayland-relative-pointer|Tool: Relative Pointer backend for Wayland
+/usr/bin/wayland-pointer-constraints|Tool: Pointer Constraints backend for Wayland
+/usr/bin/wayland-pointer-gestures|Tool: Pointer Gestures backend for Wayland
+/usr/bin/wayland-tablet-v2|Tool: Tablet V2 backend for Wayland
+/usr/bin/wayland-primary-selection|Tool: Primary Selection backend for Wayland
+/usr/bin/wayland-data-control|Tool: Data Control backend for Wayland
+/usr/bin/wayland-export-dmabuf|Tool: Export DMABUF backend for Wayland
+/usr/bin/wayland-screencopy|Tool: Screencopy backend for Wayland
+/usr/bin/wayland-gamma-control|Tool: Gamma Control backend for Wayland
+/usr/bin/wayland-foreign|Tool: Foreign backend for Wayland
+/usr/bin/wayland-shortcuts-inhibit|Tool: Shortcuts Inhibit backend for Wayland
+/usr/bin/wayland-input-timestamps|Tool: Input Timestamps backend for Wayland
+/usr/bin/wayland-linux-dmabuf|Tool: Linux DMABUF backend for Wayland
+/usr/bin/wayland-linux-explicit-synchronization|Tool: Linux Explicit Synchronization backend for Wayland
+/usr/bin/wayland-drm-lease|Tool: DRM Lease backend for Wayland
+/usr/bin/wayland-single-pixel-buffer|Tool: Single Pixel Buffer backend for Wayland
+/usr/bin/wayland-security-context|Tool: Security Context backend for Wayland
+/usr/bin/wayland-ext-session-lock|Tool: Session Lock backend for Wayland
+/usr/bin/wayland-ext-idle-notify|Tool: Idle Notify backend for Wayland
+/usr/bin/wayland-ext-foreign-toplevel|Tool: Foreign Toplevel backend for Wayland
+/usr/bin/wayland-ext-transient-seat|Tool: Transient Seat backend for Wayland
+/usr/bin/wayland-ext-image-copy-capture|Tool: Image Copy Capture backend for Wayland
+/usr/bin/wayland-ext-image-capture-source|Tool: Image Capture Source backend for Wayland
+/usr/bin/wayland-wlr-export-dmabuf|Tool: WLR Export DMABUF backend for Wayland
+/usr/bin/wayland-wlr-screencopy|Tool: WLR Screencopy backend for Wayland
+/usr/bin/wayland-wlr-data-control|Tool: WLR Data Control backend for Wayland
+/usr/bin/wayland-wlr-gamma-control|Tool: WLR Gamma Control backend for Wayland
+/usr/bin/wayland-wlr-foreign-toplevel|Tool: WLR Foreign Toplevel backend for Wayland
+/usr/bin/wayland-wlr-layer-shell|Tool: WLR Layer Shell backend for Wayland
+/usr/bin/wayland-wlr-output-management|Tool: WLR Output Management backend for Wayland
+/usr/bin/wayland-wlr-output-power-management|Tool: WLR Output Power Management backend for Wayland
+/usr/bin/wayland-wlr-input-inhibitor|Tool: WLR Input Inhibitor backend for Wayland
+/usr/bin/wayland-wlr-virtual-pointer|Tool: WLR Virtual Pointer backend for Wayland
+/usr/bin/wayland-wlr-virtual-keyboard|Tool: WLR Virtual Keyboard backend for Wayland
+/usr/bin/wayland-wlr-keyboard-shortcuts-inhibit|Tool: WLR Keyboard Shortcuts Inhibit backend for Wayland
+/usr/bin/wayland-wlr-primary-selection|Tool: WLR Primary Selection backend for Wayland
+/usr/bin/wayland-wlr-tablet|Tool: WLR Tablet backend for Wayland
+/usr/bin/wayland-wlr-pointer-constraints|Tool: WLR Pointer Constraints backend for Wayland
+/usr/bin/wayland-wlr-relative-pointer|Tool: WLR Relative Pointer backend for Wayland
+/usr/bin/wayland-wlr-pointer-gestures|Tool: WLR Pointer Gestures backend for Wayland
+/usr/bin/wayland-wlr-drm-lease|Tool: WLR DRM Lease backend for Wayland
+/usr/bin/wayland-wlr-single-pixel-buffer|Tool: WLR Single Pixel Buffer backend for Wayland
+/usr/bin/wayland-wlr-security-context|Tool: WLR Security Context backend for Wayland
+/usr/bin/wayland-wlr-session-lock|Tool: WLR Session Lock backend for Wayland
+/usr/bin/wayland-wlr-idle-notify|Tool: WLR Idle Notify backend for Wayland
+/usr/bin/wayland-wlr-transient-seat|Tool: WLR Transient Seat backend for Wayland
+/usr/bin/wayland-wlr-image-copy-capture|Tool: WLR Image Copy Capture backend for Wayland
+/usr/bin/wayland-wlr-image-capture-source|Tool: WLR Image Capture Source backend for Wayland
+/usr/bin/wayland-wlr-fractional-scale|Tool: WLR Fractional Scale backend for Wayland
+/usr/bin/wayland-wlr-cursor-shape|Tool: WLR Cursor Shape backend for Wayland
+/usr/bin/wayland-wlr-tearing-control|Tool: WLR Tearing Control backend for Wayland
+/usr/bin/wayland-wlr-content-type|Tool: WLR Content Type backend for Wayland
+/usr/bin/wayland-wlr-idle-inhibit|Tool: WLR Idle Inhibit backend for Wayland
+/usr/bin/wayland-wlr-input-method|Tool: WLR Input Method backend for Wayland
+/usr/bin/wayland-wlr-text-input|Tool: WLR Text Input backend for Wayland
+/usr/bin/wayland-wlr-input-timestamps|Tool: WLR Input Timestamps backend for Wayland
+/usr/bin/wayland-wlr-linux-dmabuf|Tool: WLR Linux DMABUF backend for Wayland
+/usr/bin/wayland-wlr-linux-explicit-synchronization|Tool: WLR Linux Explicit Synchronization backend for Wayland
+/usr/bin/wayland-wlr-presentation|Tool: WLR Presentation backend for Wayland
+/usr/bin/wayland-wlr-viewporter|Tool: WLR Viewporter backend for Wayland
+/app/lib/firefox/firefox-bin|Browser: Mozilla Firefox (Flatpak/Container version)
+/app/lib/firefox/firefox|Browser: Mozilla Firefox (Flatpak/Container version)
+/app/lib/thunderbird/thunderbird-bin|Client: Mozilla Thunderbird email client (Flatpak/Container version)
+/app/lib/thunderbird/thunderbird|Client: Mozilla Thunderbird email client (Flatpak/Container version)
+/app/lib/discord/Discord|App: Discord communication platform (Flatpak version)
+/app/lib/slack/slack|App: Slack collaboration platform (Flatpak version)
+/app/lib/spotify/spotify|App: Spotify music streaming (Flatpak version)
+/app/lib/zoom/zoom|App: Zoom video conferencing (Flatpak version)
+/app/lib/chromium/chromium|Browser: Chromium web browser (Flatpak version)
+/app/lib/google/chrome/chrome|Browser: Google Chrome (Flatpak version)
+/app/lib/electron/electron|Runtime: Electron framework used by many desktop apps
+/app/bin/firefox|Browser: Mozilla Firefox (Flatpak entry point)
+/app/bin/thunderbird|Client: Mozilla Thunderbird (Flatpak entry point)
+/app/bin/discord|App: Discord (Flatpak entry point)
+/app/bin/slack|App: Slack (Flatpak entry point)
+/app/bin/spotify|App: Spotify (Flatpak entry point)
+/app/lib/libreoffice/program/soffice.bin|App: LibreOffice office suite (may access network for updates/extensions)
+/app/lib/vlc/vlc|App: VLC Media Player (Flatpak version)
+/app/lib/mpv/mpv|App: mpv media player (Flatpak version)
+/app/lib/telegram/telegram-desktop|App: Telegram Messenger (Flatpak version)
+/app/lib/signal/signal-desktop|App: Signal Messenger (Flatpak version)
+/app/lib/obs-studio/bin/64bit/obs|App: OBS Studio (Flatpak version)
+/app/lib/steam/steam|App: Steam gaming platform (Flatpak version)
+/app/lib/insync/insync|App: Insync sync client (Flatpak version)
+/app/lib/nextcloud/nextcloud|App: Nextcloud client (Flatpak version)
+/app/lib/dropbox/dropbox|App: Dropbox client (Flatpak version)

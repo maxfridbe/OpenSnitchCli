@@ -12,37 +12,8 @@
     <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
   </ItemGroup>
 
-  <!-- We need access to the Proto definitions. 
-       Actually, the Protos are in OpenSnitchCli. 
-       Circular dependency risk: OpenSnitchCli -> OpenSnitchTUI -> OpenSnitchCli (for Protos).
-       
-       Solution: Move Protos to a separate "OpenSnitch.Shared" or "Protocol" library.
-       OR: Link the proto files in OpenSnitchTUI too.
-       
-       Simplest for now: Link the Proto files in OpenSnitchTUI so it can understand the types, 
-       OR just pass 'object' or 'dynamic'? No, we want strong types.
-       
-       Better: Extract Protos to a 'Protocol' library.
-       
-       Let's create a 'Protocol' class library first? 
-       No, let's keep it simple. OpenSnitchCli has the Protos.
-       If OpenSnitchTUI depends on OpenSnitchCli, then OpenSnitchCli cannot depend on OpenSnitchTUI.
-       
-       Current request: "Make a new project OpenSnitchTUI... if cli invoked... launch TUI".
-       This implies CLI depends on TUI.
-       So TUI cannot depend on CLI.
-       
-       So TUI needs the Protobuf definitions.
-       I will duplicate the Protobuf inclusion in OpenSnitchTUI so it generates the same types?
-       No, C# types will conflict if we link them.
-       
-       Correct Approach: Move Protos to a Shared Project.
-       
-       Plan B (Quick): 
-       Just define the data models we need in TUI (ViewModel) and map them in CLI.
-       This decouples TUI from the Proto implementation.
-       
-       I will define a `LogEvent` class in OpenSnitchTUI that holds the info we want to display.
-  -->
+  <ItemGroup>
+    <EmbeddedResource Include="descriptions.txt" />
+  </ItemGroup>
 
 </Project>

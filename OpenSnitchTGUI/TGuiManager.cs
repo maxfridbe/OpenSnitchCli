@@ -379,12 +379,14 @@ namespace OpenSnitchTGUI
                         ? req.Destination
                         : $"{dnsName} ({req.DestIp}) : {req.DestPort}";
 
-                    var text = $"Process: {req.Process}\nDest: {destDisplay}\n\nWhat do you want to do?";
+                    var description = DescriptionManager.Instance.GetDescription(req.Process);
+                    var aboutText = !string.IsNullOrEmpty(description) ? $"\nAbout: {description}" : "";
+                    var text = $"Process: {req.Process}\n{req.Description}{aboutText}\nDest: {destDisplay}\n\nWhat do you want to do?";
                     
                     var dialog = new Dialog() { 
                         Title = "OpenSnitch Request", 
                         Width = 75, 
-                        Height = 16,
+                        Height = 20,
                         SchemeName = _win?.SchemeName
                     };
                     var lbl = new Label() { Text = text, X = 1, Y = 1 };
@@ -1060,12 +1062,19 @@ namespace OpenSnitchTGUI
                     var match = Regex.Match(evt.Details ?? "", @"U(?:ID|ser):\s*(\d+)");
                     if (match.Success) user = _userManager.GetUser(match.Groups[1].Value);
 
+                    var description = DescriptionManager.Instance.GetDescription(evt.Source ?? "");
+                    var aboutText = !string.IsNullOrEmpty(description) ? $"\nAbout:       {description}" : "";
+                    
+                    var originText = "";
+                    if (evt.IsFlatpak) originText = "\nOrigin:      📦 Flatpak (Sandboxed)";
+                    else if (evt.IsInNamespace) originText = "\nOrigin:      📦 Container/Namespace";
+
                     _detailsView.Text = $"Timestamp:   {evt.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\n" +
                                        $"Type:        {evt.Type}\n" +
                                        $"Protocol:    {evt.Protocol}\n" +
                                        $"PID:         {evt.Pid}\n" +
                                        $"User:        {user}\n" +
-                                       $"Program:     {evt.Source}\n" +
+                                       $"Program:     {evt.Source}{originText}{aboutText}\n" +
                                        $"Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}\n" +
                                        $"Details:     {evt.Details}";
                 }

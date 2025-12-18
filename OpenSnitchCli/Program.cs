@@ -132,11 +132,19 @@ namespace OpenSnitchCli
                 };
 
                 uiService.AskRuleHandler = async (conn) => {
+                    var isFlatpak = !string.IsNullOrEmpty(conn.ProcessPath) && 
+                                   (conn.ProcessPath.StartsWith("/app/") || 
+                                    conn.ProcessPath.Contains("/flatpak/") ||
+                                    (conn.ProcessEnv != null && (conn.ProcessEnv.ContainsKey("FLATPAK_ID") || conn.ProcessEnv.ContainsKey("FLATPAK_SANDBOX_DIR"))));
+                    var isInNamespace = string.IsNullOrEmpty(conn.ProcessPath);
+                    
+                    var origin = isFlatpak ? "Flatpak" : (isInNamespace ? "Container/Namespace" : "Host");
+
                     var req = new PromptRequest
                     {
                         Process = conn.ProcessPath,
                         Destination = $"{conn.DstIp}:{conn.DstPort}",
-                        Description = $"{conn.Protocol} connection from {conn.SrcIp}",
+                        Description = $"{conn.Protocol} connection from {conn.SrcIp} (Origin: {origin})",
                         Protocol = conn.Protocol,
                         DestHost = conn.DstHost,
                         DestIp = conn.DstIp,
@@ -287,6 +295,12 @@ namespace OpenSnitchCli
                 // daemon couldn't find it in host /proc, often due to namespaces.
                 // Also check if path starts with known container patterns if needed.
                 evt.IsInNamespace = string.IsNullOrEmpty(conn.ProcessPath);
+                
+                // Flatpak detection
+                evt.IsFlatpak = !string.IsNullOrEmpty(conn.ProcessPath) && 
+                                (conn.ProcessPath.StartsWith("/app/") || 
+                                 conn.ProcessPath.Contains("/flatpak/") ||
+                                 (conn.ProcessEnv != null && (conn.ProcessEnv.ContainsKey("FLATPAK_ID") || conn.ProcessEnv.ContainsKey("FLATPAK_SANDBOX_DIR"))));
                 
                 list.Add(evt);
             }
