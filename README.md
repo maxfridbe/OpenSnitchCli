@@ -2,6 +2,9 @@
 
 This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for connections from the OpenSnitch daemon (`opensnitchd`) and displays received messages in a rich, interactive Terminal User Interface (TUI).
 
+![Main UI](screen.png)
+![Rule Prompt](prompt.png)
+
 ## Feature Parity Checklist (vs Python opensnitch-ui)
 
 - [x] **Live Connection Monitoring:** Real-time streaming of all network activity.
@@ -15,7 +18,7 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - [x] **Reverse DNS Resolution:** Background lookups via Cloudflare DoH.
 - [x] **User Resolution:** Automatic mapping of UIDs to local system usernames.
 - [x] **Container Detection:** Visual identification (📦) of namespaced/containerized processes.
-- [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('r' key).
+- [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('j' key).
 - [x] **Theme Support:** Multiple color schemes (Dracula, Nord, Monokai, etc.).
 - [x] **Notification System:** System beep on prompt to grab attention (rate-limited).
 - [ ] **Global Search/Filtering:** Ability to filter connection or rule lists.
@@ -32,9 +35,9 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 ## Features
 
 - **Dual TUI Modes:** 
-    - **Terminal.Gui v2 Mode (`--tui2`):** Full interactive grid with tabs, sorting, themes, and rule management.
+    - **Terminal.Gui v2 Mode (Default):** Full interactive grid with tabs, sorting, themes, and rule management.
     - **Spectre.Console Mode (`--tui`):** A high-performance, beautiful streaming view with fixed details pane.
-- **Global Hotkeys:** Responsive controls ('q', 't', 's', 'r', 'e', 'd') that work regardless of current focus.
+- **Global Hotkeys:** Responsive controls ('q', '0', 's', 'j', 'e', 'd', 'c', 'r') that work regardless of current focus.
 - **Smart Data Resolution:** DNS and User mappings handled automatically in the background.
 
 ## Setup
@@ -44,10 +47,10 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 
 ## How to Run
 
-### Mode 1: Terminal.Gui v2 (Full Interactive)
+### Default: Terminal.Gui v2 (Full Interactive)
 ```bash
 cd OpenSnitchCli
-dotnet run -- --tui2
+dotnet run
 ```
 
 ### Mode 2: Spectre.Console (Streaming View)
@@ -56,10 +59,16 @@ cd OpenSnitchCli
 dotnet run -- --tui
 ```
 
-### Mode 3: JSON Raw Output
+### Mode 3: JSON Raw Output (Dumping Mode)
 ```bash
 cd OpenSnitchCli
-dotnet run
+dotnet run -- --dump
+```
+
+### Help Information
+```bash
+cd OpenSnitchCli
+dotnet run -- --help
 ```
 
 ## Configuration
@@ -74,13 +83,17 @@ By default, the application:
 | :--- | :--- |
 | **Arrow Keys** | Navigate through the lists. |
 | **q** | Quit the application. |
-| **t** | Cycle through visual themes (TGUI Mode). |
-| **s** | Cycle sorting column (TGUI Mode). |
-| **S (Shift+S)** | Toggle sort direction (TGUI Mode). |
-| **r** | Jump to the rule applying to selected connection (TGUI Connections Tab). |
-| **e** | Edit the selected rule (TGUI Rules Tab). |
-| **d** | Delete the selected rule (TGUI Rules Tab). |
-| **F1** | Show Help dialog (TGUI Mode). |
+| **0** | Cycle through visual themes. |
+| **s** | Cycle sorting column. |
+| **S (Shift+S)** | Toggle sort direction. |
+| **l** | Cycle event history limit (50 - 1000). |
+| **c** | Switch to Connections tab. |
+| **r** | Switch to Rules tab. |
+| **j** | Jump to the rule applying to selected connection (Connections Tab). |
+| **t** | Toggle selected rule Enabled/Disabled (Rules Tab). |
+| **e** | Edit the selected rule (Rules Tab). |
+| **d** | Delete the selected rule (Rules Tab). |
+| **?** | Show Help dialog. |
 
 ## Troubleshooting
 

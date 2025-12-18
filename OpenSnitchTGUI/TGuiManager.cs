@@ -949,7 +949,7 @@ namespace OpenSnitchTGUI
                     var address = _dnsManager.GetDisplayName(evt.DestinationIp);
                     string typeStr = evt.Type;
                     if (typeStr == "ALLOW") typeStr = "✓ ALLOW";
-                    else if (typeStr == "DENY") typeStr = "✗ DENY";
+                    else if (typeStr == "DENY") typeStr = "❌ DENY";
                     else if (typeStr == "AskRule") typeStr = "? ASK";
 
                     _dt.Rows.Add(
