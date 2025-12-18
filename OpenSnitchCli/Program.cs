@@ -19,7 +19,7 @@ namespace OpenSnitchCli
 {
     class Program
     {
-        private const string Version = "1.1.0";
+        private const string Version = "1.2.0";
 
         static async Task Main(string[] args)
         {

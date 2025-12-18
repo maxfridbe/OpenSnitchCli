@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-VERSION="1.1.0"
+VERSION="1.2.0"
 OUTPUT_DIR="publish"
 RUNTIME="linux-x64"
 

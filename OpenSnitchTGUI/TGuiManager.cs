@@ -59,7 +59,10 @@ namespace OpenSnitchTGUI
         public event Action<object>? OnRuleChanged;
 
         private bool _themesInitialized = false;
-        private List<string> _cycleThemes = new List<string> { "Base", "Matrix", "Red", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord" };
+        private List<string> _cycleThemes = new List<string> { 
+            "Base", "Matrix", "Red", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord",
+            "Catppuccin", "AyuMirage", "Everforest", "Gruvbox" 
+        };
         private DateTime _lastBeepTime = DateTime.MinValue;
 
         // History limits
@@ -69,19 +72,25 @@ namespace OpenSnitchTGUI
 
         private void UpdateStatusBar()
         {
-            if (_statusBar == null || _tabView == null) return;
+            if (_statusBar == null || _tabView == null || _win == null) return;
+
+            var currentTheme = _win.SchemeName ?? "Base";
+            
+            string sortInfo = "";
+            if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0))
+                sortInfo = $"{ConnColNames[_connSortCol]} {(_connSortAsc ? "ASC" : "DESC")}";
+            else
+                sortInfo = $"{RuleColNames[_ruleSortCol]} {(_ruleSortAsc ? "ASC" : "DESC")}";
 
             var shortcuts = new List<Shortcut>();
             shortcuts.Add(new Shortcut(Key.Q, "~q~ Quit", () => _app?.RequestStop()));
-            shortcuts.Add(new Shortcut(Key.D0, "~0~ Theme", () => CycleTheme()));
-            shortcuts.Add(new Shortcut(Key.S, "~s/S~ Sort", () => { /* Handled in KeyDown */ }));
+            shortcuts.Add(new Shortcut(Key.D0, $"~0~ Theme: {currentTheme}", () => CycleTheme()));
+            shortcuts.Add(new Shortcut(Key.S, $"~s/S~ Sort: {sortInfo}", () => { /* Handled in KeyDown */ }));
             shortcuts.Add(new Shortcut(Key.L, "~l~ Limit", () => CycleLimit()));
-            shortcuts.Add(new Shortcut(Key.C, "~c~ Connections", () => { if (_tabView != null) _tabView.SelectedTab = _tabView.Tabs.ElementAt(0); }));
-            shortcuts.Add(new Shortcut(Key.R, "~r~ Rules", () => { if (_tabView != null) _tabView.SelectedTab = _tabView.Tabs.ElementAt(1); }));
 
             if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
             {
-                shortcuts.Add(new Shortcut(Key.J, "~j~ Jump to Rule", () => { /* Handled in KeyDown */ }));
+                shortcuts.Add(new Shortcut(Key.J, "~j~ Jump to Rule", () => HandleJumpToRule()));
             }
             else // Rules
             {
@@ -94,6 +103,9 @@ namespace OpenSnitchTGUI
 
             _statusBar.RemoveAll();
             foreach (var s in shortcuts) _statusBar.Add(s);
+            
+            // Sync status bar theme with window
+            _statusBar.SchemeName = _win.SchemeName;
         }
 
         private void CycleLimit()
@@ -157,7 +169,12 @@ namespace OpenSnitchTGUI
         private void ShowEditRuleDialog(object ruleObj)
         {
             dynamic rule = ruleObj;
-            var dialog = new Dialog() { Title = "Edit Rule", Width = 80, Height = 22 };
+            var dialog = new Dialog() { 
+                Title = "Edit Rule", 
+                Width = 80, 
+                Height = 22,
+                SchemeName = _win?.SchemeName // Inherit current theme
+            };
 
             var nameLabel = new Label() { Text = "Name:", X = 1, Y = 1 };
             var nameEdit = new TextField() { Text = rule.Name, X = 15, Y = 1, Width = Dim.Fill(1) };
@@ -184,7 +201,7 @@ namespace OpenSnitchTGUI
             var okBtn = new Button() { Text = "Save", IsDefault = true };
             var cancelBtn = new Button() { Text = "Cancel" };
 
-            okBtn.Accepted += (s, e) => {
+            okBtn.Accepting += (s, e) => {
                 rule.Name = nameEdit.Text;
                 rule.Action = actions[actionList.SelectedItem ?? 0].ToLower();
                 rule.Duration = durations[durationList.SelectedItem ?? 0];
@@ -195,7 +212,7 @@ namespace OpenSnitchTGUI
                 e.Handled = true;
             };
 
-            cancelBtn.Accepted += (s, e) => {
+            cancelBtn.Accepting += (s, e) => {
                 _app?.RequestStop(dialog);
                 e.Handled = true;
             };
@@ -245,6 +262,7 @@ namespace OpenSnitchTGUI
                     {
                         _tabView.SelectedTab = _tabView.Tabs.ElementAt(1);
                         _rulesTableView.SetSelection(0, i, false);
+                        _rulesTableView.EnsureSelectedCellIsVisible();
                         _rulesTableView.SetFocus();
                         return;
                     }
@@ -317,6 +335,7 @@ namespace OpenSnitchTGUI
                 _ruleSortCol = (_ruleSortCol + 1) % RuleColNames.Length;
                 RefreshRulesTable();
             }
+            UpdateStatusBar();
         }
 
         private void ToggleSortOrder()
@@ -332,6 +351,7 @@ namespace OpenSnitchTGUI
                 _ruleSortAsc = !_ruleSortAsc;
                 RefreshRulesTable();
             }
+            UpdateStatusBar();
         }
 
         public Task<PromptResult> PromptForRule(PromptRequest req)
@@ -354,9 +374,46 @@ namespace OpenSnitchTGUI
                         _lastBeepTime = DateTime.Now;
                     }
 
-                    var text = $"Process: {req.Process}\nDest: {req.Destination}\n\nWhat do you want to do?";
+                    var dnsName = _dnsManager.GetDisplayName(req.DestIp);
+                    var destDisplay = (string.IsNullOrEmpty(dnsName) || dnsName == req.DestIp)
+                        ? req.Destination
+                        : $"{dnsName} ({req.DestIp}) : {req.DestPort}";
+
+                    var text = $"Process: {req.Process}\nDest: {destDisplay}\n\nWhat do you want to do?";
                     
-                    var result = MessageBox.Query(_app, "OpenSnitch Request", text, "Allow _Once", "Allow _30s", "Allow _Always", "_Deny Once", "Deny Alwa_ys", "New _Rule");
+                    var dialog = new Dialog() { 
+                        Title = "OpenSnitch Request", 
+                        Width = 75, 
+                        Height = 16,
+                        SchemeName = _win?.SchemeName
+                    };
+                    var lbl = new Label() { Text = text, X = 1, Y = 1 };
+                    dialog.Add(lbl);
+
+                    int result = -1;
+                    
+                    // Row 1: Allows
+                    var btnAllowOnce = new Button() { Text = "Allow _Once", X = Pos.Center() - 22, Y = 6 };
+                    var btnAllow30s = new Button() { Text = "Allow _30s", X = Pos.Center() - 5, Y = 6 };
+                    var btnAllowAlways = new Button() { Text = "Allow _Always", X = Pos.Center() + 12, Y = 6 };
+
+                    // Row 2: Denies
+                    var btnDenyOnce = new Button() { Text = "_Deny Once", X = Pos.Center() - 12, Y = 8 };
+                    var btnDenyAlways = new Button() { Text = "Deny Alwa_ys", X = Pos.Center() + 5, Y = 8 };
+
+                    // Row 3: Advanced
+                    var btnNewRule = new Button() { Text = "Make a New _Rule", X = Pos.Center(), Y = 10 };
+
+                    btnAllowOnce.Accepting += (s, e) => { result = 0; _app?.RequestStop(dialog); e.Handled = true; };
+                    btnAllow30s.Accepting += (s, e) => { result = 1; _app?.RequestStop(dialog); e.Handled = true; };
+                    btnAllowAlways.Accepting += (s, e) => { result = 2; _app?.RequestStop(dialog); e.Handled = true; };
+                    btnDenyOnce.Accepting += (s, e) => { result = 3; _app?.RequestStop(dialog); e.Handled = true; };
+                    btnDenyAlways.Accepting += (s, e) => { result = 4; _app?.RequestStop(dialog); e.Handled = true; };
+                    btnNewRule.Accepting += (s, e) => { result = 5; _app?.RequestStop(dialog); e.Handled = true; };
+
+                    dialog.Add(btnAllowOnce, btnAllow30s, btnAllowAlways, btnDenyOnce, btnDenyAlways, btnNewRule);
+
+                    _app?.Run(dialog);
                     
                     if (result == 5) // New Rule
                     {
@@ -392,7 +449,12 @@ namespace OpenSnitchTGUI
 
         private void ShowCustomRuleDialog(PromptRequest req, Action<PromptResult> onComplete)
         {
-            var dialog = new Dialog() { Title = "New Rule", Width = 80, Height = 22 };
+            var dialog = new Dialog() { 
+                Title = "New Rule", 
+                Width = 80, 
+                Height = 22,
+                SchemeName = _win?.SchemeName // Inherit current theme
+            };
 
             var nameLabel = new Label() { Text = "Name:", X = 1, Y = 1 };
             var nameEdit = new TextField() { Text = $"Rule for {System.IO.Path.GetFileName(req.Process)}", X = 15, Y = 1, Width = Dim.Fill(1) };
@@ -406,10 +468,13 @@ namespace OpenSnitchTGUI
             var durationList = new ListView() { Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(durations)), X = 45, Y = 3, Width = 10, Height = 5 };
 
             // Properties with individual text boxes
+            var dnsName = _dnsManager.GetDisplayName(req.DestIp);
+            var initialDestHost = (string.IsNullOrEmpty(req.DestHost) || req.DestHost == req.DestIp) ? dnsName : req.DestHost;
+
             var props = new (string Label, string Operand, string Value)[] {
                 ("Process Path:", "process.path", req.Process),
                 ("Process Comm:", "process.comm", System.IO.Path.GetFileName(req.Process)),
-                ("Dest Host:",    "dest.host",    req.DestHost),
+                ("Dest Host:",    "dest.host",    initialDestHost),
                 ("Dest IP:",      "dest.ip",      req.DestIp),
                 ("Dest Port:",    "dest.port",    req.DestPort),
                 ("User ID:",      "user.id",      req.UserId)
@@ -441,7 +506,7 @@ namespace OpenSnitchTGUI
             var okBtn = new Button() { Text = "Ok", IsDefault = true };
             var cancelBtn = new Button() { Text = "Cancel" };
 
-            okBtn.Accepted += (s, e) => {
+            okBtn.Accepting += (s, e) => {
                 int selected = -1;
                 for (int i = 0; i < radios.Length; i++) if (radios[i].CheckedState == CheckState.Checked) selected = i;
                 if (selected == -1) selected = 0;
@@ -459,7 +524,7 @@ namespace OpenSnitchTGUI
                 e.Handled = true; 
             };
 
-            cancelBtn.Accepted += (s, e) => {
+            cancelBtn.Accepting += (s, e) => {
                 onComplete(new PromptResult { Action = "allow", Duration = "once" });
                 _app?.RequestStop(dialog);
                 e.Handled = true;
@@ -875,6 +940,12 @@ namespace OpenSnitchTGUI
                 CreateScheme("Dracula", Color.White, Color.DarkGray, Color.Magenta, Color.DarkGray);
                 CreateScheme("Nord", Color.White, Color.Blue, Color.Cyan, Color.Blue);
 
+                // Helix inspired themes
+                CreateScheme("Catppuccin", Color.BrightMagenta, Color.Black, Color.BrightCyan, Color.Black);
+                CreateScheme("AyuMirage", Color.BrightYellow, Color.Black, Color.BrightRed, Color.Black);
+                CreateScheme("Everforest", Color.BrightGreen, Color.DarkGray, Color.BrightYellow, Color.DarkGray);
+                CreateScheme("Gruvbox", Color.Yellow, Color.Black, Color.BrightRed, Color.Black);
+
                 CreateScheme("RowAllow", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen);
                 CreateScheme("RowDeny", Color.BrightRed, Color.Black, Color.White, Color.BrightRed);
                 CreateScheme("RowAsk", Color.BrightYellow, Color.Black, Color.Black, Color.BrightYellow);
@@ -895,7 +966,10 @@ namespace OpenSnitchTGUI
                 if (idx == -1) idx = 0;
                 var next = _cycleThemes[(idx + 1) % _cycleThemes.Count];
                 _win.SchemeName = next;
+                if (_statusBar != null) _statusBar.SchemeName = next;
+                if (_app?.TopRunnableView != null) _app.TopRunnableView.SchemeName = next;
                 _win.SetNeedsDraw();
+                UpdateStatusBar();
             }
             catch (Exception ex)
             {
