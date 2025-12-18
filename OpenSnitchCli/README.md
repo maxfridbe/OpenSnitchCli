@@ -2,6 +2,28 @@
 
 This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for connections from the OpenSnitch daemon (`opensnitchd`) and displays received messages in a rich, interactive Terminal User Interface (TUI).
 
+## Feature Parity Checklist (vs Python opensnitch-ui)
+
+- [x] **Live Connection Monitoring:** Real-time streaming of all network activity.
+- [x] **Rule Management:** Dedicated tab to list all active daemon rules.
+- [x] **Interactive Prompts:** Popup dialogs for new/unknown connections.
+- [x] **Custom Rule Creation:** Advanced dialog to match on Path, Comm, Host, IP, Port, or UID.
+- [x] **Rule Editing:** Modify Action, Duration, and Data of existing rules on the fly.
+- [x] **Rule Deletion:** Remote deletion of rules from the daemon with confirmation.
+- [x] **Multi-column Sorting:** Sort by any column (s/S) with secondary "Newest First" logic.
+- [x] **Process Details:** Deep inspection of PID, Path, User, and Command Line args.
+- [x] **Reverse DNS Resolution:** Background lookups via Cloudflare DoH.
+- [x] **User Resolution:** Automatic mapping of UIDs to local system usernames.
+- [x] **Container Detection:** Visual identification (📦) of namespaced/containerized processes.
+- [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('r' key).
+- [x] **Theme Support:** Multiple color schemes (Dracula, Nord, Monokai, etc.).
+- [x] **Notification System:** System beep on prompt to grab attention (rate-limited).
+- [ ] **Global Search/Filtering:** Ability to filter connection or rule lists.
+- [ ] **Daemon Config:** Manage daemon-wide settings (InterceptUnknown, etc.) via UI.
+- [ ] **Firewall Viewer:** Display system-level nftables/iptables chains and rules.
+- [ ] **Statistics Charts:** Real-time graphing of connections and rule hits.
+- [ ] **Rule Export/Import:** Backup and restore rules to/from files.
+
 ## Prerequisites
 
 - **.NET 8.0 SDK** (or later)
@@ -10,16 +32,10 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 ## Features
 
 - **Dual TUI Modes:** 
+    - **Terminal.Gui v2 Mode (`--tui2`):** Full interactive grid with tabs, sorting, themes, and rule management.
     - **Spectre.Console Mode (`--tui`):** A high-performance, beautiful streaming view with fixed details pane.
-    - **Terminal.Gui v2 Mode (`--tui2`):** A full interactive grid with sorting, multiple themes, and rule prompting.
-- **Live Event Monitoring:** Displays real-time events (AskRule, Alerts, Monitor events) from the OpenSnitch daemon.
-- **Global Hotkeys:** Responsive controls that work regardless of current focus.
-- **Smart Data Resolution:** 
-    - **DNS Resolution:** Automatically resolves destination IPs to hostnames in the background.
-    - **User Resolution:** Maps UIDs to local system usernames.
-- **Rule Prompting (TGUI):** Visual dialogs to Allow/Deny new connections directly from the CLI.
-- **Notification System:** System beep on new connection prompts (rate-limited to 3s).
-- **Theme Support (TGUI):** Includes multiple visual themes (Base, Matrix, Red, Solarized, Monokai, Dracula, Nord).
+- **Global Hotkeys:** Responsive controls ('q', 't', 's', 'r', 'e', 'd') that work regardless of current focus.
+- **Smart Data Resolution:** DNS and User mappings handled automatically in the background.
 
 ## Setup
 
@@ -56,13 +72,17 @@ By default, the application:
 
 | Key | Action |
 | :--- | :--- |
-| **Arrow Keys** | Navigate through the event list. |
+| **Arrow Keys** | Navigate through the lists. |
 | **q** | Quit the application. |
 | **t** | Cycle through visual themes (TGUI Mode). |
+| **s** | Cycle sorting column (TGUI Mode). |
+| **S (Shift+S)** | Toggle sort direction (TGUI Mode). |
+| **r** | Jump to the rule applying to selected connection (TGUI Connections Tab). |
+| **e** | Edit the selected rule (TGUI Rules Tab). |
+| **d** | Delete the selected rule (TGUI Rules Tab). |
 | **F1** | Show Help dialog (TGUI Mode). |
 
 ## Troubleshooting
 
 - **Crash Logs:** If the application crashes, check `crash_log.txt` in the working directory for detailed stack traces.
-- **Debug Logs:** TUI debug logs are temporarily created in your system temp folder and printed to console on exit if an issue is detected.
 - **No Events:** Ensure `opensnitchd` is running (`sudo systemctl status opensnitch`). Verify no other process is using `/tmp/osui.sock`.
