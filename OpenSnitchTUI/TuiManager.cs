@@ -54,21 +54,24 @@ namespace OpenSnitchTUI
                         var snapshot = _events.ToArray().Reverse().Take(20).ToList();
                         
                         // Check for Input
-                        if (Console.KeyAvailable)
+                        while (AnsiConsole.Console.Input.IsKeyAvailable())
                         {
-                            var key = Console.ReadKey(true);
-                            if (key.Key == ConsoleKey.Q)
+                            var key = AnsiConsole.Console.Input.ReadKey(true);
+                            if (key != null)
                             {
-                                onQuit?.Invoke();
-                            }
-                            else if (key.Key == ConsoleKey.UpArrow)
-                            {
-                                _selectedIndex = Math.Max(0, _selectedIndex - 1);
-                            }
-                            else if (key.Key == ConsoleKey.DownArrow)
-                            {
-                                // Limit selection to visible items
-                                _selectedIndex = Math.Min(snapshot.Count - 1, _selectedIndex + 1);
+                                if (key.Value.Key == ConsoleKey.Q)
+                                {
+                                    onQuit?.Invoke();
+                                }
+                                else if (key.Value.Key == ConsoleKey.UpArrow)
+                                {
+                                    _selectedIndex = Math.Max(0, _selectedIndex - 1);
+                                }
+                                else if (key.Value.Key == ConsoleKey.DownArrow)
+                                {
+                                    // Limit selection to visible items
+                                    _selectedIndex = Math.Min(snapshot.Count - 1, _selectedIndex + 1);
+                                }
                             }
                         }
                         
@@ -152,13 +155,13 @@ namespace OpenSnitchTUI
                 
                 table.AddRow(
                     new Text(evt.Timestamp.ToString("HH:mm:ss"), style),
-                    new Text(FormatType(evt.Type), style), // We lose color markup if we force Text style...
+                    new Text(FormatType(evt.Type) ?? "", style),
                     new Text(evt.Protocol ?? "", style),
                     new Text(evt.Pid ?? "", style),
                     new Text(evt.Source ?? "", style),
                     new Text(_dnsManager.GetDisplayName(evt.DestinationIp) ?? "", style),
                     new Text(evt.DestinationPort ?? "", style),
-                    new Text(details, style)
+                    new Text(details ?? "", style)
                 );
             }
 

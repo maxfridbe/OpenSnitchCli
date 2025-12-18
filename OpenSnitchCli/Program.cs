@@ -91,6 +91,35 @@ namespace OpenSnitchCli
                     var events = MapToTui(method, msg);
                     foreach (var evt in events) tguiManager.AddEvent(evt);
                 };
+
+                uiService.OnRulesReceived += (rules) => {
+                    tguiManager.UpdateRules(rules);
+                };
+
+                uiService.AskRuleHandler = async (conn) => {
+                    var req = new PromptRequest
+                    {
+                        Process = !string.IsNullOrEmpty(conn.ProcessPath) ? conn.ProcessPath : $"PID: {conn.ProcessId}",
+                        Destination = $"{conn.DstIp}:{conn.DstPort}",
+                        Description = $"{conn.Protocol} connection from {conn.SrcIp}"
+                    };
+                    
+                    var res = await tguiManager.PromptForRule(req);
+                    
+                    return new Protocol.Rule 
+                    {
+                        Action = res.Action,
+                        Duration = res.Duration,
+                        Enabled = true,
+                        Name = $"Rule for {conn.ProcessPath}",
+                        Operator = new Operator 
+                        { 
+                            Type = "simple", 
+                            Operand = "process.path", 
+                            Data = conn.ProcessPath 
+                        }
+                    };
+                };
             }
             else
             {
@@ -168,6 +197,8 @@ namespace OpenSnitchCli
             }
             catch (Exception ex)
             {
+                Console.Error.WriteLine($"FATAL ERROR: {ex.Message}");
+                Console.Error.WriteLine(ex.StackTrace);
                 if (!useTui && !useTui2) Console.Error.WriteLine($"Error starting server: {ex.Message}");
             }
             finally
@@ -200,7 +231,8 @@ namespace OpenSnitchCli
 
             if (msg is Protocol.Connection conn)
             {
-                var evt = new TuiEvent { Timestamp = DateTime.Now, Type = method };
+                var type = method == "ALLOW" || method == "DENY" ? method : (method == "AskRule" ? "AskRule" : "Connection");
+                var evt = new TuiEvent { Timestamp = DateTime.Now, Type = type };
                 evt.Protocol = conn.Protocol;
                 evt.Source = !string.IsNullOrEmpty(conn.ProcessPath) ? conn.ProcessPath : $"PID: {conn.ProcessId}";
                 evt.Pid = conn.ProcessId.ToString();

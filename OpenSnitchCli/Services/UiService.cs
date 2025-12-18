@@ -13,6 +13,10 @@ namespace OpenSnitchCli.Services
 
         // Event to notify subscribers (CLI logger or TUI)
         public event Action<string, IMessage>? OnMessageReceived;
+        public event Action<IEnumerable<Rule>>? OnRulesReceived;
+        
+        // Handler for interactive rule decisions
+        public Func<Connection, Task<Rule>>? AskRuleHandler { get; set; }
 
         public UiService(ILogger<UiService> logger, bool logEntries)
         {
@@ -27,16 +31,36 @@ namespace OpenSnitchCli.Services
             return Task.FromResult(new PingReply { Id = request.Id });
         }
 
-        public override Task<Rule> AskRule(Connection request, ServerCallContext context)
+        public override async Task<Rule> AskRule(Connection request, ServerCallContext context)
         {
              LogMessage("AskRule", request);
-             return Task.FromResult(new Rule());
+             
+             if (AskRuleHandler != null)
+             {
+                 try 
+                 {
+                     var rule = await AskRuleHandler(request);
+                     LogMessage(rule.Action.ToUpper(), request);
+                     return rule;
+                 }
+                 catch (Exception ex)
+                 {
+                     if(_logEntries) _logger.LogError(ex, "Error in AskRuleHandler");
+                 }
+             }
+             
+             return new Rule();
         }
 
         public override Task<ClientConfig> Subscribe(ClientConfig request, ServerCallContext context)
         {
             if(_logEntries)
             _logger.LogDebug("Received Subscribe request: {Request}", request);
+
+            if (request.Rules != null)
+            {
+                OnRulesReceived?.Invoke(request.Rules);
+            }
             
             // Create a response that attempts to force monitoring/interception
             var responseConfig = new ClientConfig

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenSnitchCli", "OpenSnitchCli\OpenSnitchCli.csproj", "{5A28EFDA-2FFA-4567-81DF-4524B05C6215}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenSnitchTUI", "OpenSnitchTUI\OpenSnitchTUI.csproj", "{89468D86-B336-468B-955D-957E755B7D32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenSnitchTGUI", "OpenSnitchTGUI\OpenSnitchTGUI.csproj", "{9F38C409-490C-4E43-8C91-C26A8E9FEB2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A28EFDA-2FFA-4567-81DF-4524B05C6215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A28EFDA-2FFA-4567-81DF-4524B05C6215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A28EFDA-2FFA-4567-81DF-4524B05C6215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A28EFDA-2FFA-4567-81DF-4524B05C6215}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89468D86-B336-468B-955D-957E755B7D32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89468D86-B336-468B-955D-957E755B7D32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89468D86-B336-468B-955D-957E755B7D32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89468D86-B336-468B-955D-957E755B7D32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F38C409-490C-4E43-8C91-C26A8E9FEB2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F38C409-490C-4E43-8C91-C26A8E9FEB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F38C409-490C-4E43-8C91-C26A8E9FEB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F38C409-490C-4E43-8C91-C26A8E9FEB2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
