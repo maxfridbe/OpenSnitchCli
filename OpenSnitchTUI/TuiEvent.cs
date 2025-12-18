@@ -13,5 +13,6 @@ namespace OpenSnitchTUI
         public string DestinationPort { get; set; } = "";
         
         public string Details { get; set; } = "";
+        public bool IsInNamespace { get; set; } = false;
     }
 }

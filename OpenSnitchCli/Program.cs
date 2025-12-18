@@ -96,29 +96,55 @@ namespace OpenSnitchCli
                     tguiManager.UpdateRules(rules);
                 };
 
+                tguiManager.OnRuleChanged += async (ruleObj) => {
+                    var rule = (Protocol.Rule)ruleObj;
+                    await uiService.SendNotificationAsync(new Protocol.Notification {
+                        Id = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                        Type = Protocol.Action.ChangeRule,
+                        Rules = { rule }
+                    });
+                };
+
+                tguiManager.OnRuleDeleted += async (ruleObj) => {
+                    var rule = (Protocol.Rule)ruleObj;
+                    await uiService.SendNotificationAsync(new Protocol.Notification {
+                        Id = (uint)DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                        Type = Protocol.Action.DeleteRule,
+                        Rules = { rule }
+                    });
+                };
+
                 uiService.AskRuleHandler = async (conn) => {
                     var req = new PromptRequest
                     {
-                        Process = !string.IsNullOrEmpty(conn.ProcessPath) ? conn.ProcessPath : $"PID: {conn.ProcessId}",
+                        Process = conn.ProcessPath,
                         Destination = $"{conn.DstIp}:{conn.DstPort}",
-                        Description = $"{conn.Protocol} connection from {conn.SrcIp}"
+                        Description = $"{conn.Protocol} connection from {conn.SrcIp}",
+                        Protocol = conn.Protocol,
+                        DestHost = conn.DstHost,
+                        DestIp = conn.DstIp,
+                        DestPort = conn.DstPort.ToString(),
+                        UserId = conn.UserId.ToString()
                     };
                     
                     var res = await tguiManager.PromptForRule(req);
                     
-                    return new Protocol.Rule 
+                    var rule = new Protocol.Rule 
                     {
                         Action = res.Action,
                         Duration = res.Duration,
                         Enabled = true,
-                        Name = $"Rule for {conn.ProcessPath}",
+                        Created = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
+                        Name = res.IsCustom ? res.CustomName : $"Rule for {conn.ProcessPath}",
                         Operator = new Operator 
                         { 
                             Type = "simple", 
-                            Operand = "process.path", 
-                            Data = conn.ProcessPath 
+                            Operand = res.IsCustom ? res.CustomOperand : "process.path", 
+                            Data = res.IsCustom ? res.CustomData : conn.ProcessPath 
                         }
                     };
+                    tguiManager.AddRule(rule);
+                    return rule;
                 };
             }
             else
@@ -239,6 +265,12 @@ namespace OpenSnitchCli
                 evt.DestinationIp = conn.DstIp;
                 evt.DestinationPort = conn.DstPort.ToString();
                 evt.Details = $"User: {conn.UserId}";
+                
+                // Simple heuristic for namespace/container: empty path usually means 
+                // daemon couldn't find it in host /proc, often due to namespaces.
+                // Also check if path starts with known container patterns if needed.
+                evt.IsInNamespace = string.IsNullOrEmpty(conn.ProcessPath);
+                
                 list.Add(evt);
             }
             else if (msg is Protocol.Alert alert)
@@ -271,7 +303,7 @@ namespace OpenSnitchCli
                     {
                         var evt = new TuiEvent 
                         {
-                            Timestamp = DateTime.Now,
+                            Timestamp = e.Unixnano > 0 ? DateTimeOffset.FromUnixTimeMilliseconds(e.Unixnano / 1000000).LocalDateTime : DateTime.Now,
                             Type = "Monitor" 
                         };
                         
@@ -283,11 +315,17 @@ namespace OpenSnitchCli
                             evt.DestinationIp = e.Connection.DstIp;
                             evt.DestinationPort = e.Connection.DstPort.ToString();
                             evt.Details = $"UID: {e.Connection.UserId}";
+
+                            if (e.Rule != null)
+                            {
+                                evt.Type = e.Rule.Action.ToUpper();
+                                evt.Details += $" [Rule: {e.Rule.Name}]";
+                            }
                         }
                         else if (e.Rule != null)
                         {
-                            evt.Type = "RuleHit";
-                            evt.Details = e.Rule.Name;
+                            evt.Type = e.Rule.Action.ToUpper();
+                            evt.Details = $"Rule Hit: {e.Rule.Name}";
                         }
                         
                         list.Add(evt);

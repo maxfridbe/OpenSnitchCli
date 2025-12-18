@@ -18,6 +18,14 @@ namespace OpenSnitchCli.Services
         // Handler for interactive rule decisions
         public Func<Connection, Task<Rule>>? AskRuleHandler { get; set; }
 
+        private readonly System.Threading.Channels.Channel<Notification> _outboundNotifications = 
+            System.Threading.Channels.Channel.CreateUnbounded<Notification>();
+
+        public async Task SendNotificationAsync(Notification notification)
+        {
+            await _outboundNotifications.Writer.WriteAsync(notification);
+        }
+
         public UiService(ILogger<UiService> logger, bool logEntries)
         {
             _logger = logger;
@@ -104,11 +112,23 @@ namespace OpenSnitchCli.Services
                  });
                  _logger.LogDebug("Sent PidMonitor: {Command}", pidConfig);
 
-                 while (await requestStream.MoveNext())
-                 {
-                     var reply = requestStream.Current;
-                     _logger.LogTrace("Received NotificationReply: Code={Code}, Data={Data}", reply.Code, reply.Data);
-                 }
+                 var readTask = Task.Run(async () => {
+                     while (await requestStream.MoveNext())
+                     {
+                         var reply = requestStream.Current;
+                         _logger.LogTrace("Received NotificationReply: Code={Code}, Data={Data}", reply.Code, reply.Data);
+                     }
+                 });
+
+                 var writeTask = Task.Run(async () => {
+                     await foreach (var notification in _outboundNotifications.Reader.ReadAllAsync(context.CancellationToken))
+                     {
+                         await responseStream.WriteAsync(notification);
+                         _logger.LogDebug("Sent Notification: Type={Type}", notification.Type);
+                     }
+                 });
+
+                 await Task.WhenAny(readTask, writeTask);
              }
              catch (Exception ex)
              {
