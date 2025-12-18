@@ -42,9 +42,11 @@ namespace OpenSnitchTGUI
         private TableView? _tableView;
         private TableView? _rulesTableView;
         private TextView? _detailsView;
+        private FrameView? _detailsFrame;
         private DataTable? _dt;
         private DataTable? _rulesDt;
         private TabView? _tabView;
+        private StatusBar? _statusBar;
         private List<TuiEvent> _events = new();
         private List<object> _rules = new(); 
         private object _lock = new object();
@@ -59,6 +61,62 @@ namespace OpenSnitchTGUI
         private bool _themesInitialized = false;
         private List<string> _cycleThemes = new List<string> { "Base", "Matrix", "Red", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord" };
         private DateTime _lastBeepTime = DateTime.MinValue;
+
+        // History limits
+        private int[] _historyLimits = { 1000, 800, 500, 200, 100, 50 };
+        private int _limitIndex = 0;
+        private int _maxEvents => _historyLimits[_limitIndex];
+
+        private void UpdateStatusBar()
+        {
+            if (_statusBar == null || _tabView == null) return;
+
+            var shortcuts = new List<Shortcut>();
+            shortcuts.Add(new Shortcut(Key.Q, "~q~ Quit", () => _app?.RequestStop()));
+            shortcuts.Add(new Shortcut(Key.D0, "~0~ Theme", () => CycleTheme()));
+            shortcuts.Add(new Shortcut(Key.S, "~s/S~ Sort", () => { /* Handled in KeyDown */ }));
+            shortcuts.Add(new Shortcut(Key.L, "~l~ Limit", () => CycleLimit()));
+            shortcuts.Add(new Shortcut(Key.C, "~c~ Connections", () => { if (_tabView != null) _tabView.SelectedTab = _tabView.Tabs.ElementAt(0); }));
+            shortcuts.Add(new Shortcut(Key.R, "~r~ Rules", () => { if (_tabView != null) _tabView.SelectedTab = _tabView.Tabs.ElementAt(1); }));
+
+            if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
+            {
+                shortcuts.Add(new Shortcut(Key.J, "~j~ Jump to Rule", () => { /* Handled in KeyDown */ }));
+            }
+            else // Rules
+            {
+                shortcuts.Add(new Shortcut(Key.T, "~t~ Toggle", () => { /* Handled in KeyDown */ }));
+                shortcuts.Add(new Shortcut(Key.E, "~e~ Edit Rule", () => { /* Handled in KeyDown */ }));
+                shortcuts.Add(new Shortcut(Key.D, "~d~ Delete Rule", () => { /* Handled in KeyDown */ }));
+            }
+
+            shortcuts.Add(new Shortcut((Key)'?', "~?~ Help", () => ShowHelp()));
+
+            _statusBar.RemoveAll();
+            foreach (var s in shortcuts) _statusBar.Add(s);
+        }
+
+        private void CycleLimit()
+        {
+            _limitIndex = (_limitIndex + 1) % _historyLimits.Length;
+            RefreshTable();
+        }
+
+        private void ShowHelp()
+        {
+            MessageBox.Query(_app, "Help", 
+                "Use Arrow Keys to Navigate\n" +
+                "Press 'q' to Quit\n" +
+                "Press '0' to Cycle Themes\n" +
+                "Press 's' to Cycle Sort Column\n" +
+                "Press 'S' to Toggle Sort Order\n" +
+                "Press 'c' for Connections tab\n" +
+                "Press 'r' for Rules tab\n" +
+                "Press 'j' to Jump to Rule (Connections tab)\n" +
+                "Press 't' to Toggle Rule (Rules tab)\n" +
+                "Press 'e' to Edit Rule (Rules tab)\n" +
+                "Press 'd' to Delete Rule (Rules tab)", "Ok");
+        }
 
         // Base column names for dynamic updates
         private static readonly string[] ConnColNames = { "Time", "Type", "PID", "User", "Program", "Address", "Port", "Protocol" };
@@ -102,7 +160,7 @@ namespace OpenSnitchTGUI
             var dialog = new Dialog() { Title = "Edit Rule", Width = 80, Height = 22 };
 
             var nameLabel = new Label() { Text = "Name:", X = 1, Y = 1 };
-            var nameEdit = new TextField() { Text = rule.Name, X = 15, Y = 1, Width = Dim.Fill(1), ReadOnly = true };
+            var nameEdit = new TextField() { Text = rule.Name, X = 15, Y = 1, Width = Dim.Fill(1) };
 
             var actionLabel = new Label() { Text = "Action:", X = 1, Y = 3 };
             var actions = new string[] { "Allow", "Deny" };
@@ -127,6 +185,7 @@ namespace OpenSnitchTGUI
             var cancelBtn = new Button() { Text = "Cancel" };
 
             okBtn.Accepted += (s, e) => {
+                rule.Name = nameEdit.Text;
                 rule.Action = actions[actionList.SelectedItem ?? 0].ToLower();
                 rule.Duration = durations[durationList.SelectedItem ?? 0];
                 if (rule.Operator != null) rule.Operator.Data = dataEdit.Text;
@@ -146,6 +205,30 @@ namespace OpenSnitchTGUI
             dialog.AddButton(cancelBtn);
 
             _app?.Run(dialog);
+        }
+
+        private void HandleJumpToRule()
+        {
+            if (_tableView == null || _tabView == null || _tabView.SelectedTab != _tabView.Tabs.ElementAt(0)) return;
+
+            int row = _tableView.SelectedRow;
+            lock (_lock)
+            {
+                var sortedEvents = GetSortedEvents();
+                if (row >= 0 && row < sortedEvents.Count)
+                {
+                    var evt = sortedEvents[row];
+                    var match = Regex.Match(evt.Details ?? "", @"\[Rule: (.*?)\]");
+                    if (match.Success)
+                    {
+                        JumpToRule(match.Groups[1].Value);
+                    }
+                    else if (evt.Details != null && evt.Details.StartsWith("Rule Hit: "))
+                    {
+                        JumpToRule(evt.Details.Replace("Rule Hit: ", ""));
+                    }
+                }
+            }
         }
 
         public void JumpToRule(string ruleName)
@@ -396,7 +479,7 @@ namespace OpenSnitchTGUI
             lock (_lock)
             {
                 _events.Insert(0, evt); 
-                if (_events.Count > 100) _events.RemoveAt(_events.Count - 1);
+                while (_events.Count > _maxEvents) _events.RemoveAt(_events.Count - 1);
             }
 
             _app?.Invoke(() =>
@@ -461,7 +544,9 @@ namespace OpenSnitchTGUI
                     FullRowSelect = true,
                     MultiSelect = false
                 };
-                _tableView.SelectedCellChanged += (s, e) => UpdateDetails(e.NewRow);
+                _tableView.SelectedCellChanged += (s, e) => {
+                    if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) UpdateDetails(e.NewRow);
+                };
 
                 _rulesTableView = new TableView()
                 {
@@ -473,13 +558,16 @@ namespace OpenSnitchTGUI
                     FullRowSelect = true,
                     MultiSelect = false
                 };
+                _rulesTableView.SelectedCellChanged += (s, e) => {
+                    if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(1)) UpdateDetails(e.NewRow);
+                };
 
-                _tabView.AddTab(new Tab { Title = "   Connections   ", View = _tableView }, true);
-                _tabView.AddTab(new Tab { Title = "   Rules   ", View = _rulesTableView }, false);
+                _tabView.AddTab(new Tab { DisplayText = "   Connections   ", View = _tableView }, true);
+                _tabView.AddTab(new Tab { DisplayText = "   Rules   ", View = _rulesTableView }, false);
 
-                _tableView.Style.GetOrCreateColumnStyle(6).Alignment = Alignment.Start; // Port Left Aligned
-                _tableView.Style.GetOrCreateColumnStyle(7).Alignment = Alignment.Start; // Protocol
-                _tableView.Style.GetOrCreateColumnStyle(2).Alignment = Alignment.End; // PID
+                _tableView.Style.GetOrCreateColumnStyle(6).Alignment = Alignment.End;
+                _tableView.Style.GetOrCreateColumnStyle(7).Alignment = Alignment.End;
+                _tableView.Style.GetOrCreateColumnStyle(3).Alignment = Alignment.End;
 
                 _win.SubViewsLaidOut += (s, e) =>
                 {
@@ -519,9 +607,9 @@ namespace OpenSnitchTGUI
                 InitCustomThemes();
                 ApplyRowColors();
 
-                var detailsWin = new FrameView() 
+                _detailsFrame = new FrameView() 
                 {
-                    Title = "Event Details",
+                    Title = "Details",
                     X = 0,
                     Y = Pos.Bottom(_tabView),
                     Width = Dim.Fill(),
@@ -535,9 +623,17 @@ namespace OpenSnitchTGUI
                     Height = Dim.Fill(),
                     ReadOnly = true
                 };
-                detailsWin.Add(_detailsView);
+                _detailsFrame.Add(_detailsView);
 
-                _win.Add(_tabView, detailsWin);
+                _win.Add(_tabView, _detailsFrame);
+
+                _tabView.SelectedTabChanged += (s, e) => {
+                    UpdateStatusBar();
+                    if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0))
+                        UpdateDetails(_tableView.SelectedRow);
+                    else
+                        UpdateDetails(_rulesTableView.SelectedRow);
+                };
 
                 // Use the instance-level Keyboard.KeyDown event for global hotkeys. 
                 // This is the correct way to handle keys when using Application.Create() in v2.
@@ -546,6 +642,9 @@ namespace OpenSnitchTGUI
                     _app.Keyboard.KeyDown += (s, e) => {
                         if (e.Handled) return;
                         
+                        // ONLY process hotkeys if the main window is the top runnable (no dialogs open)
+                        if (_app.TopRunnable != _win) return;
+
                         // Normalize the key by removing modifiers for comparison
                         var baseKey = e.NoAlt.NoCtrl.NoShift;
                         var keyCode = e.KeyCode;
@@ -555,10 +654,15 @@ namespace OpenSnitchTGUI
                             _app?.RequestStop(); 
                             e.Handled = true; 
                         }
-                        else if (baseKey == Key.T || keyCode == Key.T.KeyCode) 
+                        else if (baseKey == Key.D0 || keyCode == Key.D0.KeyCode) 
                         {
                             CycleTheme(); 
                             e.Handled = true; 
+                        }
+                        else if (baseKey == Key.L || keyCode == Key.L.KeyCode)
+                        {
+                            CycleLimit();
+                            e.Handled = true;
                         }
                         else if (baseKey == Key.S || keyCode == Key.S.KeyCode || keyCode == (Key.S.KeyCode | Terminal.Gui.Drivers.KeyCode.ShiftMask))
                         {
@@ -566,30 +670,38 @@ namespace OpenSnitchTGUI
                             else CycleSort();
                             e.Handled = true;
                         }
+                        else if (baseKey == Key.C || keyCode == Key.C.KeyCode)
+                        {
+                            if (_tabView != null) {
+                                _tabView.SelectedTab = _tabView.Tabs.ElementAt(0);
+                                e.Handled = true;
+                            }
+                        }
                         else if (baseKey == Key.R || keyCode == Key.R.KeyCode)
                         {
-                            // Only jump if we are on the connections tab
-                            if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(0) && _tableView != null)
+                            if (_tabView != null) {
+                                _tabView.SelectedTab = _tabView.Tabs.ElementAt(1);
+                                e.Handled = true;
+                            }
+                        }
+                        else if (baseKey == Key.J || keyCode == Key.J.KeyCode)
+                        {
+                            HandleJumpToRule();
+                            e.Handled = true;
+                        }
+                        else if (baseKey == Key.T || keyCode == Key.T.KeyCode)
+                        {
+                            if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(1) && _rulesTableView != null)
                             {
-                                int row = _tableView.SelectedRow;
-                                lock (_lock)
+                                int row = _rulesTableView.SelectedRow;
+                                var sortedRules = GetSortedRules();
+                                if (row >= 0 && row < sortedRules.Count)
                                 {
-                                    var sortedEvents = GetSortedEvents();
-                                    if (row >= 0 && row < sortedEvents.Count)
-                                    {
-                                        var evt = sortedEvents[row];
-                                        var match = Regex.Match(evt.Details ?? "", @"\[Rule: (.*?)\]");
-                                        if (match.Success)
-                                        {
-                                            JumpToRule(match.Groups[1].Value);
-                                            e.Handled = true;
-                                        }
-                                        else if (evt.Details != null && evt.Details.StartsWith("Rule Hit: "))
-                                        {
-                                            JumpToRule(evt.Details.Replace("Rule Hit: ", ""));
-                                            e.Handled = true;
-                                        }
-                                    }
+                                    dynamic rule = sortedRules[row];
+                                    rule.Enabled = !rule.Enabled;
+                                    OnRuleChanged?.Invoke(rule);
+                                    RefreshRulesTable();
+                                    e.Handled = true;
                                 }
                             }
                         }
@@ -625,6 +737,11 @@ namespace OpenSnitchTGUI
                                 }
                             }
                         }
+                        else if (baseKey == (Key)'?' || baseKey == Key.F1)
+                        {
+                            ShowHelp();
+                            e.Handled = true;
+                        }
                     };
                 }
 
@@ -633,24 +750,10 @@ namespace OpenSnitchTGUI
                     _win.KeyBindings.Add(Key.Q, Command.Quit);
                 } catch {}
 
-                var statusBar = new StatusBar(new Shortcut[] {
-                    new Shortcut(Key.Q, "~q~ Quit", () => _app.RequestStop()),
-                    new Shortcut(Key.T, "~t~ Theme", () => CycleTheme()),
-                    new Shortcut(Key.S, "~s/S~ Sort", () => { 
-                        // Handled by global KeyDown
-                    }),
-                    new Shortcut(Key.R, "~r~ Jump to Rule", () => {
-                        // Handled by global KeyDown
-                    }),
-                    new Shortcut(Key.E, "~e~ Edit Rule", () => {
-                        // Handled by global KeyDown
-                    }),
-                    new Shortcut(Key.D, "~d~ Delete Rule", () => {
-                        // Handled by global KeyDown
-                    }),
-                    new Shortcut(Key.F1, "~F1~ Help", () => MessageBox.Query(_app, "Help", "Use Arrow Keys to Navigate\nPress 'q' to Quit\nPress 't' to Cycle Themes\nPress 's' to Cycle Sort Column\nPress 'S' to Toggle Sort Order\nPress 'r' to Jump to Rule\nPress 'e' to Edit Rule\nPress 'd' to Delete Rule", "Ok"))
-                });
-                _win.Add(statusBar);
+                _statusBar = new StatusBar();
+                _win.Add(_statusBar);
+                _win.Add(_statusLabel);
+                UpdateStatusBar();
 
                 _app.Run(_win);
                 _app.Dispose();
@@ -834,6 +937,9 @@ namespace OpenSnitchTGUI
             _dt.Rows.Clear();
             lock (_lock)
             {
+                // Enforce limit in case it was just lowered
+                while (_events.Count > _maxEvents) _events.RemoveAt(_events.Count - 1);
+
                 var sorted = GetSortedEvents();
                 foreach (var evt in sorted)
                 {
@@ -858,33 +964,56 @@ namespace OpenSnitchTGUI
                     );
                 }
             }
+            if (_statusLabel != null) _statusLabel.Text = $"Events: {_events.Count}/{_maxEvents} | Last: {DateTime.Now:HH:mm:ss}";
             _tableView.SetNeedsDraw();
         }
 
         private void UpdateDetails(int row)
         {
-            if (_detailsView == null || row < 0) return;
-            TuiEvent evt;
-            lock (_lock) 
-            {
-                var sorted = GetSortedEvents();
-                if (row >= sorted.Count) return;
-                evt = sorted[row];
-            }
-            var dns = _dnsManager.GetDisplayName(evt.DestinationIp);
-            string user = "";
-            var match = Regex.Match(evt.Details ?? "", @"U(?:ID|ser):\s*(\d+)");
-            if (match.Success) user = _userManager.GetUser(match.Groups[1].Value);
+            if (_detailsView == null || row < 0 || _tabView == null || _detailsFrame == null) return;
 
-            var text = $"Timestamp:   {evt.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\n" +
-                       $"Type:        {evt.Type}\n" +
-                       $"Protocol:    {evt.Protocol}\n" +
-                       $"PID:         {evt.Pid}\n" +
-                       $"User:        {user}\n" +
-                       $"Program:     {evt.Source}\n" +
-                       $"Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}\n" +
-                       $"Details:     {evt.Details}";
-            _detailsView.Text = text;
+            lock (_lock)
+            {
+                if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
+                {
+                    _detailsFrame.Title = "Connection Details";
+                    var sorted = GetSortedEvents();
+                    if (row >= sorted.Count) return;
+                    var evt = sorted[row];
+
+                    var dns = _dnsManager.GetDisplayName(evt.DestinationIp);
+                    string user = "";
+                    var match = Regex.Match(evt.Details ?? "", @"U(?:ID|ser):\s*(\d+)");
+                    if (match.Success) user = _userManager.GetUser(match.Groups[1].Value);
+
+                    _detailsView.Text = $"Timestamp:   {evt.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\n" +
+                                       $"Type:        {evt.Type}\n" +
+                                       $"Protocol:    {evt.Protocol}\n" +
+                                       $"PID:         {evt.Pid}\n" +
+                                       $"User:        {user}\n" +
+                                       $"Program:     {evt.Source}\n" +
+                                       $"Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}\n" +
+                                       $"Details:     {evt.Details}";
+                }
+                else // Rules
+                {
+                    _detailsFrame.Title = "Rule Details";
+                    var sorted = GetSortedRules();
+                    if (row >= sorted.Count) return;
+                    dynamic rule = sorted[row];
+
+                    var created = DateTimeOffset.FromUnixTimeSeconds((long)rule.Created).LocalDateTime;
+                    _detailsView.Text = $"Name:        {rule.Name}\n" +
+                                       $"Enabled:     {rule.Enabled}\n" +
+                                       $"Action:      {rule.Action}\n" +
+                                       $"Duration:    {rule.Duration}\n" +
+                                       $"Precedence:  {(rule.Precedence ? "High" : "Normal")}\n" +
+                                       $"NoLog:       {rule.Nolog}\n" +
+                                       $"Created:     {created:yyyy-MM-dd HH:mm:ss}\n" +
+                                       $"Condition:   {rule.Operator?.Operand} {rule.Operator?.Type} {rule.Operator?.Data}\n" +
+                                       $"Description: {rule.Description}";
+                }
+            }
         }
     }
 }

@@ -21,8 +21,23 @@ namespace OpenSnitchCli
     {
         static async Task Main(string[] args)
         {
+            if (args.Contains("--help") || args.Contains("-h"))
+            {
+                Console.WriteLine("OpenSnitch C# CLI Listener");
+                Console.WriteLine("Usage: dotnet run -- [options]");
+                Console.WriteLine();
+                Console.WriteLine("Options:");
+                Console.WriteLine("  --tui        Start in Spectre.Console streaming mode");
+                Console.WriteLine("  --dump       Start in raw JSON dumping mode");
+                Console.WriteLine("  --help, -h   Show this help message");
+                Console.WriteLine();
+                Console.WriteLine("Default: Starts in Terminal.Gui v2 interactive mode");
+                return;
+            }
+
             bool useTui = args.Contains("--tui");
-            bool useTui2 = args.Contains("--tui2");
+            bool useDump = args.Contains("--dump");
+            bool useTui2 = !useTui && !useDump; // Default to TUI2 if no other mode specified
             string? debugLogFilePath = null;
 
             // Setup manual logging
@@ -147,7 +162,7 @@ namespace OpenSnitchCli
                     return rule;
                 };
             }
-            else
+            else if (useDump)
             {
                 var formatter = new JsonFormatter(JsonFormatter.Settings.Default.WithFormatDefaultValues(true));
                 uiService.OnMessageReceived += (method, msg) =>
