@@ -8,3 +8,5 @@ obj/
 *log
 /publish/
 /OpenSnitchCli/*log*
+/Dockerfile.deb
+/Dockerfile.rpm

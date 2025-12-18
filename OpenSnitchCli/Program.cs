@@ -19,12 +19,14 @@ namespace OpenSnitchCli
 {
     class Program
     {
+        private const string Version = "1.1.0";
+
         static async Task Main(string[] args)
         {
             if (args.Contains("--help") || args.Contains("-h"))
             {
-                Console.WriteLine("OpenSnitch C# CLI Listener");
-                Console.WriteLine("Usage: dotnet run -- [options]");
+                Console.WriteLine($"OpenSnitch C# CLI Listener v{Version}");
+                Console.WriteLine("Usage: opensnitch-cli [options]");
                 Console.WriteLine();
                 Console.WriteLine("Options:");
                 Console.WriteLine("  --tui        Start in Spectre.Console streaming mode");

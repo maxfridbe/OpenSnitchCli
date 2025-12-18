@@ -1,31 +1,32 @@
 #!/bin/bash
 
 # Configuration
-PROJECT_DIR="OpenSnitchCli"
-PROJECT_FILE="OpenSnitchCli.csproj"
-OUTPUT_DIR="./publish"
+VERSION="1.1.0"
+OUTPUT_DIR="publish"
 RUNTIME="linux-x64"
 
-echo "🚀 Starting publish process for OpenSnitch CLI..."
+echo "🚀 Phase 2: Starting Multi-distro build for OpenSnitch CLI v$VERSION..."
 
-# Ensure we are in the project directory or provide the path
-if [ ! -d "$PROJECT_DIR" ]; then
-    echo "❌ Error: Project directory '$PROJECT_DIR' not found."
-    exit 1
+# Detect container engine
+if [ -x "$(command -v docker)" ]; then
+  ENGINE="docker"
+elif [ -x "$(command -v podman)" ]; then
+  ENGINE="podman"
+else
+  echo "❌ Error: Neither docker nor podman is installed." >&2
+  exit 1
 fi
 
-# Create output directory
+echo "🐳 Using container engine: $ENGINE"
+
+# 0. Clean up
+echo "🧹 Cleaning up previous artifacts..."
+rm -rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 
-# Run dotnet publish
-# Flags:
-# -c Release: Build in Release mode
-# -r $RUNTIME: Target Linux x64
-# --self-contained true: Include .NET runtime in the executable
-# -p:PublishSingleFile=true: Package everything into one file
-# -p:PublishReadyToRun=true: Ahead-of-time (AOT) compilation for faster startup
-# -p:IncludeNativeLibrariesForSelfExtract=true: Ensure native dependencies are handled correctly
-dotnet publish "$PROJECT_DIR/$PROJECT_FILE" \
+# 1. Build on host
+echo "🛠️ Publishing single-file executable on host..."
+dotnet publish OpenSnitchCli/OpenSnitchCli.csproj \
     -c Release \
     -r "$RUNTIME" \
     --self-contained true \
@@ -34,13 +35,36 @@ dotnet publish "$PROJECT_DIR/$PROJECT_FILE" \
     -p:IncludeNativeLibrariesForSelfExtract=true \
     -o "$OUTPUT_DIR"
 
+if [ $? -ne 0 ]; then
+    echo "❌ Error: dotnet publish failed."
+    exit 1
+fi
+
+# 2. Package as RPM (Fedora/RedHat)
+echo "📦 Building RPM packer image..."
+$ENGINE build -t opensnitch-cli-rpm-packer -f Dockerfile.rpm .
+echo "🎁 Creating RPM package..."
+$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-rpm-packer
+
+# 3. Package as DEB (Debian/Ubuntu)
+echo "📦 Building DEB packer image..."
+$ENGINE build -t opensnitch-cli-deb-packer -f Dockerfile.deb .
+echo "🎁 Creating DEB package..."
+$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-deb-packer
+
 if [ $? -eq 0 ]; then
     echo "----------------------------------------------------"
-    echo "✅ Success! Single-file executable created."
-    echo "📍 Location: $OUTPUT_DIR/OpenSnitchCli"
-    echo "💻 To run: chmod +x $OUTPUT_DIR/OpenSnitchCli && sudo $OUTPUT_DIR/OpenSnitchCli"
+    echo "✅ Success! Linux packages created."
+    
+    RPM_FILE=$(ls $OUTPUT_DIR/*.rpm 2>/dev/null | tail -n 1)
+    DEB_FILE=$(ls $OUTPUT_DIR/*.deb 2>/dev/null | tail -n 1)
+    
+    [ -n "$RPM_FILE" ] && echo "📍 RPM: $RPM_FILE"
+    [ -n "$DEB_FILE" ] && echo "📍 DEB: $DEB_FILE"
+    
+    echo "🚀 Command: OpenSnitchCli"
     echo "----------------------------------------------------"
 else
-    echo "❌ Error: Publish failed."
+    echo "❌ Error: Packaging failed."
     exit 1
 fi
