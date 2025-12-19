@@ -3,6 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
 using Grpc.Core;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace OpenSnitchCli
 {
     class Program
     {
-        private const string Version = "1.2.0";
+        private static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
 
         static async Task Main(string[] args)
         {
@@ -98,6 +99,8 @@ namespace OpenSnitchCli
             else if (useTui2)
             {
                 tguiManager = new TGuiManager();
+                tguiManager.SetVersions(Version, "Connecting...");
+
                 uiService.OnMessageReceived += (method, msg) =>
                 {
                     if (method == "NotificationReply")
@@ -111,6 +114,10 @@ namespace OpenSnitchCli
 
                 uiService.OnRulesReceived += (rules) => {
                     tguiManager.UpdateRules(rules);
+                };
+                
+                uiService.OnDaemonConnected += (daemonVer) => {
+                    tguiManager.SetVersions(Version, daemonVer);
                 };
 
                 tguiManager.OnRuleChanged += async (ruleObj) => {

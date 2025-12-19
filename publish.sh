@@ -1,7 +1,11 @@
 #!/bin/bash
 
 # Configuration
-VERSION="1.2.0"
+VERSION=$(grep "<Version>" OpenSnitchCli/OpenSnitchCli.csproj | sed 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+if [ -z "$VERSION" ]; then
+  VERSION="1.0.0"
+  echo "⚠️ Warning: Could not detect version from csproj, defaulting to $VERSION"
+fi
 OUTPUT_DIR="publish"
 RUNTIME="linux-x64"
 

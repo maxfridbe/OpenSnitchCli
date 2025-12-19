@@ -21,7 +21,7 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('j' key).
 - [x] **Theme Support:** Multiple color schemes (Dracula, Nord, Monokai, etc.).
 - [x] **Notification System:** System beep on prompt to grab attention (rate-limited).
-- [ ] **Global Search/Filtering:** Ability to filter connection or rule lists.
+- [x] **Global Search/Filtering:** Ability to filter connection or rule lists.
 - [ ] **Daemon Config:** Manage daemon-wide settings (InterceptUnknown, etc.) via UI.
 - [ ] **Firewall Viewer:** Display system-level nftables/iptables chains and rules.
 - [ ] **Statistics Charts:** Real-time graphing of connections and rule hits.
@@ -83,6 +83,7 @@ By default, the application:
 | :--- | :--- |
 | **Arrow Keys** | Navigate through the lists. |
 | **q** | Quit the application. |
+| **f** | Focus the Filter bar (Connections: Process, Rules: Name). |
 | **0** | Cycle through visual themes. |
 | **s** | Cycle sorting column. |
 | **S (Shift+S)** | Toggle sort direction. |

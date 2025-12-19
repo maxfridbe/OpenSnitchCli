@@ -54,9 +54,28 @@ namespace OpenSnitchTGUI
         private Window? _win;
         private Label? _statusLabel;
         private Dictionary<string, object> _rowSchemes = new();
+        private TextField? _filterField;
+        private string _appVersion = "1.0.0";
+        private string _daemonVersion = "Unknown";
 
         public event Action<object>? OnRuleDeleted;
         public event Action<object>? OnRuleChanged;
+
+        public void SetVersions(string appVersion, string daemonVersion)
+        {
+            _appVersion = appVersion;
+            _daemonVersion = daemonVersion;
+            UpdateTitle();
+        }
+
+        private void UpdateTitle()
+        {
+            if (_win != null)
+            {
+                _win.Title = $"OpenSnitch CLI v{_appVersion} | Daemon v{_daemonVersion}";
+                _win.SetNeedsDraw();
+            }
+        }
 
         private bool _themesInitialized = false;
         private List<string> _cycleThemes = new List<string> { 
@@ -84,6 +103,7 @@ namespace OpenSnitchTGUI
 
             var shortcuts = new List<Shortcut>();
             shortcuts.Add(new Shortcut(Key.Q, "~q~ Quit", () => _app?.RequestStop()));
+            shortcuts.Add(new Shortcut(Key.F, "~f~ Filter", () => _filterField?.SetFocus()));
             shortcuts.Add(new Shortcut(Key.D0, $"~0~ Theme: {currentTheme}", () => CycleTheme()));
             shortcuts.Add(new Shortcut(Key.S, $"~s/S~ Sort: {sortInfo}", () => { /* Handled in KeyDown */ }));
             shortcuts.Add(new Shortcut(Key.L, "~l~ Limit", () => CycleLimit()));
@@ -119,6 +139,7 @@ namespace OpenSnitchTGUI
             MessageBox.Query(_app, "Help", 
                 "Use Arrow Keys to Navigate\n" +
                 "Press 'q' to Quit\n" +
+                "Press 'f' to Filter\n" +
                 "Press '0' to Cycle Themes\n" +
                 "Press 's' to Cycle Sort Column\n" +
                 "Press 'S' to Toggle Sort Order\n" +
@@ -272,19 +293,26 @@ namespace OpenSnitchTGUI
 
         private List<object> GetSortedRules()
         {
+            IEnumerable<object> filtered = _rules;
+            if (_filterField != null && _filterField.Text.Length > 0)
+            {
+                var term = _filterField.Text.ToString()!.ToLower();
+                filtered = filtered.Where(r => ((dynamic)r).Name != null && ((string)((dynamic)r).Name).ToLower().Contains(term));
+            }
+
             IOrderedEnumerable<object> query;
             bool asc = _ruleSortAsc;
             switch (_ruleSortCol)
             {
-                case 0: query = asc ? _rules.OrderBy(r => ((dynamic)r).Enabled) : _rules.OrderByDescending(r => ((dynamic)r).Enabled); break;
-                case 1: query = asc ? _rules.OrderBy(r => ((dynamic)r).Name) : _rules.OrderByDescending(r => ((dynamic)r).Name); break;
-                case 2: query = asc ? _rules.OrderBy(r => ((dynamic)r).Action) : _rules.OrderByDescending(r => ((dynamic)r).Action); break;
-                case 3: query = asc ? _rules.OrderBy(r => ((dynamic)r).Duration) : _rules.OrderByDescending(r => ((dynamic)r).Duration); break;
-                case 4: query = asc ? _rules.OrderBy(r => ((dynamic)r).Precedence) : _rules.OrderByDescending(r => ((dynamic)r).Precedence); break;
-                case 5: query = asc ? _rules.OrderBy(r => ((dynamic)r).Operator?.Type) : _rules.OrderByDescending(r => ((dynamic)r).Operator?.Type); break;
-                case 6: query = asc ? _rules.OrderBy(r => ((dynamic)r).Operator?.Operand) : _rules.OrderByDescending(r => ((dynamic)r).Operator?.Operand); break;
-                case 7: query = asc ? _rules.OrderBy(r => ((dynamic)r).Operator?.Data) : _rules.OrderByDescending(r => ((dynamic)r).Operator?.Data); break;
-                default: query = _rules.OrderByDescending(r => ((dynamic)r).Created); break;
+                case 0: query = asc ? filtered.OrderBy(r => ((dynamic)r).Enabled) : filtered.OrderByDescending(r => ((dynamic)r).Enabled); break;
+                case 1: query = asc ? filtered.OrderBy(r => ((dynamic)r).Name) : filtered.OrderByDescending(r => ((dynamic)r).Name); break;
+                case 2: query = asc ? filtered.OrderBy(r => ((dynamic)r).Action) : filtered.OrderByDescending(r => ((dynamic)r).Action); break;
+                case 3: query = asc ? filtered.OrderBy(r => ((dynamic)r).Duration) : filtered.OrderByDescending(r => ((dynamic)r).Duration); break;
+                case 4: query = asc ? filtered.OrderBy(r => ((dynamic)r).Precedence) : filtered.OrderByDescending(r => ((dynamic)r).Precedence); break;
+                case 5: query = asc ? filtered.OrderBy(r => ((dynamic)r).Operator?.Type) : filtered.OrderByDescending(r => ((dynamic)r).Operator?.Type); break;
+                case 6: query = asc ? filtered.OrderBy(r => ((dynamic)r).Operator?.Operand) : filtered.OrderByDescending(r => ((dynamic)r).Operator?.Operand); break;
+                case 7: query = asc ? filtered.OrderBy(r => ((dynamic)r).Operator?.Data) : filtered.OrderByDescending(r => ((dynamic)r).Operator?.Data); break;
+                default: query = filtered.OrderByDescending(r => ((dynamic)r).Created); break;
             }
             return query.ThenByDescending(r => ((dynamic)r).Created).ToList();
         }
@@ -368,6 +396,8 @@ namespace OpenSnitchTGUI
             {
                 try 
                 {
+                    try { Console.Title = "OpenSnitchCLI **PROMPT**"; } catch {}
+
                     if ((DateTime.Now - _lastBeepTime).TotalSeconds >= 3)
                     {
                         Console.Beep();
@@ -416,6 +446,7 @@ namespace OpenSnitchTGUI
                     dialog.Add(btnAllowOnce, btnAllow30s, btnAllowAlways, btnDenyOnce, btnDenyAlways, btnNewRule);
 
                     _app?.Run(dialog);
+                    try { Console.Title = $"OpenSnitch CLI v{_appVersion}"; } catch {}
                     
                     if (result == 5) // New Rule
                     {
@@ -571,6 +602,25 @@ namespace OpenSnitchTGUI
                     Width = Dim.Fill(),
                     Height = Dim.Fill(1) 
                 };
+                
+                // Initial title update
+                UpdateTitle();
+                try { Console.Title = $"OpenSnitch CLI v{_appVersion}"; } catch {}
+
+                var filterLabel = new Label() { Text = "Filter (f):", X = 1, Y = 0 };
+                _filterField = new TextField() 
+                {
+                    X = Pos.Right(filterLabel) + 1,
+                    Y = 0,
+                    Width = Dim.Fill() - 32 // Leave space for status label
+                };
+                _filterField.TextChanged += (s, e) => {
+                     if (_tabView != null) {
+                        if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) RefreshTable();
+                        else RefreshRulesTable();
+                     }
+                };
+                _win.Add(filterLabel, _filterField);
 
                 _statusLabel = new Label() 
                 {
@@ -712,6 +762,21 @@ namespace OpenSnitchTGUI
                         // ONLY process hotkeys if the main window is the top runnable (no dialogs open)
                         if (_app.TopRunnable != _win) return;
 
+                        // If the filter field is focused, don't process global hotkeys (like 's' for sort)
+                        // so that the user can type freely into the filter.
+                        if (_filterField != null && _filterField.HasFocus) 
+                        {
+                            // If user presses Enter or Esc, move focus back to the current table
+                            var baseKeyFocus = e.NoAlt.NoCtrl.NoShift;
+                            if (baseKeyFocus == Key.Enter || baseKeyFocus == Key.Esc)
+                            {
+                                if (_tabView?.SelectedTab == _tabView?.Tabs.ElementAt(0)) _tableView?.SetFocus();
+                                else _rulesTableView?.SetFocus();
+                                e.Handled = true;
+                            }
+                            return;
+                        }
+
                         // Normalize the key by removing modifiers for comparison
                         var baseKey = e.NoAlt.NoCtrl.NoShift;
                         var keyCode = e.KeyCode;
@@ -720,6 +785,11 @@ namespace OpenSnitchTGUI
                         {
                             _app?.RequestStop(); 
                             e.Handled = true; 
+                        }
+                        else if (baseKey == Key.F || keyCode == Key.F.KeyCode)
+                        {
+                            _filterField?.SetFocus();
+                            e.Handled = true;
                         }
                         else if (baseKey == Key.D0 || keyCode == Key.D0.KeyCode) 
                         {
@@ -981,19 +1051,26 @@ namespace OpenSnitchTGUI
 
         private List<TuiEvent> GetSortedEvents()
         {
+            IEnumerable<TuiEvent> filtered = _events;
+            if (_filterField != null && _filterField.Text.Length > 0)
+            {
+                var term = _filterField.Text.ToString()!.ToLower();
+                filtered = filtered.Where(e => (e.Source ?? "").ToLower().Contains(term));
+            }
+
             IOrderedEnumerable<TuiEvent> query;
             bool asc = _connSortAsc;
             switch (_connSortCol)
             {
-                case 0: query = asc ? _events.OrderBy(e => e.Timestamp) : _events.OrderByDescending(e => e.Timestamp); break;
-                case 1: query = asc ? _events.OrderBy(e => e.Type) : _events.OrderByDescending(e => e.Type); break;
-                case 2: query = asc ? _events.OrderBy(e => e.Pid) : _events.OrderByDescending(e => e.Pid); break;
-                case 3: query = asc ? _events.OrderBy(e => e.Details) : _events.OrderByDescending(e => e.Details); break; // User is in details currently
-                case 4: query = asc ? _events.OrderBy(e => e.Source) : _events.OrderByDescending(e => e.Source); break;
-                case 5: query = asc ? _events.OrderBy(e => e.DestinationIp) : _events.OrderByDescending(e => e.DestinationIp); break;
-                case 6: query = asc ? _events.OrderBy(e => e.DestinationPort) : _events.OrderByDescending(e => e.DestinationPort); break;
-                case 7: query = asc ? _events.OrderBy(e => e.Protocol) : _events.OrderByDescending(e => e.Protocol); break;
-                default: query = _events.OrderByDescending(e => e.Timestamp); break;
+                case 0: query = asc ? filtered.OrderBy(e => e.Timestamp) : filtered.OrderByDescending(e => e.Timestamp); break;
+                case 1: query = asc ? filtered.OrderBy(e => e.Type) : filtered.OrderByDescending(e => e.Type); break;
+                case 2: query = asc ? filtered.OrderBy(e => e.Pid) : filtered.OrderByDescending(e => e.Pid); break;
+                case 3: query = asc ? filtered.OrderBy(e => e.Details) : filtered.OrderByDescending(e => e.Details); break; // User is in details currently
+                case 4: query = asc ? filtered.OrderBy(e => e.Source) : filtered.OrderByDescending(e => e.Source); break;
+                case 5: query = asc ? filtered.OrderBy(e => e.DestinationIp) : filtered.OrderByDescending(e => e.DestinationIp); break;
+                case 6: query = asc ? filtered.OrderBy(e => e.DestinationPort) : filtered.OrderByDescending(e => e.DestinationPort); break;
+                case 7: query = asc ? filtered.OrderBy(e => e.Protocol) : filtered.OrderByDescending(e => e.Protocol); break;
+                default: query = filtered.OrderByDescending(e => e.Timestamp); break;
             }
             return query.ThenByDescending(e => e.Timestamp).ToList();
         }

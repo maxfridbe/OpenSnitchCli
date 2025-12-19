@@ -14,6 +14,7 @@ namespace OpenSnitchCli.Services
         // Event to notify subscribers (CLI logger or TUI)
         public event Action<string, IMessage>? OnMessageReceived;
         public event Action<IEnumerable<Rule>>? OnRulesReceived;
+        public event Action<string>? OnDaemonConnected;
         
         // Handler for interactive rule decisions
         public Func<Connection, Task<Rule>>? AskRuleHandler { get; set; }
@@ -64,6 +65,8 @@ namespace OpenSnitchCli.Services
         {
             if(_logEntries)
             _logger.LogDebug("Received Subscribe request: {Request}", request);
+
+            OnDaemonConnected?.Invoke(request.Version);
 
             if (request.Rules != null)
             {
