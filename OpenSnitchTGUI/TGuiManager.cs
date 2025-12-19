@@ -82,7 +82,8 @@ namespace OpenSnitchTGUI
         private bool _themesInitialized = false;
         private List<string> _cycleThemes = new List<string> { 
             "Base", "Matrix", "Red", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord",
-            "Catppuccin", "AyuMirage", "Everforest", "Gruvbox" 
+            "Catppuccin", "AyuMirage", "Everforest", "Gruvbox",
+            "OneDark", "TokyoNight", "Kanagawa", "RosePine", "Cobalt2", "GithubDark"
         };
         private DateTime _lastBeepTime = DateTime.MinValue;
 
@@ -90,6 +91,7 @@ namespace OpenSnitchTGUI
         private int[] _historyLimits = { 1000, 800, 500, 200, 100, 50 };
         private int _limitIndex = 0;
         private int _maxEvents => _historyLimits[_limitIndex];
+        private int _maxAddressWidth = 25; // Default initial width
 
         private void UpdateStatusBar()
         {
@@ -169,7 +171,7 @@ namespace OpenSnitchTGUI
         }
 
         // Base column names for dynamic updates
-        private static readonly string[] ConnColNames = { "Time", "Type", "PID", "User", "Program", "Address", "Port", "Protocol" };
+        private static readonly string[] ConnColNames = { "Time", "Type", "PID", "User", "Address", "Port", "Prot", "Program" };
         private static readonly string[] RuleColNames = { "On", "Name", "Action", "Duration", "Prec", "OpType", "Operand", "Data" };
 
         // Sorting state
@@ -705,43 +707,14 @@ namespace OpenSnitchTGUI
                 _tabView.AddTab(new Tab { DisplayText = "   Connections   ", View = _tableView }, true);
                 _tabView.AddTab(new Tab { DisplayText = "   Rules   ", View = _rulesTableView }, false);
 
-                _tableView.Style.GetOrCreateColumnStyle(6).Alignment = Alignment.End;
-                _tableView.Style.GetOrCreateColumnStyle(7).Alignment = Alignment.End;
-                _tableView.Style.GetOrCreateColumnStyle(3).Alignment = Alignment.End;
+                _tableView.Style.GetOrCreateColumnStyle(5).Alignment = Alignment.End; // Port
+                _tableView.Style.GetOrCreateColumnStyle(6).Alignment = Alignment.End; // Prot
+                _tableView.Style.GetOrCreateColumnStyle(3).Alignment = Alignment.End; // User
+                _tableView.Style.GetOrCreateColumnStyle(7).Alignment = Alignment.Start; // Program (Left align)
 
                 _win.SubViewsLaidOut += (s, e) =>
                 {
-                    if (_tableView!.Viewport.Width <= 0) return;
-
-                    int width = _tableView.Viewport.Width;
-                    int scrollBarWidth = 1; 
-                    int fixedWidths = 0;
-
-                                    var colWidths = new Dictionary<string, int>
-                                    {
-                                        { "Time", 12 },
-                                        { "Type", 10 },
-                                        { "PID", 8 },
-                                        { "User", 15 },
-                                        { "Address", 25 }, 
-                                        { "Port", 10 },
-                                        { "Protocol", 8 }
-                                    };
-                    foreach (var kvp in colWidths) fixedWidths += kvp.Value;
-
-                    int programWidth = Math.Max(10, width - fixedWidths - scrollBarWidth - 5);
-
-                    for (int i = 0; i < _dt.Columns.Count; i++)
-                    {
-                        var col = _dt.Columns[i];
-                        var style = _tableView.Style.GetOrCreateColumnStyle(i);
-                        string baseName = ConnColNames[i];
-                        int w = baseName == "Program" ? programWidth : (colWidths.ContainsKey(baseName) ? colWidths[baseName] : 10);
-                        style.MinWidth = w;
-                        style.MaxWidth = w;
-                    }
-                    
-                    _tableView.SetNeedsDraw();
+                    ApplyTableStyles();
                 };
 
                 InitCustomThemes();
@@ -1018,10 +991,6 @@ namespace OpenSnitchTGUI
                 if (normalProp == null) return;
                 var attrType = normalProp.PropertyType;
 
-                object CreateAttr(Color fg, Color bg)
-                {
-                    return Activator.CreateInstance(attrType, fg, bg)!;
-                }
                 // Moved CreateScheme to be a private method, not a local function
                 // to resolve potential compiler confusion with array initializers
                 // in InitCustomThemes scope.
@@ -1039,6 +1008,14 @@ namespace OpenSnitchTGUI
                 CreateScheme("AyuMirage", Color.BrightYellow, Color.Black, Color.BrightRed, Color.Black);
                 CreateScheme("Everforest", Color.BrightGreen, Color.DarkGray, Color.BrightYellow, Color.DarkGray);
                 CreateScheme("Gruvbox", Color.Yellow, Color.Black, Color.BrightRed, Color.Black);
+
+                // Additional popular themes
+                CreateScheme("OneDark", Color.White, Color.Black, Color.Black, Color.Blue);
+                CreateScheme("TokyoNight", Color.Cyan, Color.Black, Color.Black, Color.Magenta);
+                CreateScheme("Kanagawa", Color.White, Color.Black, Color.Black, Color.Yellow);
+                CreateScheme("RosePine", Color.BrightMagenta, Color.Black, Color.Black, Color.Magenta);
+                CreateScheme("Cobalt2", Color.White, Color.Blue, Color.Black, Color.BrightYellow);
+                CreateScheme("GithubDark", Color.White, Color.Black, Color.Black, Color.Blue);
 
                 CreateScheme("RowAllow", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen); 
                 CreateScheme("RowDeny", Color.BrightRed, Color.Black, Color.White, Color.BrightRed);   
@@ -1106,7 +1083,11 @@ namespace OpenSnitchTGUI
             if (_filterField != null && _filterField.Text.Length > 0)
             {
                 var term = _filterField.Text.ToString()!.ToLower();
-                filtered = filtered.Where(e => (e.Source ?? "").ToLower().Contains(term));
+                filtered = filtered.Where(e => 
+                {
+                    var val = (_showFullProcessCommand && !string.IsNullOrEmpty(e.Command)) ? e.Command : e.Source;
+                    return (val ?? "").ToLower().Contains(term);
+                });
             }
 
             IOrderedEnumerable<TuiEvent> query;
@@ -1116,11 +1097,11 @@ namespace OpenSnitchTGUI
                 case 0: query = asc ? filtered.OrderBy(e => e.Timestamp) : filtered.OrderByDescending(e => e.Timestamp); break;
                 case 1: query = asc ? filtered.OrderBy(e => e.Type) : filtered.OrderByDescending(e => e.Type); break;
                 case 2: query = asc ? filtered.OrderBy(e => e.Pid) : filtered.OrderByDescending(e => e.Pid); break;
-                case 3: query = asc ? filtered.OrderBy(e => e.Details) : filtered.OrderByDescending(e => e.Details); break; // User is in details currently
-                case 4: query = asc ? filtered.OrderBy(e => e.Source) : filtered.OrderByDescending(e => e.Source); break;
-                case 5: query = asc ? filtered.OrderBy(e => e.DestinationIp) : filtered.OrderByDescending(e => e.DestinationIp); break;
-                case 6: query = asc ? filtered.OrderBy(e => e.DestinationPort) : filtered.OrderByDescending(e => e.DestinationPort); break;
-                case 7: query = asc ? filtered.OrderBy(e => e.Protocol) : filtered.OrderByDescending(e => e.Protocol); break;
+                case 3: query = asc ? filtered.OrderBy(e => e.Details) : filtered.OrderByDescending(e => e.Details); break; // User
+                case 4: query = asc ? filtered.OrderBy(e => e.DestinationIp) : filtered.OrderByDescending(e => e.DestinationIp); break; // Address
+                case 5: query = asc ? filtered.OrderBy(e => e.DestinationPort) : filtered.OrderByDescending(e => e.DestinationPort); break; // Port
+                case 6: query = asc ? filtered.OrderBy(e => e.Protocol) : filtered.OrderByDescending(e => e.Protocol); break; // Prot
+                case 7: query = asc ? filtered.OrderBy(e => e.Source) : filtered.OrderByDescending(e => e.Source); break; // Program
                 default: query = filtered.OrderByDescending(e => e.Timestamp); break;
             }
             return query.ThenByDescending(e => e.Timestamp).ToList();
@@ -1145,12 +1126,15 @@ namespace OpenSnitchTGUI
                 while (_events.Count > _maxEvents) _events.RemoveAt(_events.Count - 1);
 
                 var sorted = GetSortedEvents();
+                int currentMaxAddr = 15;
                 foreach (var evt in sorted)
                 {
                     string user = "";
                     var match = Regex.Match(evt.Details ?? "", @"U(?:ID|ser):\s*(\d+)");
                     if (match.Success) user = _userManager.GetUser(match.Groups[1].Value);
                     var address = _dnsManager.GetDisplayName(evt.DestinationIp, evt.DestinationHost);
+                    if (address != null && address.Length > currentMaxAddr) currentMaxAddr = address.Length;
+                    
                     string typeStr = evt.Type;
                     if (typeStr == "ALLOW") typeStr = "✓ ALLOW";
                     else if (typeStr == "DENY") typeStr = "❌ DENY";
@@ -1161,15 +1145,87 @@ namespace OpenSnitchTGUI
                         typeStr,
                         evt.Pid,
                         user,
-                        (evt.IsInNamespace ? "📦 " : "") + ((_showFullProcessCommand && !string.IsNullOrEmpty(evt.Command)) ? evt.Command : evt.Source),
                         address,
                         evt.DestinationPort,
-                        evt.Protocol
+                        evt.Protocol,
+                        (evt.IsInNamespace ? "📦 " : "") + ((_showFullProcessCommand && !string.IsNullOrEmpty(evt.Command)) ? evt.Command : evt.Source)
                     );
                 }
+
+                _maxAddressWidth = Math.Min(50, currentMaxAddr + 2); // Cap at 50, add small padding
+                ApplyTableStyles();
             }
             if (_statusLabel != null) _statusLabel.Text = $"{GetConnectionStatusIcon()} {GetConnectionStatusText()} | Events: {_events.Count}/{_maxEvents}";
             _tableView.SetNeedsDraw();
+        }
+
+        private void ApplyTableStyles()
+        {
+            if (_tableView == null || _tableView.Viewport.Width <= 0) return;
+
+            int width = _tableView.Viewport.Width;
+            int scrollBarWidth = 1;
+            int fixedWidths = 0;
+
+            var colWidths = new Dictionary<string, int>
+            {
+                { "Time", 12 },
+                { "Type", 10 },
+                { "PID", 6 },
+                { "User", 15 },
+                { "Address", _maxAddressWidth },
+                { "Port", 6 },
+                { "Prot", 4 }
+            };
+            foreach (var kvp in colWidths) fixedWidths += kvp.Value;
+
+            // Subtract more padding to account for inter-column separators (~1 char per column) and scrollbar
+            int programWidth = Math.Max(10, width - fixedWidths - scrollBarWidth - 25);
+
+            for (int i = 0; i < _dt!.Columns.Count; i++)
+            {
+                var style = _tableView.Style.GetOrCreateColumnStyle(i);
+                string baseName = ConnColNames[i];
+                int w = baseName == "Program" ? programWidth : (colWidths.ContainsKey(baseName) ? colWidths[baseName] : 10);
+                style.MinWidth = w;
+                style.MaxWidth = w;
+            }
+
+            // Also resize Rules table
+            if (_rulesTableView != null && _rulesTableView.Viewport.Width > 0)
+            {
+                int rWidth = _rulesTableView.Viewport.Width;
+                var rColWidths = new Dictionary<string, int>
+                {
+                    { "On", 4 },
+                    { "Action", 8 },
+                    { "Duration", 10 },
+                    { "Prec", 6 },
+                    { "OpType", 10 },
+                    { "Operand", 15 }
+                };
+                int rFixedWidths = 0;
+                foreach (var kvp in rColWidths) rFixedWidths += kvp.Value;
+                int dataWidth = Math.Max(10, rWidth - rFixedWidths - scrollBarWidth - 10);
+                int nameWidth = 20;
+                dataWidth -= nameWidth;
+
+                for (int i = 0; i < _rulesDt!.Columns.Count; i++)
+                {
+                    var style = _rulesTableView.Style.GetOrCreateColumnStyle(i);
+                    string baseName = RuleColNames[i];
+                    int w = 10;
+                    if (baseName == "Data") w = Math.Max(10, dataWidth);
+                    else if (baseName == "Name") w = nameWidth;
+                    else if (rColWidths.ContainsKey(baseName)) w = rColWidths[baseName];
+
+                    style.MinWidth = w;
+                    style.MaxWidth = w;
+                }
+            }
+
+            _tableView.SetNeedsDraw();
+            _rulesTableView?.SetNeedsDraw();
         }
         
         // Helper methods for connection status
