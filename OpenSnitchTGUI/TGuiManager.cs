@@ -109,7 +109,7 @@ namespace OpenSnitchTGUI
             shortcuts.Add(new Shortcut(Key.Q, "~q~ Quit", () => _app?.RequestStop()));
             shortcuts.Add(new Shortcut(Key.F, "~f~ Filter", () => _filterField?.SetFocus()));
             shortcuts.Add(new Shortcut(Key.D0, $"~0~ Theme: {currentTheme}", () => CycleTheme()));
-            shortcuts.Add(new Shortcut(Key.S, "~s/S~ Sort: {sortInfo}", () => {{ /* Handled in KeyDown */ }} ));
+            shortcuts.Add(new Shortcut(Key.S, $"~s/S~ Sort: {sortInfo}", () => {{ /* Handled in KeyDown */ }} ));
             shortcuts.Add(new Shortcut(Key.L, "~l~ Limit", () => CycleLimit()));
 
             if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
@@ -312,7 +312,10 @@ namespace OpenSnitchTGUI
 
         private List<object> GetSortedRules()
         {
-            IEnumerable<object> filtered = _rules;
+            object[] snapshot;
+            lock (_lock) { snapshot = _rules.ToArray(); }
+
+            IEnumerable<object> filtered = snapshot;
             if (_filterField != null && _filterField.Text.Length > 0)
             {
                 var term = _filterField.Text.ToString()!.ToLower();
@@ -340,17 +343,17 @@ namespace OpenSnitchTGUI
         {
             if (_rulesDt == null || _rulesTableView == null) return; 
             
-            // Update column headers with sort indicator
-            for (int i = 0; i < RuleColNames.Length; i++)
-            {
-                string header = RuleColNames[i];
-                if (i == _ruleSortCol) header += _ruleSortAsc ? " ▲" : " ▼";
-                _rulesDt.Columns[i].ColumnName = header;
-            }
-
-            _rulesDt.Rows.Clear();
             lock (_lock)
             {
+                // Update column headers with sort indicator
+                for (int i = 0; i < RuleColNames.Length; i++)
+                {
+                    string header = RuleColNames[i];
+                    if (i == _ruleSortCol) header += _ruleSortAsc ? " ▲" : " ▼";
+                    _rulesDt.Columns[i].ColumnName = header;
+                }
+
+                _rulesDt.Rows.Clear();
                 var sorted = GetSortedRules();
                 foreach (dynamic rule in sorted)
                 {
@@ -1079,7 +1082,10 @@ namespace OpenSnitchTGUI
 
         private List<TuiEvent> GetSortedEvents()
         {
-            IEnumerable<TuiEvent> filtered = _events;
+            TuiEvent[] snapshot;
+            lock (_lock) { snapshot = _events.ToArray(); }
+
+            IEnumerable<TuiEvent> filtered = snapshot;
             if (_filterField != null && _filterField.Text.Length > 0)
             {
                 var term = _filterField.Text.ToString()!.ToLower();
@@ -1111,17 +1117,18 @@ namespace OpenSnitchTGUI
         {
             if (_dt == null || _tableView == null) return;
 
-            // Update column headers with sort indicator
-            for (int i = 0; i < ConnColNames.Length; i++)
-            {
-                string header = ConnColNames[i];
-                if (i == _connSortCol) header += _connSortAsc ? " ▲" : " ▼";
-                _dt.Columns[i].ColumnName = header;
-            }
-
-            _dt.Rows.Clear();
             lock (_lock)
             {
+                // Update column headers with sort indicator
+                for (int i = 0; i < ConnColNames.Length; i++)
+                {
+                    string header = ConnColNames[i];
+                    if (i == _connSortCol) header += _connSortAsc ? " ▲" : " ▼";
+                    _dt.Columns[i].ColumnName = header;
+                }
+
+                _dt.Rows.Clear();
+                
                 // Enforce limit in case it was just lowered
                 while (_events.Count > _maxEvents) _events.RemoveAt(_events.Count - 1);
 
@@ -1140,6 +1147,13 @@ namespace OpenSnitchTGUI
                     else if (typeStr == "DENY") typeStr = "❌ DENY";
                     else if (typeStr == "AskRule") typeStr = "? ASK";
 
+                    string icons = "";
+                    if (evt.IsFlatpak || evt.ContainerType == "Flatpak") icons += "📦 ";
+                    else if (evt.IsInNamespace || (evt.ContainerType != "Host" && !string.IsNullOrEmpty(evt.ContainerType))) icons += "📦 ";
+                    if (evt.IsDaemon) icons += "⚙️ ";
+
+                    string programDisplayName = icons + ((_showFullProcessCommand && !string.IsNullOrEmpty(evt.Command)) ? evt.Command : evt.Source);
+
                     _dt.Rows.Add(
                         evt.Timestamp.ToString("HH:mm:ss.fff"),
                         typeStr,
@@ -1148,7 +1162,7 @@ namespace OpenSnitchTGUI
                         address,
                         evt.DestinationPort,
                         evt.Protocol,
-                        (evt.IsInNamespace ? "📦 " : "") + ((_showFullProcessCommand && !string.IsNullOrEmpty(evt.Command)) ? evt.Command : evt.Source)
+                        programDisplayName
                     );
                 }
 
@@ -1263,8 +1277,11 @@ namespace OpenSnitchTGUI
                     var aboutText = !string.IsNullOrEmpty(description) ? $"\nAbout:       {description}" : "";
                     
                     var originText = "";
-                    if (evt.IsFlatpak) originText = "\nOrigin:      📦 Flatpak (Sandboxed)";
+                    if (!string.IsNullOrEmpty(evt.ContainerType) && evt.ContainerType != "Host") originText = $"\nOrigin:      📦 {evt.ContainerType}";
+                    else if (evt.IsFlatpak) originText = "\nOrigin:      📦 Flatpak (Sandboxed)";
                     else if (evt.IsInNamespace) originText = "\nOrigin:      📦 Container/Namespace";
+
+                    var daemonText = evt.IsDaemon ? "\nService:     ⚙️ System Daemon" : "";
 
                     var commandText = (!string.IsNullOrEmpty(evt.Command) && evt.Command != evt.Source) ? $"\nCommand:     {evt.Command}" : "";
 
@@ -1273,7 +1290,7 @@ namespace OpenSnitchTGUI
                                        $"Protocol:    {evt.Protocol}\n" +
                                        $"PID:         {evt.Pid}\n" +
                                        $"User:        {user}\n" +
-                                       $"Program:     {evt.Source}{commandText}{originText}{aboutText}\n" +
+                                       $"Program:     {evt.Source}{commandText}{originText}{daemonText}{aboutText}\n" +
                                        $"Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}\n" +
                                        $"Details:     {evt.Details}";
                 }

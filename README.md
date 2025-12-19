@@ -17,11 +17,12 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - [x] **Process Details:** Deep inspection of PID, Path, User, and Command Line args.
 - [x] **Reverse DNS Resolution:** Background lookups via Cloudflare DoH.
 - [x] **User Resolution:** Automatic mapping of UIDs to local system usernames.
-- [x] **Container Detection:** Visual identification (📦) of namespaced/containerized processes.
+- [x] **Container & Daemon Detection:** Visual indicators for Namespaces/Containers (📦) and System Services (⚙️).
 - [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('j' key).
-- [x] **Theme Support:** Multiple color schemes (Dracula, Nord, Monokai, etc.).
+- [x] **Theme Support:** 15+ color schemes including OneDark, TokyoNight, Kanagawa, RosePine, and Cobalt2.
 - [x] **Notification System:** System beep on prompt to grab attention (rate-limited).
-- [x] **Global Search/Filtering:** Ability to filter connection or rule lists.
+- [x] **Global Search/Filtering:** Real-time filtering of connection or rule lists, including full-path filtering.
+- [x] **Dynamic Layout:** Column auto-sizing for addresses and flexible "Program" column that absorbs remaining space.
 - [ ] **Daemon Config:** Manage daemon-wide settings (InterceptUnknown, etc.) via UI.
 - [ ] **Firewall Viewer:** Display system-level nftables/iptables chains and rules.
 - [ ] **Statistics Charts:** Real-time graphing of connections and rule hits.
@@ -98,5 +99,6 @@ By default, the application:
 
 ## Troubleshooting
 
-- **Crash Logs:** If the application crashes, check `crash_log.txt` in the working directory for detailed stack traces.
+- **Icon Visibility:** If you don't see 📦 or ⚙️ icons, ensure your terminal supports UTF-8 and its font includes emoji glyphs. Note that daemon and container detection requires permissions to read `/proc` files; running the CLI with `sudo` is recommended for full accuracy.
+- **Crash Logs:** If the application crashes, check `opensnitch_tui_debug_*.log` in your temp directory for detailed logs.
 - **No Events:** Ensure `opensnitchd` is running (`sudo systemctl status opensnitch`). Verify no other process is using `/tmp/osui.sock`.

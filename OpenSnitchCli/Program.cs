@@ -25,6 +25,8 @@ namespace OpenSnitchCli
 
         static async Task Main(string[] args)
         {
+            try { Console.OutputEncoding = System.Text.Encoding.UTF8; } catch {}
+
             if (args.Contains("--help") || args.Contains("-h"))
             {
                 Console.WriteLine($"OpenSnitch C# CLI Listener v{Version}");
@@ -302,6 +304,11 @@ namespace OpenSnitchCli
 
             if (msg is Protocol.Connection conn) {
                 var type = method == "ALLOW" || method == "DENY" ? method : (method == "AskRule" ? "AskRule" : "Connection");
+                
+                var containerInfo = ProcessInfoHelper.GetProcessContext((int)conn.ProcessId);
+                var isFlatpak = containerInfo.Type == "Flatpak" || (!string.IsNullOrEmpty(conn.ProcessPath) && (conn.ProcessPath.StartsWith("/app/") || conn.ProcessPath.Contains("/flatpak/")));
+                var isNamespace = (containerInfo.IsContainer && containerInfo.Type != "Flatpak") || string.IsNullOrEmpty(conn.ProcessPath);
+
                 var evt = new TuiEvent { 
                     Timestamp = DateTime.Now, 
                     Type = type, 
@@ -313,13 +320,22 @@ namespace OpenSnitchCli
                     DestinationPort = conn.DstPort.ToString(), 
                     DestinationHost = conn.DstHost,
                     Details = $"User: {conn.UserId}", 
-                    IsInNamespace = string.IsNullOrEmpty(conn.ProcessPath) 
+                    IsInNamespace = isNamespace,
+                    IsFlatpak = isFlatpak,
+                    IsDaemon = containerInfo.IsDaemon,
+                    ContainerType = containerInfo.Type
                 };
-                evt.IsFlatpak = !string.IsNullOrEmpty(conn.ProcessPath) && (conn.ProcessPath.StartsWith("/app/") || conn.ProcessPath.Contains("/flatpak/"));
+                
+                if (containerInfo.IsContainer && !string.IsNullOrEmpty(containerInfo.Details) && containerInfo.Details != "Unknown")
+                {
+                    evt.Details += $" [{containerInfo.Type}: {containerInfo.Details}]";
+                }
+                
                 list.Add(evt);
             } else if (msg is Protocol.Alert alert) {
                 Program.StaticLogger.LogDebug($"MapToTui Alert: {alert.What} from {alert.Conn?.DstIp ?? alert.Proc?.Path}");
                 var evt = new TuiEvent { Timestamp = DateTime.Now, Type = "Alert", Details = $"{alert.Action} ({alert.What})" };
+                int pid = 0;
                 if (alert.Conn != null) { 
                     evt.Protocol = alert.Conn.Protocol; 
                     evt.Source = alert.Conn.ProcessPath;
@@ -328,15 +344,23 @@ namespace OpenSnitchCli
                     evt.DestinationIp = alert.Conn.DstIp; 
                     evt.DestinationPort = alert.Conn.DstPort.ToString(); 
                     evt.DestinationHost = alert.Conn.DstHost;
+                    pid = (int)alert.Conn.ProcessId;
                 }
                 else if (alert.Proc != null) { 
                     evt.Source = alert.Proc.Path; 
                     evt.Command = (alert.Proc.Args != null && alert.Proc.Args.Count > 0) ? string.Join(" ", alert.Proc.Args) : alert.Proc.Path;
                     evt.Pid = alert.Proc.Pid.ToString(); 
+                    pid = (int)alert.Proc.Pid;
+                }
+                if (pid > 0) {
+                    var ctx = ProcessInfoHelper.GetProcessContext(pid);
+                    evt.IsDaemon = ctx.IsDaemon;
+                    evt.ContainerType = ctx.Type;
+                    evt.IsFlatpak = ctx.Type == "Flatpak";
+                    evt.IsInNamespace = ctx.IsContainer && ctx.Type != "Flatpak";
                 }
                 list.Add(evt);
             } else if (msg is Protocol.PingRequest ping && ping.Stats?.Events != null) {
-                // Program.StaticLogger.LogDebug($"MapToTui PingRequest: Events count={ping.Stats.Events.Count}"); // Commented out
                 list.Add(new TuiEvent { Timestamp = DateTime.Now, Type = "Ping", Details = "Ping" });
                 foreach (var e in ping.Stats.Events) {
                     var evt = new TuiEvent { Timestamp = e.Unixnano > 0 ? DateTimeOffset.FromUnixTimeMilliseconds(e.Unixnano / 1000000).LocalDateTime : DateTime.Now, Type = "Monitor" };
@@ -350,6 +374,12 @@ namespace OpenSnitchCli
                         evt.DestinationHost = e.Connection.DstHost;
                         evt.Details = $"UID: {e.Connection.UserId}";
                         if (e.Rule != null) { evt.Type = e.Rule.Action.ToUpper(); evt.Details += $" [Rule: {e.Rule.Name}]"; }
+                        
+                        var ctx = ProcessInfoHelper.GetProcessContext((int)e.Connection.ProcessId);
+                        evt.IsDaemon = ctx.IsDaemon;
+                        evt.ContainerType = ctx.Type;
+                        evt.IsFlatpak = ctx.Type == "Flatpak";
+                        evt.IsInNamespace = ctx.IsContainer && ctx.Type != "Flatpak";
                     } else if (e.Rule != null) { evt.Type = e.Rule.Action.ToUpper(); evt.Details = $"Rule Hit: {e.Rule.Name}"; }
                     list.Add(evt);
                 }

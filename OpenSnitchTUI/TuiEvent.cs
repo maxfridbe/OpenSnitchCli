@@ -17,5 +17,7 @@ namespace OpenSnitchTUI
         public string Details { get; set; } = "";
         public bool IsInNamespace { get; set; } = false;
         public bool IsFlatpak { get; set; } = false;
+        public bool IsDaemon { get; set; } = false;
+        public string ContainerType { get; set; } = ""; // Docker, Podman, etc.
     }
 }
