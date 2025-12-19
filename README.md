@@ -90,6 +90,7 @@ By default, the application:
 | **c** | Switch to Connections tab. |
 | **r** | Switch to Rules tab. |
 | **j** | Jump to the rule applying to selected connection (Connections Tab). |
+| **p** | Toggle full process command args in "Program" column (Connections Tab). |
 | **t** | Toggle selected rule Enabled/Disabled (Rules Tab). |
 | **e** | Edit the selected rule (Rules Tab). |
 | **d** | Delete the selected rule (Rules Tab). |

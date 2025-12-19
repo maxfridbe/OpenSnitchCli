@@ -15,6 +15,7 @@ This project is a high-performance, modern replacement for the official Python O
   - The primary interactive UI built using **Terminal.Gui (v2)**.
   - `TGuiManager.cs`: Contains the core UI logic, including the multi-tab interface, DataTable-backed grids, filtering logic, and custom color schemes.
   - Supports real-time filtering, sorting, rule editing, and deletion.
+  - Supports toggling full process command line arguments.
 
 - **OpenSnitchTUI:**
   - Contains shared logic and the legacy/streaming UI mode using **Spectre.Console**.
