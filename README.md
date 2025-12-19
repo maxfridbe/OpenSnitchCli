@@ -30,7 +30,6 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 ## Prerequisites
 
 - **.NET 8.0 SDK** (or later)
-- **socat** (used for Unix socket to TCP proxying)
 
 ## Features
 
@@ -42,7 +41,7 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 
 ## Setup
 
-1.  Ensure the official OpenSnitch UI is **NOT** running, as this application needs to bind to `/tmp/osui.sock` (Unix socket) or port 50051 (TCP).
+1.  Ensure the official OpenSnitch UI is **NOT** running, as this application needs to bind to `/tmp/osui.sock` (Unix socket).
 2.  Navigate to the project root or `OpenSnitchCli` directory.
 
 ## How to Run
@@ -74,8 +73,8 @@ dotnet run -- --help
 ## Configuration
 
 By default, the application:
-1. Starts a gRPC server on `0.0.0.0:50051`.
-2. Automatically manages a `socat` process to proxy `/tmp/osui.sock` to the gRPC port.
+1. Starts a gRPC server on `127.0.0.1:50051`.
+2. Starts an internal UDS Proxy that bridges `/tmp/osui.sock` to the TCP port, ensuring compatibility with the daemon.
 
 ## Runtime Controls
 

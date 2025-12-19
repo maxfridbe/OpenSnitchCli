@@ -1,31 +1,30 @@
 using System.Collections.Concurrent;
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Net.Http.Json; // Required for GetFromJsonAsync
 
 namespace OpenSnitchTUI
 {
     public class DnsManager
     {
         private readonly ConcurrentDictionary<string, string> _cache = new();
-        private static readonly HttpClient _httpClient = new() 
-        { 
-            BaseAddress = new Uri("https://cloudflare-dns.com/dns-query") 
-        };
         private readonly string _cacheFilePath = "dns.cache.txt";
         private readonly ConcurrentDictionary<string, bool> _pendingLookups = new();
 
         public DnsManager()
         {
-            _httpClient.DefaultRequestHeaders.Add("Accept", "application/dns-json");
             LoadCache();
             _ = PeriodicallySaveCache();
         }
 
-        public string GetDisplayName(string ip)
+        public string GetDisplayName(string ip, string? daemonProvidedHost = null)
         {
             if (string.IsNullOrEmpty(ip)) return "";
+
+            // If the daemon already provided a meaningful hostname, use it and cache it.
+            if (!string.IsNullOrEmpty(daemonProvidedHost) && daemonProvidedHost != ip)
+            {
+                _cache[ip] = daemonProvidedHost;
+                return daemonProvidedHost;
+            }
             
             if (_cache.TryGetValue(ip, out var hostname))
             {
@@ -47,18 +46,11 @@ namespace OpenSnitchTUI
             {
                 try
                 {
-                    string reverseName = GetReverseDnsName(address);
-                    // Type 12 is PTR
-                    var response = await _httpClient.GetFromJsonAsync<DohResponse>($"?name={reverseName}&type=PTR");
+                    // Use local system DNS for reverse lookup
+                    var entry = await Dns.GetHostEntryAsync(address);
+                    string hostname = entry.HostName;
 
-                    string? hostname = null;
-                    if (response?.Answer != null && response.Answer.Count > 0)
-                    {
-                        // The 'data' field in PTR record is the hostname
-                        hostname = response.Answer[0].Data?.TrimEnd('.');
-                    }
-
-                    if (!string.IsNullOrEmpty(hostname))
+                    if (!string.IsNullOrEmpty(hostname) && hostname != ip)
                     {
                         _cache[ip] = hostname;
                     }
@@ -76,27 +68,6 @@ namespace OpenSnitchTUI
                     _pendingLookups.TryRemove(ip, out _);
                 }
             });
-        }
-
-        private string GetReverseDnsName(IPAddress ip)
-        {
-            if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-            {
-                return string.Join(".", ip.ToString().Split('.').Reverse()) + ".in-addr.arpa";
-            }
-            else
-            {
-                // IPv6 expansion is complex to do manually perfectly, 
-                // but usually: expand to full hex, reverse nibbles, join with dots, + .ip6.arpa
-                // For this CLI, IPv4 is 99% of cases. 
-                // Let's rely on standard library if possible? No built-in reverser.
-                // Simple implementation:
-                var bytes = ip.GetAddressBytes();
-                var hex = Convert.ToHexString(bytes); // Uppercase hex
-                // Reverse nibbles
-                var reversed = string.Join(".", hex.Reverse());
-                return reversed + ".ip6.arpa";
-            }
         }
 
         private void LoadCache()
@@ -132,18 +103,5 @@ namespace OpenSnitchTUI
             }
             catch {}
         }
-    }
-
-    // JSON models for Cloudflare DoH
-    public class DohResponse
-    {
-        [JsonPropertyName("Answer")]
-        public List<DohAnswer>? Answer { get; set; }
-    }
-
-    public class DohAnswer
-    {
-        [JsonPropertyName("data")]
-        public string? Data { get; set; }
     }
 }

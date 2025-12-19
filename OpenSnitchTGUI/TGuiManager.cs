@@ -52,11 +52,12 @@ namespace OpenSnitchTGUI
         private object _lock = new object();
         private IApplication? _app;
         private Window? _win;
-        private Label? _statusLabel;
+        private Label? _statusLabel; // Top-right status label
         private Dictionary<string, object> _rowSchemes = new();
         private TextField? _filterField;
         private string _appVersion = "1.0.0";
         private string _daemonVersion = "Unknown";
+        private DateTime _lastPingTime = DateTime.MinValue; // Tracks daemon connectivity
 
         public event Action<object>? OnRuleDeleted;
         public event Action<object>? OnRuleChanged;
@@ -105,7 +106,7 @@ namespace OpenSnitchTGUI
             shortcuts.Add(new Shortcut(Key.Q, "~q~ Quit", () => _app?.RequestStop()));
             shortcuts.Add(new Shortcut(Key.F, "~f~ Filter", () => _filterField?.SetFocus()));
             shortcuts.Add(new Shortcut(Key.D0, $"~0~ Theme: {currentTheme}", () => CycleTheme()));
-            shortcuts.Add(new Shortcut(Key.S, $"~s/S~ Sort: {sortInfo}", () => { /* Handled in KeyDown */ }));
+            shortcuts.Add(new Shortcut(Key.S, "~s/S~ Sort: {sortInfo}", () => {{ /* Handled in KeyDown */ }} ));
             shortcuts.Add(new Shortcut(Key.L, "~l~ Limit", () => CycleLimit()));
 
             if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
@@ -114,18 +115,32 @@ namespace OpenSnitchTGUI
             }
             else // Rules
             {
-                shortcuts.Add(new Shortcut(Key.T, "~t~ Toggle", () => { /* Handled in KeyDown */ }));
-                shortcuts.Add(new Shortcut(Key.E, "~e~ Edit Rule", () => { /* Handled in KeyDown */ }));
-                shortcuts.Add(new Shortcut(Key.D, "~d~ Delete Rule", () => { /* Handled in KeyDown */ }));
+                shortcuts.Add(new Shortcut(Key.T, "~t~ Toggle", () => {{ /* Handled in KeyDown */ }} ));
+                shortcuts.Add(new Shortcut(Key.E, "~e~ Edit Rule", () => {{ /* Handled in KeyDown */ }} ));
+                shortcuts.Add(new Shortcut(Key.D, "~d~ Delete Rule", () => {{ /* Handled in KeyDown */ }} ));
             }
 
             shortcuts.Add(new Shortcut((Key)'?', "~?~ Help", () => ShowHelp()));
 
             _statusBar.RemoveAll();
-            foreach (var s in shortcuts) _statusBar.Add(s);
+            foreach (var s in shortcuts) _statusBar.Add(s); 
             
             // Sync status bar theme with window
             _statusBar.SchemeName = _win.SchemeName;
+
+            // Update the top-right status label with connection status and event count
+            UpdateConnectionStatusLabel();
+        }
+
+        private void UpdateConnectionStatusLabel()
+        {
+            if (_statusLabel != null)
+            {
+                bool isAlive = (DateTime.Now - _lastPingTime).TotalSeconds < 5; // Daemon is considered alive if pinged recently
+                var statusIcon = isAlive ? "●" : "○";
+                var statusText = isAlive ? "Online" : "No Signal";
+                _statusLabel.Text = $"{statusIcon} {statusText} | Events: {_events.Count}/{_maxEvents}";
+            }
         }
 
         private void CycleLimit()
@@ -319,7 +334,7 @@ namespace OpenSnitchTGUI
 
         private void RefreshRulesTable()
         {
-            if (_rulesDt == null || _rulesTableView == null) return;
+            if (_rulesDt == null || _rulesTableView == null) return; 
             
             // Update column headers with sort indicator
             for (int i = 0; i < RuleColNames.Length; i++)
@@ -392,11 +407,11 @@ namespace OpenSnitchTGUI
                 return tcs.Task;
             }
 
-            _app.Invoke(() =>
+            _app?.Invoke(() =>
             {
                 try 
                 {
-                    try { Console.Title = "OpenSnitchCLI **PROMPT**"; } catch {}
+                    try {{ Console.Title = "OpenSnitchCLI **PROMPT**"; }} catch {{}}
 
                     if ((DateTime.Now - _lastBeepTime).TotalSeconds >= 3)
                     {
@@ -404,7 +419,7 @@ namespace OpenSnitchTGUI
                         _lastBeepTime = DateTime.Now;
                     }
 
-                    var dnsName = _dnsManager.GetDisplayName(req.DestIp);
+                    var dnsName = _dnsManager.GetDisplayName(req.DestIp, req.DestHost);
                     var destDisplay = (string.IsNullOrEmpty(dnsName) || dnsName == req.DestIp)
                         ? req.Destination
                         : $"{dnsName} ({req.DestIp}) : {req.DestPort}";
@@ -436,17 +451,17 @@ namespace OpenSnitchTGUI
                     // Row 3: Advanced
                     var btnNewRule = new Button() { Text = "Make a New _Rule", X = Pos.Center(), Y = 10 };
 
-                    btnAllowOnce.Accepting += (s, e) => { result = 0; _app?.RequestStop(dialog); e.Handled = true; };
-                    btnAllow30s.Accepting += (s, e) => { result = 1; _app?.RequestStop(dialog); e.Handled = true; };
-                    btnAllowAlways.Accepting += (s, e) => { result = 2; _app?.RequestStop(dialog); e.Handled = true; };
-                    btnDenyOnce.Accepting += (s, e) => { result = 3; _app?.RequestStop(dialog); e.Handled = true; };
-                    btnDenyAlways.Accepting += (s, e) => { result = 4; _app?.RequestStop(dialog); e.Handled = true; };
-                    btnNewRule.Accepting += (s, e) => { result = 5; _app?.RequestStop(dialog); e.Handled = true; };
+                    btnAllowOnce.Accepting += (s, e) => {{ result = 0; _app?.RequestStop(dialog); e.Handled = true; }};
+                    btnAllow30s.Accepting += (s, e) => {{ result = 1; _app?.RequestStop(dialog); e.Handled = true; }};
+                    btnAllowAlways.Accepting += (s, e) => {{ result = 2; _app?.RequestStop(dialog); e.Handled = true; }};
+                    btnDenyOnce.Accepting += (s, e) => {{ result = 3; _app?.RequestStop(dialog); e.Handled = true; }};
+                    btnDenyAlways.Accepting += (s, e) => {{ result = 4; _app?.RequestStop(dialog); e.Handled = true; }};
+                    btnNewRule.Accepting += (s, e) => {{ result = 5; _app?.RequestStop(dialog); e.Handled = true; }};
 
                     dialog.Add(btnAllowOnce, btnAllow30s, btnAllowAlways, btnDenyOnce, btnDenyAlways, btnNewRule);
 
                     _app?.Run(dialog);
-                    try { Console.Title = $"OpenSnitch CLI v{_appVersion}"; } catch {}
+                    try {{ Console.Title = $"OpenSnitch CLI v{_appVersion}"; }} catch {{}}
                     
                     if (result == 5) // New Rule
                     {
@@ -501,7 +516,7 @@ namespace OpenSnitchTGUI
             var durationList = new ListView() { Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(durations)), X = 45, Y = 3, Width = 10, Height = 5 };
 
             // Properties with individual text boxes
-            var dnsName = _dnsManager.GetDisplayName(req.DestIp);
+            var dnsName = _dnsManager.GetDisplayName(req.DestIp, req.DestHost);
             var initialDestHost = (string.IsNullOrEmpty(req.DestHost) || req.DestHost == req.DestIp) ? dnsName : req.DestHost;
 
             var props = new (string Label, string Operand, string Value)[] {
@@ -516,7 +531,7 @@ namespace OpenSnitchTGUI
             var radios = new CheckBox[props.Length];
             var edits = new TextField[props.Length];
 
-            for (int i = 0; i < props.Length; i++) {
+            for (int i = 0; i < props.Length; i++) { 
                 int row = 9 + i;
                 var cb = new CheckBox() { Text = props[i].Label, X = 1, Y = row, RadioStyle = true };
                 var tf = new TextField() { Text = props[i].Value, X = 20, Y = row, Width = Dim.Fill(1) };
@@ -572,7 +587,12 @@ namespace OpenSnitchTGUI
 
         public void AddEvent(TuiEvent evt)
         {
-            if (evt.Type == "Ping") return; 
+            if (evt.Type == "Ping") 
+            {
+                _lastPingTime = DateTime.Now; // Update last ping time
+                _app?.Invoke(() => { UpdateConnectionStatusLabel(); }); // Update status bar
+                return; // DO NOT ADD PING EVENTS TO THE GRID
+            }
 
             lock (_lock)
             {
@@ -582,6 +602,7 @@ namespace OpenSnitchTGUI
 
             _app?.Invoke(() =>
             {
+                UpdateConnectionStatusLabel(); // Call this to update connection status and event count
                 RefreshTable();
             });
         }
@@ -605,14 +626,14 @@ namespace OpenSnitchTGUI
                 
                 // Initial title update
                 UpdateTitle();
-                try { Console.Title = $"OpenSnitch CLI v{_appVersion}"; } catch {}
+                try {{ Console.Title = $"OpenSnitch CLI v{_appVersion}"; }} catch {{}}
 
                 var filterLabel = new Label() { Text = "Filter (f):", X = 1, Y = 0 };
                 _filterField = new TextField() 
                 {
                     X = Pos.Right(filterLabel) + 1,
                     Y = 0,
-                    Width = Dim.Fill() - 32 // Leave space for status label
+                    Width = Dim.Fill() - 80 // Made narrower from 50 to 80
                 };
                 _filterField.TextChanged += (s, e) => {
                      if (_tabView != null) {
@@ -939,7 +960,7 @@ namespace OpenSnitchTGUI
                     colorGetterProp.SetValue(style, compiledDelegate);
                 }
             }
-            catch { }
+            catch {{ }}
         }
 
         private object? GetRowScheme(object args) 
@@ -961,7 +982,7 @@ namespace OpenSnitchTGUI
                 
                 return null;
             }
-            catch { return null; }
+            catch {{ return null; }}
         }
 
         private void InitCustomThemes()
@@ -990,20 +1011,10 @@ namespace OpenSnitchTGUI
                 {
                     return Activator.CreateInstance(attrType, fg, bg)!;
                 }
-
-                void CreateScheme(string name, Color fg, Color bg, Color focusFg, Color focusBg)
-                {
-                    try {
-                        var scheme = Activator.CreateInstance(schemeType);
-                        schemeType.GetProperty("Normal")?.SetValue(scheme, CreateAttr(fg, bg));
-                        schemeType.GetProperty("Focus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
-                        schemeType.GetProperty("HotNormal")?.SetValue(scheme, CreateAttr(fg, bg));
-                        schemeType.GetProperty("HotFocus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
-                        addSchemeMethod.Invoke(null, new object[] { name, scheme });
-                        if (name.StartsWith("Row")) _rowSchemes[name] = scheme;
-                    } catch { } 
-                }
-
+                // Moved CreateScheme to be a private method, not a local function
+                // to resolve potential compiler confusion with array initializers
+                // in InitCustomThemes scope.
+                
                 CreateScheme("Matrix", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen);
                 CreateScheme("Red", Color.Red, Color.Black, Color.White, Color.Red);
                 CreateScheme("SolarizedDark", Color.Cyan, Color.Black, Color.White, Color.DarkGray);
@@ -1018,13 +1029,42 @@ namespace OpenSnitchTGUI
                 CreateScheme("Everforest", Color.BrightGreen, Color.DarkGray, Color.BrightYellow, Color.DarkGray);
                 CreateScheme("Gruvbox", Color.Yellow, Color.Black, Color.BrightRed, Color.Black);
 
-                CreateScheme("RowAllow", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen);
-                CreateScheme("RowDeny", Color.BrightRed, Color.Black, Color.White, Color.BrightRed);
-                CreateScheme("RowAsk", Color.BrightYellow, Color.Black, Color.Black, Color.BrightYellow);
+                CreateScheme("RowAllow", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen); 
+                CreateScheme("RowDeny", Color.BrightRed, Color.Black, Color.White, Color.BrightRed);   
+                CreateScheme("RowAsk", Color.BrightYellow, Color.Black, Color.Black, Color.BrightYellow); 
 
                 _themesInitialized = true;
             }
-            catch { }
+            catch {{ }}
+        }
+        
+        // Converted CreateScheme from local function to private method
+        private void CreateScheme(string name, Color fg, Color bg, Color focusFg, Color focusBg)
+        {
+            try {
+                // Re-obtain reflection data within this method's scope
+                var schemeManagerType = AppDomain.CurrentDomain.GetAssemblies()
+                        .Select(a => a.GetType("Terminal.Gui.Configuration.SchemeManager"))
+                        .FirstOrDefault(t => t != null);
+                var addSchemeMethod = schemeManagerType?.GetMethods()
+                    .FirstOrDefault(m => m.Name == "AddScheme" && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(string));
+                var schemeType = addSchemeMethod?.GetParameters()[1].ParameterType;
+                var normalProp = schemeType?.GetProperty("Normal");
+                var attrType = normalProp?.PropertyType;
+
+                object CreateAttr(Color fgColor, Color bgColor) // Local CreateAttr
+                {
+                    return Activator.CreateInstance(attrType, fgColor, bgColor)!;
+                }
+
+                var scheme = Activator.CreateInstance(schemeType);
+                schemeType.GetProperty("Normal")?.SetValue(scheme, CreateAttr(fg, bg));
+                schemeType.GetProperty("Focus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
+                schemeType.GetProperty("HotNormal")?.SetValue(scheme, CreateAttr(fg, bg));
+                schemeType.GetProperty("HotFocus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
+                addSchemeMethod?.Invoke(null, new object[] { name, scheme });
+                if (name.StartsWith("Row")) _rowSchemes[name] = scheme;
+            } catch {{ }} 
         }
 
         private void CycleTheme()
@@ -1099,7 +1139,7 @@ namespace OpenSnitchTGUI
                     string user = "";
                     var match = Regex.Match(evt.Details ?? "", @"U(?:ID|ser):\s*(\d+)");
                     if (match.Success) user = _userManager.GetUser(match.Groups[1].Value);
-                    var address = _dnsManager.GetDisplayName(evt.DestinationIp);
+                    var address = _dnsManager.GetDisplayName(evt.DestinationIp, evt.DestinationHost);
                     string typeStr = evt.Type;
                     if (typeStr == "ALLOW") typeStr = "✓ ALLOW";
                     else if (typeStr == "DENY") typeStr = "❌ DENY";
@@ -1117,8 +1157,21 @@ namespace OpenSnitchTGUI
                     );
                 }
             }
-            if (_statusLabel != null) _statusLabel.Text = $"Events: {_events.Count}/{_maxEvents} | Last: {DateTime.Now:HH:mm:ss}";
+            if (_statusLabel != null) _statusLabel.Text = $"{GetConnectionStatusIcon()} {GetConnectionStatusText()} | Events: {_events.Count}/{_maxEvents}";
             _tableView.SetNeedsDraw();
+        }
+        
+        // Helper methods for connection status
+        private string GetConnectionStatusIcon()
+        {
+            bool isAlive = (DateTime.Now - _lastPingTime).TotalSeconds < 5;
+            return isAlive ? "●" : "○";
+        }
+
+        private string GetConnectionStatusText()
+        {
+            bool isAlive = (DateTime.Now - _lastPingTime).TotalSeconds < 5;
+            return isAlive ? "Online" : "No Signal";
         }
 
         private void UpdateDetails(int row)
@@ -1134,7 +1187,7 @@ namespace OpenSnitchTGUI
                     if (row >= sorted.Count) return;
                     var evt = sorted[row];
 
-                    var dns = _dnsManager.GetDisplayName(evt.DestinationIp);
+                    var dns = _dnsManager.GetDisplayName(evt.DestinationIp, evt.DestinationHost);
                     string user = "";
                     var match = Regex.Match(evt.Details ?? "", @"U(?:ID|ser):\s*(\d+)");
                     if (match.Success) user = _userManager.GetUser(match.Groups[1].Value);

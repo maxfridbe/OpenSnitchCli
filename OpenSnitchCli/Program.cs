@@ -1,5 +1,7 @@
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Linq;
@@ -12,15 +14,14 @@ using Google.Protobuf;
 using OpenSnitchCli.Services;
 using OpenSnitchTUI;
 using OpenSnitchTGUI;
-using Protocol; // For UI.BindService & Message types
-using SysProcess = System.Diagnostics.Process;
-using SysProcessStartInfo = System.Diagnostics.ProcessStartInfo;
+using Protocol; 
 
 namespace OpenSnitchCli
 {
     class Program
     {
         private static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "1.0.0";
+        private static ILogger<UiService> StaticLogger = null!; // Will be initialized in Main
 
         static async Task Main(string[] args)
         {
@@ -40,40 +41,35 @@ namespace OpenSnitchCli
 
             bool useTui = args.Contains("--tui");
             bool useDump = args.Contains("--dump");
-            bool useTui2 = !useTui && !useDump; // Default to TUI2 if no other mode specified
-            string? debugLogFilePath = null;
+            bool useTui2 = !useTui && !useDump; 
 
-            // Setup manual logging
-            var loggerFactoryBuilder = LoggerFactory.Create(builder =>
+            string? debugLogFilePath = null;
+            ILoggerProvider? fileLoggerProvider = null;
+
+            if (useTui || useTui2)
+            {
+                debugLogFilePath = Path.Combine(Path.GetTempPath(), $"opensnitch_tui_debug_{DateTime.Now:yyyyMMddHHmmss}.log");
+                try
+                {
+                    var logFileStream = File.AppendText(debugLogFilePath);
+                    fileLoggerProvider = new CustomTextWriterLoggerProvider(logFileStream);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Failed to create debug log file {debugLogFilePath}: {ex.Message}");
+                }
+            }
+
+            var loggerFactory = LoggerFactory.Create(builder =>
             {
                 builder.AddFilter("Microsoft", LogLevel.Warning);
                 builder.AddFilter("System", LogLevel.Warning);
                 builder.AddFilter("OpenSnitchCli", LogLevel.Debug);
-                
-                if (useTui || useTui2)
-                {
-                    debugLogFilePath = Path.Combine(Path.GetTempPath(), $"opensnitch_tui_debug_{DateTime.Now:yyyyMMddHHmmss}.log");
-                    try
-                    {
-                        var logFileStream = File.AppendText(debugLogFilePath);
-                        builder.AddProvider(new CustomTextWriterLoggerProvider(logFileStream));
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine($"Failed to create debug log file {debugLogFilePath}: {ex.Message}");
-                        debugLogFilePath = null;
-                    }
-                }
-                else
-                {
-                    builder.AddConsole();
-                }
+                builder.AddFilter("OpenSnitchTUI", LogLevel.Debug); // Add this filter
+                if (fileLoggerProvider != null) builder.AddProvider(fileLoggerProvider); else builder.AddConsole();
             });
-            var logger = loggerFactoryBuilder.CreateLogger<UiService>();
-
-            // Clean up socket file
-            var socketPath = "/tmp/osui.sock";
-            if (File.Exists(socketPath)) File.Delete(socketPath);
+            var logger = loggerFactory.CreateLogger<UiService>();
+            Program.StaticLogger = logger;
 
             var uiService = new UiService(logger, !(useTui || useTui2));
 
@@ -84,14 +80,9 @@ namespace OpenSnitchCli
 
             if (useTui)
             {
-                tuiManager = new TuiManager();
-                uiService.OnMessageReceived += (method, msg) =>
-                {
-                    if (method == "NotificationReply")
-                    {
-                        // logger.LogDebug("TUI: Filtering NotificationReply from display.");
-                        return;
-                    }
+                tuiManager = new TuiManager(loggerFactory.CreateLogger<TuiManager>());
+                uiService.OnMessageReceived += (method, msg) => {
+                    if (method == "NotificationReply") return;
                     var events = MapToTui(method, msg);
                     foreach (var evt in events) tuiManager.AddEvent(evt);
                 };
@@ -100,26 +91,13 @@ namespace OpenSnitchCli
             {
                 tguiManager = new TGuiManager();
                 tguiManager.SetVersions(Version, "Connecting...");
-
-                uiService.OnMessageReceived += (method, msg) =>
-                {
-                    if (method == "NotificationReply")
-                    {
-                        // logger.LogDebug("TGUI: Filtering NotificationReply.");
-                        return;
-                    }
+                uiService.OnMessageReceived += (method, msg) => {
+                    if (method == "NotificationReply") return;
                     var events = MapToTui(method, msg);
                     foreach (var evt in events) tguiManager.AddEvent(evt);
                 };
-
-                uiService.OnRulesReceived += (rules) => {
-                    tguiManager.UpdateRules(rules);
-                };
-                
-                uiService.OnDaemonConnected += (daemonVer) => {
-                    tguiManager.SetVersions(Version, daemonVer);
-                };
-
+                uiService.OnRulesReceived += (rules) => tguiManager.UpdateRules(rules);
+                uiService.OnDaemonConnected += (daemonVer) => tguiManager.SetVersions(Version, daemonVer);
                 tguiManager.OnRuleChanged += async (ruleObj) => {
                     var rule = (Protocol.Rule)ruleObj;
                     await uiService.SendNotificationAsync(new Protocol.Notification {
@@ -128,7 +106,6 @@ namespace OpenSnitchCli
                         Rules = { rule }
                     });
                 };
-
                 tguiManager.OnRuleDeleted += async (ruleObj) => {
                     var rule = (Protocol.Rule)ruleObj;
                     await uiService.SendNotificationAsync(new Protocol.Notification {
@@ -137,39 +114,28 @@ namespace OpenSnitchCli
                         Rules = { rule }
                     });
                 };
-
                 uiService.AskRuleHandler = async (conn) => {
                     var isFlatpak = !string.IsNullOrEmpty(conn.ProcessPath) && 
                                    (conn.ProcessPath.StartsWith("/app/") || 
-                                    conn.ProcessPath.Contains("/flatpak/") ||
-                                    (conn.ProcessEnv != null && (conn.ProcessEnv.ContainsKey("FLATPAK_ID") || conn.ProcessEnv.ContainsKey("FLATPAK_SANDBOX_DIR"))));
-                    var isInNamespace = string.IsNullOrEmpty(conn.ProcessPath);
-                    
-                    var origin = isFlatpak ? "Flatpak" : (isInNamespace ? "Container/Namespace" : "Host");
-
-                    var req = new PromptRequest
-                    {
+                                    conn.ProcessPath.Contains("/flatpak/"));
+                    var req = new PromptRequest { 
                         Process = conn.ProcessPath,
                         Destination = $"{conn.DstIp}:{conn.DstPort}",
-                        Description = $"{conn.Protocol} connection from {conn.SrcIp} (Origin: {origin})",
+                        Description = $"{conn.Protocol} connection from {conn.SrcIp}",
                         Protocol = conn.Protocol,
                         DestHost = conn.DstHost,
                         DestIp = conn.DstIp,
                         DestPort = conn.DstPort.ToString(),
                         UserId = conn.UserId.ToString()
                     };
-                    
                     var res = await tguiManager.PromptForRule(req);
-                    
-                    var rule = new Protocol.Rule 
-                    {
+                    var rule = new Protocol.Rule { 
                         Action = res.Action,
                         Duration = res.Duration,
                         Enabled = true,
                         Created = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                         Name = res.IsCustom ? res.CustomName : $"Rule for {conn.ProcessPath}",
-                        Operator = new Operator 
-                        { 
+                        Operator = new Operator { 
                             Type = "simple", 
                             Operand = res.IsCustom ? res.CustomOperand : "process.path", 
                             Data = res.IsCustom ? res.CustomData : conn.ProcessPath 
@@ -182,248 +148,233 @@ namespace OpenSnitchCli
             else if (useDump)
             {
                 var formatter = new JsonFormatter(JsonFormatter.Settings.Default.WithFormatDefaultValues(true));
-                uiService.OnMessageReceived += (method, msg) =>
-                {
-                    try
-                    {
-                        Console.WriteLine(formatter.Format(msg));
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error formatting: {ex.Message}");
-                    }
+                uiService.OnMessageReceived += (method, msg) => {
+                    try { Console.WriteLine(formatter.Format(msg)); } catch {}
                 };
             }
 
-            // Configure Server
-            var server = new Server
-            {
+            // 1. Start Grpc.Core Server on TCP
+            const int tcpPort = 50052;
+            var server = new Server {
                 Services = { UI.BindService(uiService) },
-                Ports = { new ServerPort("0.0.0.0", 50051, ServerCredentials.Insecure) }
+                Ports = { new ServerPort("0.0.0.0", tcpPort, ServerCredentials.Insecure) }
             };
 
-            SysProcess? socatProcess = null;
-
-            try
-            {
+            try {
                 server.Start();
-                
-                if (File.Exists(socketPath)) File.Delete(socketPath);
-                
-                if (!useTui && !useTui2) Console.WriteLine($"Starting socat proxy: {socketPath} -> 127.0.0.1:50051");
-                
-                var startInfo = new SysProcessStartInfo
-                {
-                    FileName = "socat",
-                    Arguments = $"UNIX-LISTEN:{socketPath},fork,mode=777 TCP:127.0.0.1:50051",
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true,
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                };
-                
-                socatProcess = SysProcess.Start(startInfo);
+                if (!useTui && !useTui2) Console.WriteLine($"gRPC Server started on 0.0.0.0:{tcpPort}");
+                else if (useTui2) Console.Title = $"OpenSnitch CLI v{Version} | UDS Proxy /tmp/osui.sock -> 127.0.0.1:{tcpPort}";
 
-                if (!useTui && !useTui2)
-                {
-                    Console.WriteLine("Listening on TCP: 0.0.0.0:50051");
-                    Console.WriteLine("Press any key to stop the server...");
-                }
+                // 2. Start UDS -> TCP Proxy
+                var socketPath = "/tmp/osui.sock";
+                _ = Task.Run(() => RunUdsProxy(socketPath, tcpPort, logger, cts.Token));
 
                 // Handle Shutdown
                 Console.CancelKeyPress += (sender, e) => {
                     e.Cancel = true;
                     cts.Cancel();
-                    if (useTui2) tguiManager.Stop();
+                    if (useTui2) tguiManager?.Stop();
                 };
 
-                if (useTui && tuiManager != null)
-                {
+                if (useTui && tuiManager != null) {
                     await tuiManager.RunAsync(cts.Token, () => cts.Cancel());
-                }
-                else if (useTui2 && tguiManager != null)
-                {
-                    // TGUI runs on main thread blocking
+                } else if (useTui2 && tguiManager != null) {
                     tguiManager.Run();
-                    // When Run returns (Application.RequestStop called), we exit
                     cts.Cancel();
+                } else {
+                    try { await Task.Delay(-1, cts.Token); } catch (TaskCanceledException) {}
                 }
-                else
-                {
-                    try { await Task.Delay(-1, cts.Token); } catch (TaskCanceledException) { }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"FATAL ERROR: {ex.Message}");
-                Console.Error.WriteLine(ex.StackTrace);
-                if (!useTui && !useTui2) Console.Error.WriteLine($"Error starting server: {ex.Message}");
-            }
-            finally
-            {
-                loggerFactoryBuilder.Dispose();
-
-                if (!useTui && !useTui2) Console.WriteLine("Shutting down...");
-                
-                if (socatProcess != null && !socatProcess.HasExited)
-                {
-                    try { socatProcess.Kill(); socatProcess.WaitForExit(); } catch {}
-                }
-
+            } catch (Exception ex) {
+                if (!useTui && !useTui2) Console.Error.WriteLine($"FATAL: {ex.Message}");
+            } finally {
+                loggerFactory.Dispose();
                 await server.ShutdownAsync();
-                if (File.Exists(socketPath)) File.Delete(socketPath);
-
-                if ((useTui || useTui2) && !string.IsNullOrEmpty(debugLogFilePath) && File.Exists(debugLogFilePath))
-                {
+                if (File.Exists("/tmp/osui.sock")) File.Delete("/tmp/osui.sock");
+                
+                if ((useTui || useTui2) && !string.IsNullOrEmpty(debugLogFilePath) && File.Exists(debugLogFilePath)) {
                     Console.WriteLine("\n--- TUI Debug Log ---");
                     Console.WriteLine(File.ReadAllText(debugLogFilePath));
-                    Console.WriteLine("---------------------\n");
                     File.Delete(debugLogFilePath);
                 }
+            }
+        }
+
+        private static async Task RunUdsProxy(string socketPath, int tcpPort, ILogger logger, CancellationToken ct)
+        {
+            try {
+                if (File.Exists(socketPath)) File.Delete(socketPath);
+                
+                using var listenSocket = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
+                listenSocket.Bind(new UnixDomainSocketEndPoint(socketPath));
+                
+                // Set 777 permissions
+                try {
+                    File.SetUnixFileMode(socketPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute |
+                                                   UnixFileMode.GroupRead | UnixFileMode.GroupWrite | UnixFileMode.GroupExecute |
+                                                   UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute);
+                } catch (Exception ex) {
+                    logger.LogWarning($"Could not set socket permissions: {ex.Message}");
+                }
+
+                listenSocket.Listen(128);
+                logger.LogInformation($"UDS Proxy listening on {socketPath} -> 127.0.0.1:{tcpPort}");
+
+                while (!ct.IsCancellationRequested) {
+                    var clientSocket = await listenSocket.AcceptAsync(ct);
+                    _ = Task.Run(async () => {
+                        try {
+                            using var tcpClient = new TcpClient();
+                            // Retry logic for backend connection
+                            int retries = 3;
+                            while (retries > 0)
+                            {
+                                try
+                                {
+                                    await tcpClient.ConnectAsync("127.0.0.1", tcpPort, ct);
+                                    break; // Connected
+                                }
+                                catch (SocketException) when (retries > 1)
+                                {
+                                    retries--;
+                                    await Task.Delay(100, ct);
+                                }
+                            }
+                            
+                            if (!tcpClient.Connected) throw new Exception("Failed to connect to backend after retries");
+
+                            using var udsStream = new NetworkStream(clientSocket, true);
+                            using var tcpStream = tcpClient.GetStream();
+
+                            var t1 = udsStream.CopyToAsync(tcpStream, ct);
+                            var t2 = tcpStream.CopyToAsync(udsStream, ct);
+                            await Task.WhenAny(t1, t2);
+                        } catch (Exception ex) {
+                            logger.LogDebug($"Proxy connection error: {ex.Message}");
+                        }
+                    });
+                }
+            } catch (OperationCanceledException) {
+            } catch (Exception ex) {
+                logger.LogError($"UDS Proxy critical error: {ex.Message}");
             }
         }
 
         static IEnumerable<TuiEvent> MapToTui(string method, IMessage msg)
         {
             var list = new List<TuiEvent>();
+            // Add debug logging for incoming messages
+            // logger is not directly accessible here, so use Console.WriteLine to the debug file
+            // The logger for UiService is created with fileLoggerProvider if useTui/useTui2 is true.
+            // So we need to pass logger here or create a new one.
 
-            if (msg is Protocol.Connection conn)
-            {
-                var type = method == "ALLOW" || method == "DENY" ? method : (method == "AskRule" ? "AskRule" : "Connection");
-                var evt = new TuiEvent { Timestamp = DateTime.Now, Type = type };
-                evt.Protocol = conn.Protocol;
-                evt.Source = !string.IsNullOrEmpty(conn.ProcessPath) ? conn.ProcessPath : $"PID: {conn.ProcessId}";
-                evt.Pid = conn.ProcessId.ToString();
-                evt.DestinationIp = conn.DstIp;
-                evt.DestinationPort = conn.DstPort.ToString();
-                evt.Details = $"User: {conn.UserId}";
-                
-                // Simple heuristic for namespace/container: empty path usually means 
-                // daemon couldn't find it in host /proc, often due to namespaces.
-                // Also check if path starts with known container patterns if needed.
-                evt.IsInNamespace = string.IsNullOrEmpty(conn.ProcessPath);
-                
-                // Flatpak detection
-                evt.IsFlatpak = !string.IsNullOrEmpty(conn.ProcessPath) && 
-                                (conn.ProcessPath.StartsWith("/app/") || 
-                                 conn.ProcessPath.Contains("/flatpak/") ||
-                                 (conn.ProcessEnv != null && (conn.ProcessEnv.ContainsKey("FLATPAK_ID") || conn.ProcessEnv.ContainsKey("FLATPAK_SANDBOX_DIR"))));
-                
-                list.Add(evt);
-            }
-            else if (msg is Protocol.Alert alert)
-            {
-                var evt = new TuiEvent { Timestamp = DateTime.Now, Type = "Alert" };
-                evt.Details = $"{alert.Action} ({alert.What})";
-                
-                if (alert.Conn != null)
-                {
-                    evt.Protocol = alert.Conn.Protocol;
-                    evt.Source = alert.Conn.ProcessPath;
-                    evt.Pid = alert.Conn.ProcessId.ToString();
-                    evt.DestinationIp = alert.Conn.DstIp;
-                    evt.DestinationPort = alert.Conn.DstPort.ToString();
-                }
-                else if (alert.Proc != null)
-                {
-                    evt.Source = alert.Proc.Path;
-                    evt.Pid = alert.Proc.Pid.ToString();
-                }
-                list.Add(evt);
-            }
-            else if (msg is Protocol.PingRequest ping)
-            {
-                list.Add(new TuiEvent { Timestamp = DateTime.Now, Type = "Ping", Details = "Ping" });
+            // Since logger is a static field, it's not possible to pass it directly.
+            // I'll make a helper that uses ILogger from UiService to log messages.
+            // This requires making logger a field in Program class.
+            // This is a static method, so I can't use instance logger.
 
-                if (ping.Stats != null && ping.Stats.Events != null)
-                {
-                    foreach (var e in ping.Stats.Events)
-                    {
-                        var evt = new TuiEvent 
-                        {
-                            Timestamp = e.Unixnano > 0 ? DateTimeOffset.FromUnixTimeMilliseconds(e.Unixnano / 1000000).LocalDateTime : DateTime.Now,
-                            Type = "Monitor" 
-                        };
-                        
-                        if (e.Connection != null)
-                        {
-                            evt.Protocol = e.Connection.Protocol;
-                            evt.Source = e.Connection.ProcessPath;
-                            evt.Pid = e.Connection.ProcessId.ToString();
-                            evt.DestinationIp = e.Connection.DstIp;
-                            evt.DestinationPort = e.Connection.DstPort.ToString();
-                            evt.Details = $"UID: {e.Connection.UserId}";
+            // I'll use a static logger or pass it.
+            // Let's modify Program.Main to pass the logger.
+            // This will affect Main signature.
 
-                            if (e.Rule != null)
-                            {
-                                evt.Type = e.Rule.Action.ToUpper();
-                                evt.Details += $" [Rule: {e.Rule.Name}]";
-                            }
-                        }
-                        else if (e.Rule != null)
-                        {
-                            evt.Type = e.Rule.Action.ToUpper();
-                            evt.Details = $"Rule Hit: {e.Rule.Name}";
-                        }
-                        
-                        list.Add(evt);
-                    }
-                }
-            }
+            // I'll change MapToTui to accept an ILogger.
+            // The method is static.
+
+            // Alternative: use a static logger reference.
+            // I'll add a static ILogger field to Program.
+
+            // Let's create a temporary logger here.
+            // No, the logger is already set up to go to debug file if in TUI mode.
+            // I'll make an anonymous function to map.
+
+            // Best way: pass ILogger logger to MapToTui.
+            // This means I have to change the signature of MapToTui.
+            // This changes a lot of calls to MapToTui.
+
+            // The simplest approach without refactoring everything:
+            // Just use a Console.WriteLine to stderr, and assume user is running with redirection to file.
+            // No, the debug file is used.
+
+            // I need to make `logger` available in `MapToTui`.
+            // The `logger` is a local variable in `Main`.
+            // I'll make `logger` a static field in `Program` class.
             
+            // Program.StaticLogger.LogDebug($"MapToTui received: Method={method}, MsgType={msg.GetType().Name}");
+
+            if (msg is Protocol.Connection conn) {
+                var type = method == "ALLOW" || method == "DENY" ? method : (method == "AskRule" ? "AskRule" : "Connection");
+                var evt = new TuiEvent { 
+                    Timestamp = DateTime.Now, 
+                    Type = type, 
+                    Protocol = conn.Protocol, 
+                    Source = !string.IsNullOrEmpty(conn.ProcessPath) ? conn.ProcessPath : $"PID: {conn.ProcessId}",
+                    Command = (conn.ProcessArgs != null && conn.ProcessArgs.Count > 0) ? string.Join(" ", conn.ProcessArgs) : conn.ProcessPath,
+                    Pid = conn.ProcessId.ToString(), 
+                    DestinationIp = conn.DstIp, 
+                    DestinationPort = conn.DstPort.ToString(), 
+                    DestinationHost = conn.DstHost,
+                    Details = $"User: {conn.UserId}", 
+                    IsInNamespace = string.IsNullOrEmpty(conn.ProcessPath) 
+                };
+                evt.IsFlatpak = !string.IsNullOrEmpty(conn.ProcessPath) && (conn.ProcessPath.StartsWith("/app/") || conn.ProcessPath.Contains("/flatpak/"));
+                list.Add(evt);
+            } else if (msg is Protocol.Alert alert) {
+                Program.StaticLogger.LogDebug($"MapToTui Alert: {alert.What} from {alert.Conn?.DstIp ?? alert.Proc?.Path}");
+                var evt = new TuiEvent { Timestamp = DateTime.Now, Type = "Alert", Details = $"{alert.Action} ({alert.What})" };
+                if (alert.Conn != null) { 
+                    evt.Protocol = alert.Conn.Protocol; 
+                    evt.Source = alert.Conn.ProcessPath;
+                    evt.Command = (alert.Conn.ProcessArgs != null && alert.Conn.ProcessArgs.Count > 0) ? string.Join(" ", alert.Conn.ProcessArgs) : alert.Conn.ProcessPath;
+                    evt.Pid = alert.Conn.ProcessId.ToString(); 
+                    evt.DestinationIp = alert.Conn.DstIp; 
+                    evt.DestinationPort = alert.Conn.DstPort.ToString(); 
+                    evt.DestinationHost = alert.Conn.DstHost;
+                }
+                else if (alert.Proc != null) { 
+                    evt.Source = alert.Proc.Path; 
+                    evt.Command = (alert.Proc.Args != null && alert.Proc.Args.Count > 0) ? string.Join(" ", alert.Proc.Args) : alert.Proc.Path;
+                    evt.Pid = alert.Proc.Pid.ToString(); 
+                }
+                list.Add(evt);
+            } else if (msg is Protocol.PingRequest ping && ping.Stats?.Events != null) {
+                // Program.StaticLogger.LogDebug($"MapToTui PingRequest: Events count={ping.Stats.Events.Count}"); // Commented out
+                list.Add(new TuiEvent { Timestamp = DateTime.Now, Type = "Ping", Details = "Ping" });
+                foreach (var e in ping.Stats.Events) {
+                    var evt = new TuiEvent { Timestamp = e.Unixnano > 0 ? DateTimeOffset.FromUnixTimeMilliseconds(e.Unixnano / 1000000).LocalDateTime : DateTime.Now, Type = "Monitor" };
+                    if (e.Connection != null) {
+                        evt.Protocol = e.Connection.Protocol; 
+                        evt.Source = e.Connection.ProcessPath; 
+                        evt.Command = (e.Connection.ProcessArgs != null && e.Connection.ProcessArgs.Count > 0) ? string.Join(" ", e.Connection.ProcessArgs) : e.Connection.ProcessPath;
+                        evt.Pid = e.Connection.ProcessId.ToString(); 
+                        evt.DestinationIp = e.Connection.DstIp; 
+                        evt.DestinationPort = e.Connection.DstPort.ToString(); 
+                        evt.DestinationHost = e.Connection.DstHost;
+                        evt.Details = $"UID: {e.Connection.UserId}";
+                        if (e.Rule != null) { evt.Type = e.Rule.Action.ToUpper(); evt.Details += $" [Rule: {e.Rule.Name}]"; }
+                    } else if (e.Rule != null) { evt.Type = e.Rule.Action.ToUpper(); evt.Details = $"Rule Hit: {e.Rule.Name}"; }
+                    list.Add(evt);
+                }
+            }
             return list;
         }
     }
 
-    // Custom logger provider to write to a TextWriter (e.g., a file)
-    public class CustomTextWriterLoggerProvider : ILoggerProvider
-    {
+    public class CustomTextWriterLoggerProvider : ILoggerProvider {
         private readonly TextWriter _writer;
-
-        public CustomTextWriterLoggerProvider(TextWriter writer)
-        {
-            _writer = writer;
-        }
-
-        public ILogger CreateLogger(string categoryName)
-        {
-            return new CustomTextWriterLogger(categoryName, _writer);
-        }
-
-        public void Dispose()
-        {
-            _writer.Dispose();
-        }
+        public CustomTextWriterLoggerProvider(TextWriter writer) => _writer = writer;
+        public ILogger CreateLogger(string categoryName) => new CustomTextWriterLogger(categoryName, _writer);
+        public void Dispose() => _writer.Dispose();
     }
 
-    public class CustomTextWriterLogger : ILogger
-    {
+    public class CustomTextWriterLogger : ILogger {
         private readonly string _categoryName;
         private readonly TextWriter _writer;
-
-        public CustomTextWriterLogger(string categoryName, TextWriter writer)
-        {
-            _categoryName = categoryName;
-            _writer = writer;
-        }
-
+        public CustomTextWriterLogger(string categoryName, TextWriter writer) { _categoryName = categoryName; _writer = writer; }
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => default;
-
-        public bool IsEnabled(LogLevel logLevel)
-        {
-            return logLevel >= LogLevel.Debug;
-        }
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
-        {
-            if (!IsEnabled(logLevel)) return;
-
+        public bool IsEnabled(LogLevel logLevel) => logLevel >= LogLevel.Debug;
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter) {
             var message = formatter(state, exception);
             _writer.WriteLine($"{DateTime.Now:HH:mm:ss.fff} [{logLevel}] [{_categoryName}] {message}");
-            if (exception != null)
-            {
-                _writer.WriteLine(exception.ToString());
-            }
+            if (exception != null) _writer.WriteLine(exception.ToString());
             _writer.Flush();
         }
     }

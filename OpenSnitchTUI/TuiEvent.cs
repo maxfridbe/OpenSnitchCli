@@ -6,11 +6,13 @@ namespace OpenSnitchTUI
         public string Type { get; set; } = ""; // Ping, Alert, Rule
         public string Protocol { get; set; } = "";
         public string Source { get; set; } = ""; // Process
+        public string Command { get; set; } = ""; // Full Process Command
         public string Pid { get; set; } = ""; // Process ID
         
         // Split Destination
         public string DestinationIp { get; set; } = "";
         public string DestinationPort { get; set; } = "";
+        public string DestinationHost { get; set; } = "";
         
         public string Details { get; set; } = "";
         public bool IsInNamespace { get; set; } = false;

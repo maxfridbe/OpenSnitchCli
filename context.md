@@ -6,7 +6,7 @@ This project is a high-performance, modern replacement for the official Python O
 
 - **OpenSnitchCli (Main Project):**
   - Acts as a gRPC server that the `opensnitchd` daemon connects to.
-  - Manages a `socat` subprocess to proxy the Unix socket (`/tmp/osui.sock`) to TCP port 50051.
+  - Implements an internal Unix Domain Socket (UDS) proxy to bridge `/tmp/osui.sock` to the internal gRPC server (replacing `socat`).
   - Orchestrates the different UI modes.
   - `Program.cs`: Main entry point and service wiring.
   - `Services/UiService.cs`: Implements the `UI.UIBase` gRPC service defined in `ui.proto`.
@@ -27,8 +27,7 @@ This project is a high-performance, modern replacement for the official Python O
 ## Tech Stack
 - **Framework:** .NET 8
 - **UI:** Terminal.Gui 2.0 (develop branch), Spectre.Console
-- **Communication:** gRPC (Google.Protobuf, Grpc.Core)
-- **Tooling:** `socat` for socket proxying.
+- **Communication:** gRPC (Google.Protobuf, Grpc.Core), System.Net.Sockets (UDS)
 
 ## Development Patterns
 - **Events:** The `UiService` exposes events (`OnMessageReceived`, `OnRulesReceived`, `OnDaemonConnected`) that the UI managers subscribe to.

@@ -1,6 +1,8 @@
 using Spectre.Console;
 using System.Collections.Concurrent;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace OpenSnitchTUI
 {
@@ -10,19 +12,27 @@ namespace OpenSnitchTUI
         private DateTime _lastPingTime = DateTime.MinValue;
         private readonly DnsManager _dnsManager = new();
         private readonly UserManager _userManager = new();
+        private readonly ILogger<TuiManager> _logger;
         
         // Selection state
         private int _selectedIndex = 0;
+        private bool _showFullProcessCommand = false;
+
+        public TuiManager(ILogger<TuiManager> logger)
+        {
+            _logger = logger;
+        }
 
         public void AddEvent(TuiEvent evt)
         {
             if (evt.Type == "Ping" || evt.Details == "Ping")
             {
                 _lastPingTime = DateTime.Now;
-                return; 
             }
             
             _events.Enqueue(evt);
+            _logger.LogDebug($"AddEvent: Enqueued {evt.Type}, _events.Count={_events.Count}");
+
             // Limit history
             if (_events.Count > 100)
             {
@@ -32,15 +42,13 @@ namespace OpenSnitchTUI
 
         public async Task RunAsync(CancellationToken token, Action? onQuit = null)
         {
-            // Create Layout with Footer for details
             var layout = new Layout("Root")
                 .SplitRows(
                     new Layout("Header").Size(3),
                     new Layout("Content"),
-                    new Layout("Footer").Size(10) // Fixed size for details pane
+                    new Layout("Footer").Size(10)
                 );
 
-            // Run Live Loop
             await AnsiConsole.Live(layout)
                 .AutoClear(false)
                 .Overflow(VerticalOverflow.Ellipsis)
@@ -49,11 +57,9 @@ namespace OpenSnitchTUI
                 {
                     while (!token.IsCancellationRequested)
                     {
-                        // Snapshot events for stable rendering and selection
-                        // Reverse so index 0 is newest (top)
                         var snapshot = _events.ToArray().Reverse().Take(20).ToList();
+                        _logger.LogDebug($"RunAsync loop: snapshot.Count={snapshot.Count}, _events.Count={_events.Count}");
                         
-                        // Check for Input
                         while (AnsiConsole.Console.Input.IsKeyAvailable())
                         {
                             var key = AnsiConsole.Console.Input.ReadKey(true);
@@ -69,32 +75,26 @@ namespace OpenSnitchTUI
                                 }
                                 else if (key.Value.Key == ConsoleKey.DownArrow)
                                 {
-                                    // Limit selection to visible items
                                     _selectedIndex = Math.Min(snapshot.Count - 1, _selectedIndex + 1);
+                                }
+                                else if (key.Value.Key == ConsoleKey.P)
+                                {
+                                    _showFullProcessCommand = !_showFullProcessCommand;
                                 }
                             }
                         }
                         
-                        // Clamp selection in case list shrank
                         if (snapshot.Count > 0)
                             _selectedIndex = Math.Clamp(_selectedIndex, 0, snapshot.Count - 1);
                         else 
                             _selectedIndex = 0;
 
-                        // Update Header
                         layout["Header"].Update(CreateHeader());
-                        
-                        // Update Content (Table)
                         layout["Content"].Update(CreateTable(snapshot));
-                        
-                        // Update Footer (Details)
-                        var selectedEvent = (snapshot.Count > 0 && _selectedIndex < snapshot.Count) 
-                            ? snapshot[_selectedIndex] 
-                            : null;
-                        layout["Footer"].Update(CreateDetailsPanel(selectedEvent));
+                        layout["Footer"].Update(CreateDetailsPanel(snapshot.Count > 0 ? snapshot[_selectedIndex] : null));
                         
                         ctx.Refresh();
-                        await Task.Delay(150, token); // Reduced refresh rate to prevent flickering
+                        await Task.Delay(150, token);
                     }
                 });
         }
@@ -113,7 +113,7 @@ namespace OpenSnitchTUI
 
             grid.AddRow(
                 new Text("OpenSnitch CLI", new Style(Color.Blue, decoration: Decoration.Bold)),
-                new Text("v1.0", new Style(Color.Grey)),
+                new Text($"v1.0 (Events: {_events.Count})", new Style(Color.Grey)),
                 new Markup($"[{statusColor}]{statusIcon} {statusText}[/]")
             );
 
@@ -137,10 +137,8 @@ namespace OpenSnitchTUI
                 var evt = snapshot[i];
                 var isSelected = (i == _selectedIndex);
                 
-                // Style for selected row
                 var style = isSelected ? new Style(foreground: Color.Black, background: Color.White) : Style.Plain;
 
-                // Resolve UID in details
                 var details = evt.Details ?? "";
                 details = Regex.Replace(details, @"U(?:ID|ser):\s*(\d+)", m => 
                 {
@@ -148,23 +146,17 @@ namespace OpenSnitchTUI
                     return _userManager.GetUser(uid);
                 });
 
-                // Helper to apply style to text
-                // Spectre Table AddRow accepts Renderables or strings. 
-                // We must wrap strings in Text/Markup with style if selected.
-                // Actually, AddRow() doesn't take a row style easily for the whole row unless we wrap each cell.
-                
                 table.AddRow(
                     new Text(evt.Timestamp.ToString("HH:mm:ss"), style),
                     new Text(FormatType(evt.Type) ?? "", style),
                     new Text(evt.Protocol ?? "", style),
                     new Text(evt.Pid ?? "", style),
-                    new Text(evt.Source ?? "", style),
-                    new Text(_dnsManager.GetDisplayName(evt.DestinationIp) ?? "", style),
+                    new Text((_showFullProcessCommand && !string.IsNullOrEmpty(evt.Command)) ? evt.Command : (evt.Source ?? ""), style),
+                    new Text(_dnsManager.GetDisplayName(evt.DestinationIp, evt.DestinationHost) ?? "", style),
                     new Text(evt.DestinationPort ?? "", style),
                     new Text(details ?? "", style)
                 );
             }
-
             return table;
         }
 
@@ -200,7 +192,7 @@ namespace OpenSnitchTUI
                 grid.AddRow("About:", $"[yellow]{description}[/]");
             }
             
-            var dnsName = _dnsManager.GetDisplayName(evt.DestinationIp);
+            var dnsName = _dnsManager.GetDisplayName(evt.DestinationIp, evt.DestinationHost);
             grid.AddRow("Destination:", $"{evt.DestinationIp} ({dnsName}) : {evt.DestinationPort}");
             
             var details = evt.Details ?? "";
@@ -219,10 +211,6 @@ namespace OpenSnitchTUI
 
         private string FormatType(string type)
         {
-            // Note: If row is selected, we override style, so this method just returns text content 
-            // effectively if we use Text(..., style). 
-            // If we want to keep colors AND highlight, it's tricky.
-            // For now, simpler to just lose color on selection (invert).
             return type;
         }
     }

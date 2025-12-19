@@ -19,11 +19,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
-      </ItemGroup>
-    
-        <ItemGroup>
-          <ProjectReference Include="..\OpenSnitchTUI\OpenSnitchTUI.csproj" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenSnitchTUI\OpenSnitchTUI.csproj" />
           <ProjectReference Include="..\OpenSnitchTGUI\OpenSnitchTGUI.csproj" />
         </ItemGroup>
           </Project>
