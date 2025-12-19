@@ -58,6 +58,7 @@ namespace OpenSnitchTGUI
         private string _appVersion = "1.0.0";
         private string _daemonVersion = "Unknown";
         private DateTime _lastPingTime = DateTime.MinValue; // Tracks daemon connectivity
+        private bool _showFullProcessCommand = false;
 
         public event Action<object>? OnRuleDeleted;
         public event Action<object>? OnRuleChanged;
@@ -111,6 +112,7 @@ namespace OpenSnitchTGUI
 
             if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
             {
+                shortcuts.Add(new Shortcut(Key.P, "~p~ Toggle Process", () => {{ /* Handled in KeyDown */ }} ));
                 shortcuts.Add(new Shortcut(Key.J, "~j~ Jump to Rule", () => HandleJumpToRule()));
             }
             else // Rules
@@ -847,6 +849,15 @@ namespace OpenSnitchTGUI
                             HandleJumpToRule();
                             e.Handled = true;
                         }
+                        else if (baseKey == Key.P || keyCode == Key.P.KeyCode)
+                        {
+                            if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(0))
+                            {
+                                _showFullProcessCommand = !_showFullProcessCommand;
+                                RefreshTable();
+                                e.Handled = true;
+                            }
+                        }
                         else if (baseKey == Key.T || keyCode == Key.T.KeyCode)
                         {
                             if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(1) && _rulesTableView != null)
@@ -1150,7 +1161,7 @@ namespace OpenSnitchTGUI
                         typeStr,
                         evt.Pid,
                         user,
-                        (evt.IsInNamespace ? "📦 " : "") + evt.Source,
+                        (evt.IsInNamespace ? "📦 " : "") + ((_showFullProcessCommand && !string.IsNullOrEmpty(evt.Command)) ? evt.Command : evt.Source),
                         address,
                         evt.DestinationPort,
                         evt.Protocol
