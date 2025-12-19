@@ -1210,12 +1210,14 @@ namespace OpenSnitchTGUI
                     if (evt.IsFlatpak) originText = "\nOrigin:      📦 Flatpak (Sandboxed)";
                     else if (evt.IsInNamespace) originText = "\nOrigin:      📦 Container/Namespace";
 
+                    var commandText = (!string.IsNullOrEmpty(evt.Command) && evt.Command != evt.Source) ? $"\nCommand:     {evt.Command}" : "";
+
                     _detailsView.Text = $"Timestamp:   {evt.Timestamp:yyyy-MM-dd HH:mm:ss.fff}\n" +
                                        $"Type:        {evt.Type}\n" +
                                        $"Protocol:    {evt.Protocol}\n" +
                                        $"PID:         {evt.Pid}\n" +
                                        $"User:        {user}\n" +
-                                       $"Program:     {evt.Source}{originText}{aboutText}\n" +
+                                       $"Program:     {evt.Source}{commandText}{originText}{aboutText}\n" +
                                        $"Destination: {evt.DestinationIp} ({dns}) : {evt.DestinationPort}\n" +
                                        $"Details:     {evt.Details}";
                 }
