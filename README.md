@@ -20,6 +20,8 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - [x] **Container & Daemon Detection:** Visual indicators for Namespaces/Containers (📦) and System Services (⚙️).
 - [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('j' key).
 - [x] **Theme Support:** 15+ color schemes including OneDark, TokyoNight, Kanagawa, RosePine, and Cobalt2.
+- [x] **Persistent Settings:** Save and load UI state (theme, sort, filter, limit) via `~/.config/opensnitch-cli/config.json`.
+- [x] **Manual Configuration Save:** Use `Ctrl+S` to save current settings with a confirmation dialog.
 - [x] **Notification System:** System beep on prompt to grab attention (rate-limited).
 - [x] **Global Search/Filtering:** Real-time filtering of connection or rule lists, including full-path filtering.
 - [x] **Dynamic Layout:** Column auto-sizing for addresses and flexible "Program" column that absorbs remaining space.
@@ -37,8 +39,10 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - **Dual TUI Modes:** 
     - **Terminal.Gui v2 Mode (Default):** Full interactive grid with tabs, sorting, themes, and rule management.
     - **Spectre.Console Mode (`--tui`):** A high-performance, beautiful streaming view with fixed details pane.
-- **Global Hotkeys:** Responsive controls ('q', '0', 's', 'j', 'e', 'd', 'c', 'r') that work regardless of current focus.
+- **Global Hotkeys:** Responsive controls ('q', '0', 's', 'j', 'e', 'd', 'c', 'r', 'Ctrl+S') that work regardless of current focus.
+- **Persistent Configuration:** Automatically loads settings from `~/.config/opensnitch-cli/config.json`. Supports manual saving via `Ctrl+S`.
 - **Smart Data Resolution:** DNS and User mappings handled automatically in the background.
+- **Enhanced Process Context:** Deep inspection of `/proc` and cgroups to identify Docker, Podman, LXC, Flatpak, Snap, and system daemons.
 
 ## Setup
 
@@ -51,6 +55,16 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 ```bash
 cd OpenSnitchCli
 dotnet run
+```
+
+### With Custom Configuration
+```bash
+dotnet run -- --cfg my-config.json
+```
+
+### Generate Sample Configuration
+```bash
+dotnet run -- --gen-cfg
 ```
 
 ### Mode 2: Spectre.Console (Streaming View)
@@ -84,6 +98,7 @@ By default, the application:
 | **Arrow Keys** | Navigate through the lists. |
 | **q** | Quit the application. |
 | **f** | Focus the Filter bar (Connections: Process, Rules: Name). |
+| **Ctrl + s** | **Save current settings** to configuration file. |
 | **0** | Cycle through visual themes. |
 | **s** | Cycle sorting column. |
 | **S (Shift+S)** | Toggle sort direction. |
