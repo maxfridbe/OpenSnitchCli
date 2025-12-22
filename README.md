@@ -19,9 +19,11 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - [x] **User Resolution:** Automatic mapping of UIDs to local system usernames.
 - [x] **Container & Daemon Detection:** Visual indicators for Namespaces/Containers (📦) and System Services (⚙️).
 - [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('j' key).
-- [x] **Theme Support:** 15+ color schemes including OneDark, TokyoNight, Kanagawa, RosePine, and Cobalt2.
+- [x] **Theme Support:** 15+ color schemes including OneDark, TokyoNight, Kanagawa, RosePine, and Cobalt2. Supports **HEX colors** (#RRGGBB).
+- [x] **Live Theme Editor:** Interactive dialog (press **e** in Connections tab) to customize colors live with dropdown selection.
 - [x] **Persistent Settings:** Save and load UI state (theme, sort, filter, limit) via `~/.config/opensnitch-cli/config.json`.
 - [x] **Manual Configuration Save:** Use `Ctrl+S` to save current settings with a confirmation dialog.
+- [x] **Packaging Support:** Automated generation of **RPM, DEB, and AppImage** packages via containerized builds.
 - [x] **Notification System:** System beep on prompt to grab attention (rate-limited).
 - [x] **Global Search/Filtering:** Real-time filtering of connection or rule lists, including full-path filtering.
 - [x] **Dynamic Layout:** Column auto-sizing for addresses and flexible "Program" column that absorbs remaining space.
@@ -40,6 +42,7 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
     - **Terminal.Gui v2 Mode (Default):** Full interactive grid with tabs, sorting, themes, and rule management.
     - **Spectre.Console Mode (`--tui`):** A high-performance, beautiful streaming view with fixed details pane.
 - **Global Hotkeys:** Responsive controls ('q', '0', 's', 'j', 'e', 'd', 'c', 'r', 'Ctrl+S') that work regardless of current focus.
+- **Advanced Theme System:** Support for HEX colors and 40+ named colors. Includes a built-in live editor for real-time customization.
 - **Persistent Configuration:** Automatically loads settings from `~/.config/opensnitch-cli/config.json`. Supports manual saving via `Ctrl+S`.
 - **Smart Data Resolution:** DNS and User mappings handled automatically in the background.
 - **Enhanced Process Context:** Deep inspection of `/proc` and cgroups to identify Docker, Podman, LXC, Flatpak, Snap, and system daemons.
@@ -65,6 +68,11 @@ dotnet run -- --cfg my-config.json
 ### Generate Sample Configuration
 ```bash
 dotnet run -- --gen-cfg
+```
+
+### Build Distribution Packages (RPM, DEB, AppImage)
+```bash
+./publish.sh
 ```
 
 ### Mode 2: Spectre.Console (Streaming View)
@@ -108,7 +116,7 @@ By default, the application:
 | **j** | Jump to the rule applying to selected connection (Connections Tab). |
 | **p** | Toggle full process command args in "Program" column (Connections Tab). |
 | **t** | Toggle selected rule Enabled/Disabled (Rules Tab). |
-| **e** | Edit the selected rule (Rules Tab). |
+| **e** | **Open Theme Editor** (Connections Tab) or Edit Rule (Rules Tab). |
 | **d** | Delete the selected rule (Rules Tab). |
 | **?** | Show Help dialog. |
 
