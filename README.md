@@ -4,6 +4,7 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 
 ![Main UI](screen.png)
 ![Rule Prompt](prompt.png)
+![Rules Tab](rule.png)
 
 ## Feature Parity Checklist (vs Python opensnitch-ui)
 
