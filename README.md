@@ -16,7 +16,7 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 - [x] **Rule Deletion:** Remote deletion of rules from the daemon with confirmation.
 - [x] **Multi-column Sorting:** Sort by any column (s/S) with secondary "Newest First" logic.
 - [x] **Process Details:** Deep inspection of PID, Path, User, and Command Line args.
-- [x] **Reverse DNS Resolution:** Background lookups via Cloudflare DoH.
+- [x] **Reverse DNS Resolution:** Background lookups via local system DNS.
 - [x] **User Resolution:** Automatic mapping of UIDs to local system usernames.
 - [x] **Container & Daemon Detection:** Visual indicators for Namespaces/Containers (📦) and System Services (⚙️).
 - [x] **Quick Navigation:** Jump directly from a connection event to its applying rule ('j' key).

@@ -19,7 +19,7 @@ This project is a high-performance, modern replacement for the official Python O
 
 - **OpenSnitchTUI:**
   - Contains shared logic and the legacy/streaming UI mode using **Spectre.Console**.
-  - `DnsManager.cs`: Handles background DNS resolution (DoH).
+  - `DnsManager.cs`: Handles background DNS resolution (Local DNS).
   - `UserManager.cs`: Resolves UIDs to local usernames.
 
 - **Protos:**
