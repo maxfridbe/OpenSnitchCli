@@ -46,15 +46,21 @@ fi
 
 # 2. Package as RPM (Fedora/RedHat)
 echo "📦 Building RPM packer image..."
-$ENGINE build -t opensnitch-cli-rpm-packer -f Dockerfile.rpm .
+$ENGINE build -t opensnitch-cli-rpm-packer -f Dockerfile.rpm . || exit 1
 echo "🎁 Creating RPM package..."
-$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-rpm-packer
+$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-rpm-packer "$VERSION"
 
 # 3. Package as DEB (Debian/Ubuntu)
 echo "📦 Building DEB packer image..."
-$ENGINE build -t opensnitch-cli-deb-packer -f Dockerfile.deb .
+$ENGINE build -t opensnitch-cli-deb-packer -f Dockerfile.deb . || exit 1
 echo "🎁 Creating DEB package..."
-$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-deb-packer
+$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-deb-packer "$VERSION"
+
+# 4. Package as AppImage (Universal)
+echo "📦 Building AppImage packer image..."
+$ENGINE build -t opensnitch-cli-appimage-packer -f Dockerfile.appimage . || exit 1
+echo "🎁 Creating AppImage package..."
+$ENGINE run --rm -v "$(pwd)/$OUTPUT_DIR:/dist:Z" opensnitch-cli-appimage-packer "$VERSION"
 
 if [ $? -eq 0 ]; then
     echo "----------------------------------------------------"
@@ -62,9 +68,11 @@ if [ $? -eq 0 ]; then
     
     RPM_FILE=$(ls $OUTPUT_DIR/*.rpm 2>/dev/null | tail -n 1)
     DEB_FILE=$(ls $OUTPUT_DIR/*.deb 2>/dev/null | tail -n 1)
+    APPIMAGE_FILE=$(ls $OUTPUT_DIR/*.AppImage 2>/dev/null | tail -n 1)
     
-    [ -n "$RPM_FILE" ] && echo "📍 RPM: $RPM_FILE"
-    [ -n "$DEB_FILE" ] && echo "📍 DEB: $DEB_FILE"
+    [ -n "$RPM_FILE" ] && echo "📍 RPM:      $RPM_FILE"
+    [ -n "$DEB_FILE" ] && echo "📍 DEB:      $DEB_FILE"
+    [ -n "$APPIMAGE_FILE" ] && echo "📍 AppImage: $APPIMAGE_FILE"
     
     echo "🚀 Command: OpenSnitchCli"
     echo "----------------------------------------------------"

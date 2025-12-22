@@ -1,0 +1,29 @@
+FROM ubuntu:20.04
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies for appimagetool
+RUN apt-get update && apt-get install -y \
+    wget \
+    file \
+    ca-certificates \
+    libglib2.0-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Download appimagetool
+RUN wget -O /usr/local/bin/appimagetool https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage && \
+    chmod +x /usr/local/bin/appimagetool
+
+WORKDIR /app
+
+# Copy assets
+COPY publish/OpenSnitchCli .
+COPY prompt.png opensnitch-cli.png
+RUN chmod +x OpenSnitchCli
+
+# Copy and setup packaging script
+COPY scripts/package-appimage.sh package.sh
+RUN chmod +x package.sh
+
+ENTRYPOINT ["./package.sh"]

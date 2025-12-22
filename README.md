@@ -52,17 +52,45 @@ This is a C# CLI application that acts as a modern OpenSnitch UI. It listens for
 1.  Ensure the official OpenSnitch UI is **NOT** running, as this application needs to bind to `/tmp/osui.sock` (Unix socket).
 2.  Navigate to the project root or `OpenSnitchCli` directory.
 
+## Installation
+
+Generated packages can be found in the `publish/` directory after running `./publish.sh`.
+
+### Debian / Ubuntu (.deb)
+```bash
+sudo apt install ./opensnitch-cli_1.4.0_amd64.deb
+```
+
+### Fedora / RedHat (.rpm)
+```bash
+sudo dnf install ./opensnitch-cli-1.4.0-1.x86_64.rpm
+```
+
+### Universal Linux (.AppImage)
+The AppImage is a portable single-file executable that runs on most distributions.
+```bash
+chmod +x OpenSnitch_CLI-1.4.0-x86_64.AppImage
+./OpenSnitch_CLI-1.4.0-x86_64.AppImage
+```
+
 ## How to Run
 
-### Default: Terminal.Gui v2 (Full Interactive)
+### From Source (Development)
 ```bash
 cd OpenSnitchCli
 dotnet run
 ```
 
+### Run AppImage (Portable)
+```bash
+./OpenSnitch_CLI-1.4.0-x86_64.AppImage
+```
+
 ### With Custom Configuration
 ```bash
 dotnet run -- --cfg my-config.json
+# OR if installed:
+opensnitch-cli --cfg my-config.json
 ```
 
 ### Generate Sample Configuration

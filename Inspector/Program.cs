@@ -8,10 +8,10 @@ public class Program {
         var assembly = Assembly.LoadFrom(dllPath);
         
         var types = assembly.GetTypes();
-        var styleType = types.FirstOrDefault(t => t.Name == "TableStyle" && t.Namespace == "Terminal.Gui.Views");
-        if (styleType != null) {
-            Console.WriteLine($"\nMembers of {styleType.FullName}:");
-            foreach (var prop in styleType.GetProperties()) {
+        var cbType = types.FirstOrDefault(t => t.Name == "ComboBox" && t.Namespace == "Terminal.Gui.Views");
+        if (cbType != null) {
+            Console.WriteLine($"\nMembers of {cbType.FullName}:");
+            foreach (var prop in cbType.GetProperties()) {
                 Console.WriteLine($"Property: {prop.Name} ({prop.PropertyType})");
             }
         }

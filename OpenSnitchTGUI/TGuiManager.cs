@@ -35,6 +35,28 @@ namespace OpenSnitchTGUI
         public string CustomData { get; set; } = "";
     }
 
+    public class CustomThemeConfig
+    {
+        public string? Name { get; set; }
+        public string? Foreground { get; set; }
+        public string? Background { get; set; }
+        public string? FocusForeground { get; set; }
+        public string? FocusBackground { get; set; }
+        public string? TextEditForeground { get; set; }
+        public string? TextEditBackground { get; set; }
+    }
+
+    public class AppConfig
+    {
+        public string? Theme { get; set; }
+        public CustomThemeConfig? CustomTheme { get; set; }
+        public string? Filter { get; set; }
+        public int? SortColumn { get; set; }
+        public bool? SortAscending { get; set; }
+        public bool? ShowFullCommand { get; set; }
+        public int? HistoryLimit { get; set; }
+    }
+
     public class TGuiManager
     {
         private readonly DnsManager _dnsManager = new();
@@ -55,13 +77,49 @@ namespace OpenSnitchTGUI
         private Label? _statusLabel; // Top-right status label
         private Dictionary<string, object> _rowSchemes = new();
         private TextField? _filterField;
-        private string _appVersion = "1.0.0";
+        private string _appVersion = "1.4.0";
         private string _daemonVersion = "Unknown";
         private DateTime _lastPingTime = DateTime.MinValue; // Tracks daemon connectivity
         private bool _showFullProcessCommand = false;
+        private AppConfig? _pendingConfig;
+        public string? ConfigPath { get; set; }
 
         public event Action<object>? OnRuleDeleted;
         public event Action<object>? OnRuleChanged;
+
+        private void SaveConfig()
+        {
+            if (string.IsNullOrEmpty(ConfigPath)) return;
+            try
+            {
+                var currentTheme = _win?.SchemeName;
+                var config = new AppConfig
+                {
+                    Theme = currentTheme,
+                    Filter = _filterField?.Text.ToString(),
+                    SortColumn = _connSortCol,
+                    SortAscending = _connSortAsc,
+                    ShowFullCommand = _showFullProcessCommand,
+                    HistoryLimit = _historyLimits[_limitIndex]
+                };
+
+                // If currently using the custom theme, persist its definition
+                if (_pendingConfig?.CustomTheme != null && _pendingConfig.CustomTheme.Name == currentTheme)
+                {
+                    config.CustomTheme = _pendingConfig.CustomTheme;
+                    config.Theme = null;
+                }
+
+                var json = System.Text.Json.JsonSerializer.Serialize(config, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+                System.IO.File.WriteAllText(ConfigPath, json);
+            }
+            catch { }
+        }
+
+        public void ApplyConfig(AppConfig config)
+        {
+            _pendingConfig = config;
+        }
 
         public void SetVersions(string appVersion, string daemonVersion)
         {
@@ -81,9 +139,9 @@ namespace OpenSnitchTGUI
 
         private bool _themesInitialized = false;
         private List<string> _cycleThemes = new List<string> { 
-            "Base", "Matrix", "Red", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord",
-            "Catppuccin", "AyuMirage", "Everforest", "Gruvbox",
-            "OneDark", "TokyoNight", "Kanagawa", "RosePine", "Cobalt2", "GithubDark"
+            "Base", "Matrix", "SolarizedDark", "SolarizedLight", "Monokai", "Dracula", "Nord",
+            "Catppuccin", "OneDark", "TokyoNight", "Kanagawa", "RosePine", "Everforest", "Gruvbox",
+            "Cobalt2", "GithubDark"
         };
         private DateTime _lastBeepTime = DateTime.MinValue;
 
@@ -111,11 +169,13 @@ namespace OpenSnitchTGUI
             shortcuts.Add(new Shortcut(Key.D0, $"~0~ Theme: {currentTheme}", () => CycleTheme()));
             shortcuts.Add(new Shortcut(Key.S, $"~s/S~ Sort: {sortInfo}", () => {{ /* Handled in KeyDown */ }} ));
             shortcuts.Add(new Shortcut(Key.L, "~l~ Limit", () => CycleLimit()));
+            shortcuts.Add(new Shortcut(Key.S.WithCtrl, "~Ctrl-S~ Save Config", () => ShowSaveConfigDialog()));
 
             if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0)) // Connections
             {
-                shortcuts.Add(new Shortcut(Key.P, "~p~ Toggle Process", () => {{ /* Handled in KeyDown */ }} ));
+                shortcuts.Add(new Shortcut(Key.P, "~p~ Toggle Process", () => { /* Handled in KeyDown */ } ));
                 shortcuts.Add(new Shortcut(Key.J, "~j~ Jump to Rule", () => HandleJumpToRule()));
+                shortcuts.Add(new Shortcut(Key.E, "~e~ Theme Editor", () => ShowThemeEditorDialog()));
             }
             else // Rules
             {
@@ -150,8 +210,16 @@ namespace OpenSnitchTGUI
         private void CycleLimit()
         {
             _limitIndex = (_limitIndex + 1) % _historyLimits.Length;
-            RefreshTable();
+            UpdateStatusBar();
         }
+
+        private static readonly string[] ColorOptions = {
+            "Black", "Blue", "Green", "Cyan", "Red", "Magenta", "Yellow", "Gray", "DarkGray", 
+            "BrightBlue", "BrightGreen", "BrightCyan", "BrightRed", "BrightMagenta", "BrightYellow", "White",
+            "Orange", "Purple", "Pink", "Teal", "Navy", "Maroon", "Olive", "Silver", "Gold", 
+            "SkyBlue", "Violet", "Indigo", "Lime", "Aqua", "Fuchsia", "Crimson", "Chocolate", 
+            "Coral", "Khaki", "Plum", "Salmon", "Wheat", "Beige", "Ivory", "Azure"
+        };
 
         private void ShowHelp()
         {
@@ -802,7 +870,8 @@ namespace OpenSnitchTGUI
                         }
                         else if (baseKey == Key.S || keyCode == Key.S.KeyCode || keyCode == (Key.S.KeyCode | Terminal.Gui.Drivers.KeyCode.ShiftMask))
                         {
-                            if (e.IsShift || (keyCode & Terminal.Gui.Drivers.KeyCode.ShiftMask) != 0) ToggleSortOrder();
+                            if (e.IsCtrl) ShowSaveConfigDialog();
+                            else if (e.IsShift || (keyCode & Terminal.Gui.Drivers.KeyCode.ShiftMask) != 0) ToggleSortOrder();
                             else CycleSort();
                             e.Handled = true;
                         }
@@ -834,6 +903,27 @@ namespace OpenSnitchTGUI
                                 e.Handled = true;
                             }
                         }
+                        else if (baseKey == Key.E || keyCode == Key.E.KeyCode)
+                        {
+                            if (_tabView != null)
+                            {
+                                if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(0))
+                                {
+                                    ShowThemeEditorDialog();
+                                    e.Handled = true;
+                                }
+                                else if (_tabView.SelectedTab == _tabView.Tabs.ElementAt(1) && _rulesTableView != null)
+                                {
+                                    int row = _rulesTableView.SelectedRow;
+                                    var sortedRules = GetSortedRules();
+                                    if (row >= 0 && row < sortedRules.Count)
+                                    {
+                                        ShowEditRuleDialog(sortedRules[row]);
+                                        e.Handled = true;
+                                    }
+                                }
+                            }
+                        }
                         else if (baseKey == Key.T || keyCode == Key.T.KeyCode)
                         {
                             if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(1) && _rulesTableView != null)
@@ -846,19 +936,6 @@ namespace OpenSnitchTGUI
                                     rule.Enabled = !rule.Enabled;
                                     OnRuleChanged?.Invoke(rule);
                                     RefreshRulesTable();
-                                    e.Handled = true;
-                                }
-                            }
-                        }
-                        else if (baseKey == Key.E || keyCode == Key.E.KeyCode)
-                        {
-                            if (_tabView != null && _tabView.SelectedTab == _tabView.Tabs.ElementAt(1) && _rulesTableView != null)
-                            {
-                                int row = _rulesTableView.SelectedRow;
-                                var sortedRules = GetSortedRules();
-                                if (row >= 0 && row < sortedRules.Count)
-                                {
-                                    ShowEditRuleDialog(sortedRules[row]);
                                     e.Handled = true;
                                 }
                             }
@@ -898,6 +975,9 @@ namespace OpenSnitchTGUI
                 _statusBar = new StatusBar();
                 _win.Add(_statusBar);
                 _win.Add(_statusLabel);
+
+                if (_pendingConfig != null) ApplyPendingConfig();
+
                 UpdateStatusBar();
 
                 _app.Run(_win);
@@ -905,9 +985,248 @@ namespace OpenSnitchTGUI
             }
             catch (Exception ex)
             {
-                System.IO.File.AppendAllText("crash_log.txt", $"CRITICAL ERROR: {ex}\n");
+                System.IO.File.AppendAllText("crash_log.txt", $"[{DateTime.Now}] TGUI RUN ERROR: {ex}\n");
                 throw; // Re-throw to be caught by Program.Main
             }
+        }
+
+        private void ShowThemeEditorDialog()
+        {
+            var dialog = new Dialog()
+            {
+                Title = "Theme Editor",
+                Width = 60,
+                Height = 18
+            };
+
+            var ct = _pendingConfig?.CustomTheme ?? new CustomThemeConfig { 
+                Name = "Custom", 
+                Foreground = "White", 
+                Background = "Black", 
+                FocusForeground = "Black", 
+                FocusBackground = "Blue",
+                TextEditForeground = "Yellow",
+                TextEditBackground = "Black"
+            };
+
+            var nameLabel = new Label() { Text = "Theme Name:", X = 2, Y = 1 };
+            var nameEdit = new TextField() { Text = ct.Name ?? "Custom", X = 20, Y = 1, Width = 35 };
+
+            var fgLabel = new Label() { Text = "Normal FG:", X = 2, Y = 3 };
+            var fgEdit = new ComboBox() { Text = ct.Foreground ?? "White", X = 20, Y = 3, Width = 35, Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(ColorOptions.ToList())) };
+
+            var bgLabel = new Label() { Text = "Normal BG:", X = 2, Y = 4 };
+            var bgEdit = new ComboBox() { Text = ct.Background ?? "Black", X = 20, Y = 4, Width = 35, Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(ColorOptions.ToList())) };
+
+            var ffgLabel = new Label() { Text = "Focus FG:", X = 2, Y = 6 };
+            var ffgEdit = new ComboBox() { Text = ct.FocusForeground ?? "Black", X = 20, Y = 6, Width = 35, Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(ColorOptions.ToList())) };
+
+            var fbgLabel = new Label() { Text = "Focus BG:", X = 2, Y = 7 };
+            var fbgEdit = new ComboBox() { Text = ct.FocusBackground ?? "Blue", X = 20, Y = 7, Width = 35, Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(ColorOptions.ToList())) };
+
+            var efgLabel = new Label() { Text = "Text Edit FG:", X = 2, Y = 9 };
+            var efgEdit = new ComboBox() { Text = ct.TextEditForeground ?? "Yellow", X = 20, Y = 9, Width = 35, Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(ColorOptions.ToList())) };
+
+            var ebgLabel = new Label() { Text = "Text Edit BG:", X = 2, Y = 10 };
+            var ebgEdit = new ComboBox() { Text = ct.TextEditBackground ?? "Black", X = 20, Y = 10, Width = 35, Source = new ListWrapper<string>(new System.Collections.ObjectModel.ObservableCollection<string>(ColorOptions.ToList())) };
+
+            var hintLabel = new Label() { 
+                Text = "Colors: Pick from list or type HEX: #RRGGBB", 
+                X = 2, Y = 12, Width = 55
+            };
+
+            var okBtn = new Button() { Text = "Apply", IsDefault = true };
+            var cancelBtn = new Button() { Text = "Cancel" };
+
+            okBtn.Accepting += (s, e) => {
+                var newCt = new CustomThemeConfig {
+                    Name = nameEdit.Text.ToString(),
+                    Foreground = fgEdit.Text.ToString(),
+                    Background = bgEdit.Text.ToString(),
+                    FocusForeground = ffgEdit.Text.ToString(),
+                    FocusBackground = fbgEdit.Text.ToString(),
+                    TextEditForeground = efgEdit.Text.ToString(),
+                    TextEditBackground = ebgEdit.Text.ToString()
+                };
+
+                // Apply live
+                var fg = ParseColor(newCt.Foreground, Color.White);
+                var bg = ParseColor(newCt.Background, Color.Black);
+                var ffg = ParseColor(newCt.FocusForeground, Color.Black);
+                var fbg = ParseColor(newCt.FocusBackground, Color.Blue);
+                var efgVal = ParseColor(newCt.TextEditForeground, Color.Yellow);
+                var ebgVal = ParseColor(newCt.TextEditBackground, Color.Black);
+
+                CreateScheme(newCt.Name!, fg, bg, ffg, fbg, efgVal, ebgVal);
+                if (!_cycleThemes.Contains(newCt.Name!)) _cycleThemes.Add(newCt.Name!);
+                if (_win != null) _win.SchemeName = newCt.Name;
+                
+                // Update pending config so Ctrl+S can save it
+                if (_pendingConfig == null) _pendingConfig = new AppConfig();
+                _pendingConfig.CustomTheme = newCt;
+                _pendingConfig.Theme = null;
+
+                _app?.RequestStop(dialog);
+                UpdateStatusBar();
+                _win?.SetNeedsDraw();
+            };
+
+            cancelBtn.Accepting += (s, e) => {
+                _app?.RequestStop(dialog);
+                _win?.SetNeedsDraw();
+            };
+
+            dialog.Add(nameLabel, nameEdit, fgLabel, fgEdit, bgLabel, bgEdit, ffgLabel, ffgEdit, fbgLabel, fbgEdit, efgLabel, efgEdit, ebgLabel, ebgEdit, hintLabel);
+            dialog.AddButton(okBtn);
+            dialog.AddButton(cancelBtn);
+
+            _app?.Run(dialog);
+        }
+
+        private void ShowSaveConfigDialog()
+        {
+            if (string.IsNullOrEmpty(ConfigPath))
+            {
+                MessageBox.ErrorQuery(_app, "Error", "No configuration path set.", "Ok");
+                return;
+            }
+
+            var theme = _win?.SchemeName ?? "Base";
+            var filter = _filterField?.Text.ToString() ?? "";
+            var sort = ConnColNames[_connSortCol] + (_connSortAsc ? " ASC" : " DESC");
+            var fullCmd = _showFullProcessCommand ? "Yes" : "No";
+            var limit = _historyLimits[_limitIndex];
+
+            string msg = $"Save current settings to:\n{ConfigPath}\n\n" +
+                         $"Theme:      {theme}\n" +
+                         $"Filter:     {filter}\n" +
+                         $"Sort:       {sort}\n" +
+                         $"Full Cmd:   {fullCmd}\n" +
+                         $"Limit:      {limit}";
+
+            if (MessageBox.Query(_app, "Save Configuration", msg, "Yes", "No") == 0)
+            {
+                SaveConfig();
+                MessageBox.Query(_app, "Success", "Configuration saved successfully.", "Ok");
+            }
+            _win?.SetNeedsDraw();
+        }
+
+        private void ApplyPendingConfig()
+        {
+            if (_pendingConfig == null || _win == null) return;
+
+            if (_pendingConfig.CustomTheme != null && !string.IsNullOrEmpty(_pendingConfig.CustomTheme.Name))
+            {
+                var ct = _pendingConfig.CustomTheme;
+                var fg = ParseColor(ct.Foreground, Color.White);
+                var bg = ParseColor(ct.Background, Color.Black);
+                var ffg = ParseColor(ct.FocusForeground, Color.Black);
+                var fbg = ParseColor(ct.FocusBackground, Color.Blue);
+                var efg = !string.IsNullOrEmpty(ct.TextEditForeground) ? ParseColor(ct.TextEditForeground, ffg) : (Color?)null;
+                var ebg = !string.IsNullOrEmpty(ct.TextEditBackground) ? ParseColor(ct.TextEditBackground, fbg) : (Color?)null;
+
+                CreateScheme(ct.Name, fg, bg, ffg, fbg, efg, ebg);
+                if (!_cycleThemes.Contains(ct.Name)) _cycleThemes.Add(ct.Name);
+                _win.SchemeName = ct.Name;
+            }
+            else if (!string.IsNullOrEmpty(_pendingConfig.Theme))
+            {
+                _win.SchemeName = _pendingConfig.Theme;
+            }
+            
+            if (_pendingConfig.Filter != null && _filterField != null) _filterField.Text = _pendingConfig.Filter;
+            if (_pendingConfig.SortColumn.HasValue) _connSortCol = Math.Clamp(_pendingConfig.SortColumn.Value, 0, ConnColNames.Length - 1);
+            if (_pendingConfig.SortAscending.HasValue) _connSortAsc = _pendingConfig.SortAscending.Value;
+            if (_pendingConfig.ShowFullCommand.HasValue) _showFullProcessCommand = _pendingConfig.ShowFullCommand.Value;
+            if (_pendingConfig.HistoryLimit.HasValue)
+            {
+                int limit = _pendingConfig.HistoryLimit.Value;
+                for (int i = 0; i < _historyLimits.Length; i++)
+                {
+                    if (_historyLimits[i] <= limit)
+                    {
+                        _limitIndex = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private Color ParseColor(string? name, Color defaultColor)
+        {
+            if (string.IsNullOrEmpty(name)) return defaultColor;
+
+            // HEX Support
+            if (name.StartsWith("#") && (name.Length == 7 || name.Length == 4))
+            {
+                try
+                {
+                    if (name.Length == 7)
+                    {
+                        int r = Convert.ToInt32(name.Substring(1, 2), 16);
+                        int g = Convert.ToInt32(name.Substring(3, 2), 16);
+                        int b = Convert.ToInt32(name.Substring(5, 2), 16);
+                        return new Color(r, g, b);
+                    }
+                    else
+                    {
+                        int r = Convert.ToInt32(name.Substring(1, 1) + name.Substring(1, 1), 16);
+                        int g = Convert.ToInt32(name.Substring(2, 1) + name.Substring(2, 1), 16);
+                        int b = Convert.ToInt32(name.Substring(3, 1) + name.Substring(3, 1), 16);
+                        return new Color(r, g, b);
+                    }
+                }
+                catch { return defaultColor; }
+            }
+
+            return name.ToLower().Trim() switch
+            {
+                "black" => Color.Black,
+                "blue" => Color.Blue,
+                "green" => Color.Green,
+                "cyan" => Color.Cyan,
+                "red" => Color.Red,
+                "magenta" => Color.Magenta,
+                "yellow" => Color.BrightYellow,
+                "gray" => Color.Gray,
+                "darkgray" => Color.DarkGray,
+                "brightblue" => Color.BrightBlue,
+                "brightgreen" => Color.BrightGreen,
+                "brightcyan" => Color.BrightCyan,
+                "brightred" => Color.BrightRed,
+                "brightmagenta" => Color.BrightMagenta,
+                "brightyellow" => Color.BrightYellow,
+                "white" => Color.White,
+                
+                // Additional Options
+                "orange" => new Color(255, 165, 0),
+                "purple" => new Color(128, 0, 128),
+                "pink" => new Color(255, 192, 203),
+                "teal" => new Color(0, 128, 128),
+                "navy" => new Color(0, 0, 128),
+                "maroon" => new Color(128, 0, 0),
+                "olive" => new Color(128, 128, 0),
+                "silver" => new Color(192, 192, 192),
+                "gold" => new Color(255, 215, 0),
+                "skyblue" => new Color(135, 206, 235),
+                "violet" => new Color(238, 130, 238),
+                "indigo" => new Color(75, 0, 130),
+                "lime" => new Color(0, 255, 0),
+                "aqua" => new Color(0, 255, 255),
+                "fuchsia" => new Color(255, 0, 255),
+                "crimson" => new Color(220, 20, 60),
+                "chocolate" => new Color(210, 105, 30),
+                "coral" => new Color(255, 127, 80),
+                "khaki" => new Color(240, 230, 140),
+                "plum" => new Color(221, 160, 221),
+                "salmon" => new Color(250, 128, 114),
+                "wheat" => new Color(245, 222, 179),
+                "beige" => new Color(245, 245, 220),
+                "ivory" => new Color(255, 255, 240),
+                "azure" => new Color(240, 255, 255),
+                _ => defaultColor
+            };
         }
 
         private void ApplyRowColors()
@@ -998,71 +1317,77 @@ namespace OpenSnitchTGUI
                 // to resolve potential compiler confusion with array initializers
                 // in InitCustomThemes scope.
                 
+                // Base themes with accurate HEX colors
                 CreateScheme("Matrix", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen);
-                CreateScheme("Red", Color.Red, Color.Black, Color.White, Color.Red);
-                CreateScheme("SolarizedDark", Color.Cyan, Color.Black, Color.White, Color.DarkGray);
-                CreateScheme("SolarizedLight", Color.Black, Color.White, Color.Blue, Color.White);
-                CreateScheme("Monokai", Color.White, Color.Black, Color.Magenta, Color.Black);
-                CreateScheme("Dracula", Color.White, Color.DarkGray, Color.Magenta, Color.DarkGray);
-                CreateScheme("Nord", Color.White, Color.Blue, Color.Cyan, Color.Blue);
+                CreateScheme("SolarizedDark", new Color(131, 148, 150), new Color(0, 43, 54), Color.White, new Color(7, 54, 66));
+                CreateScheme("SolarizedLight", new Color(101, 123, 131), new Color(253, 246, 227), Color.Black, new Color(238, 232, 213));
+                CreateScheme("Dracula", new Color(248, 248, 242), new Color(40, 42, 54), new Color(255, 121, 198), new Color(68, 71, 90));
+                CreateScheme("Nord", new Color(216, 222, 233), new Color(46, 52, 64), new Color(136, 192, 208), new Color(59, 66, 82));
+                CreateScheme("Monokai", new Color(248, 248, 242), new Color(39, 40, 34), Color.Black, new Color(166, 226, 46));
 
-                // Helix inspired themes
-                CreateScheme("Catppuccin", Color.BrightMagenta, Color.Black, Color.BrightCyan, Color.Black);
-                CreateScheme("AyuMirage", Color.BrightYellow, Color.Black, Color.BrightRed, Color.Black);
-                CreateScheme("Everforest", Color.BrightGreen, Color.DarkGray, Color.BrightYellow, Color.DarkGray);
-                CreateScheme("Gruvbox", Color.Yellow, Color.Black, Color.BrightRed, Color.Black);
+                // Helix / Modern inspired themes
+                CreateScheme("Catppuccin", new Color(217, 224, 238), new Color(30, 30, 46), new Color(150, 205, 251), new Color(48, 52, 70));
+                CreateScheme("OneDark", new Color(171, 178, 191), new Color(40, 44, 52), Color.White, new Color(62, 68, 81));
+                CreateScheme("TokyoNight", new Color(169, 177, 214), new Color(26, 27, 38), new Color(122, 162, 247), new Color(41, 46, 66));
+                CreateScheme("Kanagawa", new Color(220, 224, 198), new Color(31, 31, 40), new Color(122, 162, 247), new Color(34, 34, 45));
+                CreateScheme("RosePine", new Color(224, 222, 244), new Color(25, 23, 36), new Color(235, 188, 186), new Color(31, 29, 46));
+                CreateScheme("Everforest", new Color(211, 198, 170), new Color(43, 51, 49), new Color(167, 192, 128), new Color(51, 62, 59));
+                CreateScheme("Gruvbox", new Color(235, 219, 178), new Color(40, 40, 40), new Color(250, 189, 47), new Color(60, 56, 54));
+                CreateScheme("Cobalt2", Color.White, new Color(0, 32, 61), Color.Black, new Color(255, 196, 0));
+                CreateScheme("GithubDark", new Color(201, 209, 217), new Color(13, 17, 23), Color.White, new Color(33, 38, 45));
 
-                // Additional popular themes
-                CreateScheme("OneDark", Color.White, Color.Black, Color.Black, Color.Blue);
-                CreateScheme("TokyoNight", Color.Cyan, Color.Black, Color.Black, Color.Magenta);
-                CreateScheme("Kanagawa", Color.White, Color.Black, Color.Black, Color.Yellow);
-                CreateScheme("RosePine", Color.BrightMagenta, Color.Black, Color.Black, Color.Magenta);
-                CreateScheme("Cobalt2", Color.White, Color.Blue, Color.Black, Color.BrightYellow);
-                CreateScheme("GithubDark", Color.White, Color.Black, Color.Black, Color.Blue);
-
-                CreateScheme("RowAllow", Color.BrightGreen, Color.Black, Color.Black, Color.BrightGreen); 
-                CreateScheme("RowDeny", Color.BrightRed, Color.Black, Color.White, Color.BrightRed);   
-                CreateScheme("RowAsk", Color.BrightYellow, Color.Black, Color.Black, Color.BrightYellow); 
+                CreateScheme("RowAllow", new Color(0, 255, 0), Color.Black, Color.Black, new Color(0, 255, 0)); 
+                CreateScheme("RowDeny", new Color(255, 0, 0), Color.Black, Color.White, new Color(255, 0, 0));   
+                CreateScheme("RowAsk", new Color(255, 255, 0), Color.Black, Color.Black, new Color(255, 255, 0)); 
 
                 _themesInitialized = true;
             }
             catch {{ }}
         }
         
-        // Converted CreateScheme from local function to private method
-        private void CreateScheme(string name, Color fg, Color bg, Color focusFg, Color focusBg)
+        private static MethodInfo? _addSchemeMethod;
+        private static Type? _schemeType;
+        private static PropertyInfo? _normalProp;
+        private static Type? _attrType;
+
+        private void CreateScheme(string name, Color fg, Color bg, Color focusFg, Color focusBg, Color? editFg = null, Color? editBg = null)
         {
             try {
-                // Re-obtain reflection data within this method's scope
-                var schemeManagerType = AppDomain.CurrentDomain.GetAssemblies()
-                        .Select(a => a.GetType("Terminal.Gui.Configuration.SchemeManager"))
-                        .FirstOrDefault(t => t != null);
-                var addSchemeMethod = schemeManagerType?.GetMethods()
-                    .FirstOrDefault(m => m.Name == "AddScheme" && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(string));
-                var schemeType = addSchemeMethod?.GetParameters()[1].ParameterType;
-                var normalProp = schemeType?.GetProperty("Normal");
-                var attrType = normalProp?.PropertyType;
-
-                object CreateAttr(Color fgColor, Color bgColor) // Local CreateAttr
+                lock (_lock)
                 {
-                    return Activator.CreateInstance(attrType, fgColor, bgColor)!;
+                    if (_addSchemeMethod == null)
+                    {
+                        var schemeManagerType = AppDomain.CurrentDomain.GetAssemblies()
+                                .Select(a => a.GetType("Terminal.Gui.Configuration.SchemeManager"))
+                                .FirstOrDefault(t => t != null);
+                        _addSchemeMethod = schemeManagerType?.GetMethods()
+                            .FirstOrDefault(m => m.Name == "AddScheme" && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(string));
+                        _schemeType = _addSchemeMethod?.GetParameters()[1].ParameterType;
+                        _normalProp = _schemeType?.GetProperty("Normal");
+                        _attrType = _normalProp?.PropertyType;
+                    }
+
+                    if (_addSchemeMethod == null || _schemeType == null || _attrType == null) return;
+
+                    object CreateAttr(Color fgColor, Color bgColor)
+                    {
+                        return Activator.CreateInstance(_attrType, fgColor, bgColor)!;
+                    }
+
+                    var scheme = Activator.CreateInstance(_schemeType);
+                    _schemeType.GetProperty("Normal")?.SetValue(scheme, CreateAttr(fg, bg));
+                    _schemeType.GetProperty("Focus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
+                    _schemeType.GetProperty("HotNormal")?.SetValue(scheme, CreateAttr(fg, bg));
+                    _schemeType.GetProperty("HotFocus")?.SetValue(scheme, CreateAttr(editFg ?? focusFg, editBg ?? focusBg));
+                    _addSchemeMethod.Invoke(null, new object[] { name, scheme! });
+                    if (name.StartsWith("Row")) _rowSchemes[name] = scheme!;
                 }
-
-                var scheme = Activator.CreateInstance(schemeType);
-                schemeType.GetProperty("Normal")?.SetValue(scheme, CreateAttr(fg, bg));
-                schemeType.GetProperty("Focus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
-                schemeType.GetProperty("HotNormal")?.SetValue(scheme, CreateAttr(fg, bg));
-                schemeType.GetProperty("HotFocus")?.SetValue(scheme, CreateAttr(focusFg, focusBg));
-                addSchemeMethod?.Invoke(null, new object[] { name, scheme });
-                if (name.StartsWith("Row")) _rowSchemes[name] = scheme;
-            } catch {{ }} 
+            } catch { } 
         }
-
         private void CycleTheme()
         {
             try 
             {
-                InitCustomThemes();
                 if (_win == null) return; 
                 var current = _win.SchemeName ?? "Base";
                 var idx = _cycleThemes.IndexOf(current);
