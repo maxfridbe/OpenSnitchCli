@@ -228,11 +228,13 @@ namespace OpenSnitchTGUI
                 "Press 'q' to Quit\n" +
                 "Press 'f' to Filter\n" +
                 "Press '0' to Cycle Themes\n" +
+                "Press 'e' for Theme Editor (Conn Tab)\n" +
+                "Press 'Ctrl+S' to Save Config\n" +
                 "Press 's' to Cycle Sort Column\n" +
                 "Press 'S' to Toggle Sort Order\n" +
                 "Press 'c' for Connections tab\n" +
                 "Press 'r' for Rules tab\n" +
-                "Press 'j' to Jump to Rule (Connections tab)\n" +
+                "Press 'j' to Jump to Rule (Conn tab)\n" +
                 "Press 't' to Toggle Rule (Rules tab)\n" +
                 "Press 'e' to Edit Rule (Rules tab)\n" +
                 "Press 'd' to Delete Rule (Rules tab)", "Ok");

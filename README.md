@@ -125,7 +125,7 @@ dotnet run -- --help
 ## Configuration
 
 By default, the application:
-1. Starts a gRPC server on `127.0.0.1:50051`.
+1. Starts a gRPC server on `127.0.0.1:50052`.
 2. Starts an internal UDS Proxy that bridges `/tmp/osui.sock` to the TCP port, ensuring compatibility with the daemon.
 
 ## Runtime Controls
